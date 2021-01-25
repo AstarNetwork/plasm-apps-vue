@@ -1,26 +1,45 @@
 <template>
     <h2 class="text-gray-400 text-3xl font-medium">Balance</h2>
-    <span>{{ accountInfos[accounts[0].toString()].data.free }}</span>
+    <span class="text-gray-400">{{ balance.toString() }}</span>
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, reactive } from 'vue';
+import BN from 'bn.js';
+import { defineComponent, onUnmounted, ref, watch } from 'vue';
 import keyring from '@polkadot/ui-keyring';
-import { subscribeAccountInfo } from '../api/query/accountInfo';
-import { AccountInfo } from '@/api/models';
-// import { store } from '../store';
+import { subscribeBalance } from '../api/query/accountInfo';
+import { Balance } from '@/api/models';
+import { store } from '@/store';
+import { VoidFn } from '@polkadot/api/types';
 
 export default defineComponent({
     setup() {
-        // const api = await store.getters.api;
-        const accounts = keyring.getPairs();
-        const accountInfos = reactive<{ [key: string]: AccountInfo }>({});
-        // // TODO: switch accounts
-        // // TODO: batch unsub
-        const unsub = subscribeAccountInfo(accounts[0].address, accountInfos[accounts[0].address]);
+        console.log('created');
+        let balance = ref<Balance>(new BN(0));
+        // accounts to state;
+        var accounts;
+        // map unsubs;
+        var unsub: VoidFn;
         onUnmounted(() => {
-            unsub.then();
+            if (unsub) {
+                unsub();
+            }
         });
+        watch(
+            () => store.state.initialized,
+            async () => {
+                if (store.getters.initialized) {
+                    accounts = keyring.getPairs();
+                    // TODO: switch accounts
+                    const account = accounts[0];
+                    unsub = await subscribeBalance(account.address, balance);
+                }
+            },
+            { immediate: true },
+        );
+        return {
+            balance,
+        };
     },
 });
 </script>

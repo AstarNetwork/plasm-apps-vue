@@ -25,6 +25,7 @@ export const actions: ActionTree<State, State> & Actions = {
         const url = process.env.VUE_APP_WS_URL ?? 'ws://127.0.0.1:9944';
         const api = await connectApi(url);
         commit(MutationTypes.SET_NETWORK_API, api);
+        commit(MutationTypes.SET_INITIALIZED, undefined);
         return api;
     },
 };

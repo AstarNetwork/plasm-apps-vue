@@ -9,15 +9,14 @@ import DashboardLayout from './layouts/DashboardLayout.vue';
 import EmptyLayout from './layouts/EmptyLayout.vue';
 import { ActionTypes } from './store/action-types';
 
-//TODO: Find better way.
-store.dispatch(ActionTypes.GET_NETWORK_API).then((api) => {
-    const app = createApp(App);
+store.dispatch(ActionTypes.GET_NETWORK_API);
 
-    app.component('default-layout', DashboardLayout);
-    app.component('empty-layout', EmptyLayout);
+const app = createApp(App);
 
-    app.use(router);
-    app.use(store);
+app.component('default-layout', DashboardLayout);
+app.component('empty-layout', EmptyLayout);
 
-    app.mount('#app');
-});
+app.use(router);
+app.use(store);
+
+app.mount('#app');

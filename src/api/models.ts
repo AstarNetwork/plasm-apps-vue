@@ -2,7 +2,7 @@ import BN from 'bn.js';
 
 // type of account should be string
 export type Address = string;
-export type Balance = number | BN;
+export type Balance = BN;
 export type BalanceFull = {
     free: Balance;
     reserved: Balance;

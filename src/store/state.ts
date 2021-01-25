@@ -1,7 +1,11 @@
 import { ApiPromise } from '@polkadot/api';
 
 export type State = {
-    api: ApiPromise;
+    api?: ApiPromise;
+    initialized: boolean;
 };
 
-export let state: State;
+export const state: State = {
+    api: undefined,
+    initialized: false,
+};
