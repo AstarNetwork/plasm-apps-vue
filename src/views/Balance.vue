@@ -15,8 +15,8 @@ export default defineComponent({
         // const api = await store.getters.api;
         const accounts = keyring.getPairs();
         const accountInfos = reactive<{ [key: string]: AccountInfo }>({});
-        // TODO: switch accounts
-        // TODO: batch unsub
+        // // TODO: switch accounts
+        // // TODO: batch unsub
         const unsub = subscribeAccountInfo(accounts[0].address, accountInfos[accounts[0].address]);
         onUnmounted(() => {
             unsub.then();

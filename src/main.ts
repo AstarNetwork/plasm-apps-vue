@@ -7,13 +7,17 @@ import './assets/style/base.css';
 import './registerServiceWorker';
 import DashboardLayout from './layouts/DashboardLayout.vue';
 import EmptyLayout from './layouts/EmptyLayout.vue';
+import { ActionTypes } from './store/action-types';
 
-const app = createApp(App);
+//TODO: Find better way.
+store.dispatch(ActionTypes.GET_NETWORK_API).then((api) => {
+    const app = createApp(App);
 
-app.component('default-layout', DashboardLayout);
-app.component('empty-layout', EmptyLayout);
+    app.component('default-layout', DashboardLayout);
+    app.component('empty-layout', EmptyLayout);
 
-app.use(router);
-app.use(store);
+    app.use(router);
+    app.use(store);
 
-app.mount('#app');
+    app.mount('#app');
+});

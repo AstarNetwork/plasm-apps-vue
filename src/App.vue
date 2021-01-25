@@ -7,8 +7,6 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { store } from './store';
-import { ActionTypes } from './store/action-types';
 
 const defaultLayout = 'default';
 
@@ -18,8 +16,6 @@ export default defineComponent({
         const { currentRoute } = useRouter();
 
         const layout = computed(() => `${currentRoute.value.meta.layout || defaultLayout}-layout`);
-
-        store.dispatch(ActionTypes.GET_NETWORK_API);
 
         return {
             layout,

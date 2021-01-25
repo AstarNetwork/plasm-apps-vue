@@ -21,15 +21,10 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-    [ActionTypes.GET_NETWORK_API]({ commit }) {
-        return new Promise((resolve) => {
-            const url = process.env.VUE_APP_WS_URL ?? 'ws://127.0.0.1:9944';
-            const api = connectApi(url);
-
-            setTimeout(() => {
-                commit(MutationTypes.SET_NETWORK_API, api);
-                resolve(api);
-            }, 500);
-        });
+    async [ActionTypes.GET_NETWORK_API]({ commit }) {
+        const url = process.env.VUE_APP_WS_URL ?? 'ws://127.0.0.1:9944';
+        const api = await connectApi(url);
+        commit(MutationTypes.SET_NETWORK_API, api);
+        return api;
     },
 };
