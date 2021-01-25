@@ -16,9 +16,9 @@ export default defineComponent({
     setup() {
         console.log('created');
         let balance = ref<Balance>(new BN(0));
-        // accounts to state;
+        // TODO: move keyring to store;
         var accounts;
-        // map unsubs;
+        // TODO: map multiple unsubs;
         var unsub: VoidFn;
         onUnmounted(() => {
             if (unsub) {
