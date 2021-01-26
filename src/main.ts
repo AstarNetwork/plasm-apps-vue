@@ -7,9 +7,6 @@ import './assets/style/base.css';
 import './registerServiceWorker';
 import DashboardLayout from './layouts/DashboardLayout.vue';
 import EmptyLayout from './layouts/EmptyLayout.vue';
-import { ActionTypes } from './store/action-types';
-
-store.dispatch(ActionTypes.GET_NETWORK_API);
 
 const app = createApp(App);
 
