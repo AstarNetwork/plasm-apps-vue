@@ -15,11 +15,11 @@ import { VoidFn } from '@polkadot/api/types';
 export default defineComponent({
     setup() {
         console.log('created');
-        let balance = ref<Balance>(new BN(0));
+        const balance = ref<Balance>(new BN(0));
         // TODO: move keyring to store;
-        var accounts;
+        let accounts;
         // TODO: map multiple unsubs;
-        var unsub: VoidFn;
+        let unsub: VoidFn;
         onUnmounted(() => {
             if (unsub) {
                 unsub();
