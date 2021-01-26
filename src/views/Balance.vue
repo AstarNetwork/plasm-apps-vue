@@ -7,7 +7,7 @@
 import BN from 'bn.js';
 import { defineComponent, onUnmounted, ref, watch } from 'vue';
 import keyring from '@polkadot/ui-keyring';
-import { subscribeBalance } from '../api/query/accountInfo';
+import { subscribeBalance } from '@/api/query/accountInfo';
 import { Balance } from '@/api/models';
 import { store } from '@/store';
 import { VoidFn } from '@polkadot/api/types';

@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
-import Balance from '../views/Balance.vue';
-import DApps from '../views/DApps.vue';
-import Staking from '../views/Staking.vue';
-import History from '../views/History.vue';
-import Lockdrop from '../views/Lockdrop.vue';
+import Balance from '@/views/Balance.vue';
+import DApps from '@/views/DApps.vue';
+import Staking from '@/views/Staking.vue';
+import History from '@/views/History.vue';
+import Lockdrop from '@/views/Lockdrop.vue';
 
 const routes: RouteRecordRaw[] = [
     {

@@ -1,6 +1,6 @@
 import { state } from '@/store/state';
 import { getters } from '@/store/getters';
-import { AccountInfo, Address, Balance } from '../models';
+import { AccountInfo, Address, Balance } from '@/api/models';
 import { Ref } from 'vue';
 
 export async function subscribeAccountInfo(account: Address, ref: Ref<AccountInfo>) {
