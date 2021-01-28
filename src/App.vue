@@ -1,7 +1,9 @@
 <template>
-    <component :is="layout">
-        <router-view />
-    </component>
+    <keep-alive>
+        <component :is="layout">
+            <router-view />
+        </component>
+    </keep-alive>
 </template>
 
 <script lang="ts">
@@ -17,9 +19,9 @@ export default defineComponent({
     setup() {
         const { currentRoute } = useRouter();
 
-        const layout = computed(() => `${currentRoute.value.meta.layout || defaultLayout}-layout`);
-
         store.dispatch(ActionTypes.GET_NETWORK_API);
+
+        const layout = computed(() => `${currentRoute.value.meta.layout || defaultLayout}-layout`);
 
         return {
             layout,

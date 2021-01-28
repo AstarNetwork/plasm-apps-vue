@@ -44,7 +44,7 @@ async function loadOnReady(api: ApiPromise): Promise<void> {
     );
 }
 
-export function connectApi(url: string): ApiPromise {
+export async function connectApi(url: string): Promise<ApiPromise> {
     const provider = new WsProvider(url);
 
     const types = Object.values(plasmDefinitions).reduce(
@@ -58,16 +58,12 @@ export function connectApi(url: string): ApiPromise {
     });
     api.on('connected', (): void => console.log(`Connected to ${url}`));
     api.on('disconnected', (): void => console.log(`Disconnected from ${url}`));
-    api.on(
-        'ready',
-        async (): Promise<void> => {
-            try {
-                await loadOnReady(api);
-            } catch (error) {
-                console.error('Unable to load chain', error);
-            }
-        },
-    );
+    await api.isReady;
+    try {
+        await loadOnReady(api);
+    } catch (error) {
+        console.error('Unable to load chain', error);
+    }
 
     injectedPromise.then((): void => {}).catch((error: Error) => console.error(error));
 
