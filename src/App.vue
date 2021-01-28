@@ -1,7 +1,9 @@
 <template>
-    <component :is="layout">
-        <router-view />
-    </component>
+    <keep-alive>
+        <component :is="layout">
+            <router-view />
+        </component>
+    </keep-alive>
 </template>
 
 <script lang="ts">
