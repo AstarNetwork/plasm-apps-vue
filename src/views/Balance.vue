@@ -1,6 +1,7 @@
 <template>
     <h2 class="text-gray-400 text-3xl font-medium">Balance</h2>
-    <span class="text-gray-400">{{ balance ? balance.toString() : '0' }}</span>
+    <p class="text-gray-400">Balance: {{ balance ? balance.toString() : '0' }}</p>
+    <p class="text-gray-400">Counter: {{ testCounter ? testCounter.toString() : '0' }}</p>
     <p class="text-gray-400">{{ api ? api.isConnected : 'no api' }}</p>
 </template>
 
@@ -13,11 +14,12 @@ import { useApi } from '@/hooks/useApi';
 export default defineComponent({
     setup() {
         const balance = ref<Balance>(new BN(0));
-        const { api } = useApi();
+        const { api, testCounter } = useApi();
 
         return {
             api,
             balance,
+            testCounter,
         };
     },
 });

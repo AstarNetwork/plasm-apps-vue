@@ -3,16 +3,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { providePolkadotContainer } from '@/api/polkadot';
 
 export default defineComponent({
     name: 'polkadot-provider',
     setup() {
+        const isLoading = ref(false);
+        //todo: initialize node connection
         // set up the provider that can be accessed to all the child components
         providePolkadotContainer();
 
-        //todo: add connection handler method
+        return {
+            isLoading,
+        };
     },
 });
 </script>
