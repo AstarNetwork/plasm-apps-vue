@@ -1,15 +1,23 @@
 <template>
-    <polkadot-provider>
-        <component :is="layout">
-            <router-view />
-        </component>
-    </polkadot-provider>
+    <Suspense>
+        <template #default>
+            <polkadot-provider>
+                <component :is="layout">
+                    <router-view />
+                </component>
+            </polkadot-provider>
+        </template>
+        <template #fallback>
+            <spinner />
+        </template>
+    </Suspense>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import polkadotProvider from '@/components/PolkadotProvider.vue';
+import polkadotProvider from '@/hooks/providers/PolkadotProvider.vue';
+import Spinner from '@/components/Spinner.vue';
 
 const defaultLayout = 'default';
 
@@ -26,6 +34,7 @@ export default defineComponent({
     },
     components: {
         polkadotProvider,
+        Spinner,
     },
 });
 </script>

@@ -1,6 +1,6 @@
 import { ActionTree, ActionContext } from 'vuex';
 import { ApiPromise } from '@polkadot/api';
-import { connectApi } from '@/Api';
+import { connectApi } from '@/api/polkadot';
 import { State } from './state';
 import { Mutations } from './mutations';
 import { ActionTypes } from './action-types';

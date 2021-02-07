@@ -52,12 +52,11 @@ export const connectApi = async (endpoint: string): Promise<ApiPromise> => {
         {},
     );
 
-    const api = new ApiPromise({
+    const api = await new ApiPromise({
         provider,
         types,
-    });
+    }).isReady;
 
-    await api.isReady;
     try {
         await loadAccounts(api);
     } catch (error) {
