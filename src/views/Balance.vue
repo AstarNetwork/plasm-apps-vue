@@ -7,13 +7,13 @@
 
 <script lang="ts">
 import BN from 'bn.js';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { Balance } from '@/api/models';
 import { useApi } from '@/hooks/useApi';
 
 export default defineComponent({
     setup() {
-        const balance = ref<Balance>(new BN(0));
+        const balance = reactive<Balance>(new BN(0));
         const { api, testCounter } = useApi();
 
         return {

@@ -1,11 +1,11 @@
 <template>
     <Suspense>
         <template #default>
-            <polkadot-provider>
+            <api-loader>
                 <component :is="layout">
                     <router-view />
                 </component>
-            </polkadot-provider>
+            </api-loader>
         </template>
         <template #fallback>
             <spinner />
@@ -16,7 +16,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import polkadotProvider from '@/hooks/providers/PolkadotProvider.vue';
+import ApiLoader from '@/hooks/providers/ApiLoader.vue';
 import Spinner from '@/components/Spinner.vue';
 
 const defaultLayout = 'default';
@@ -33,7 +33,7 @@ export default defineComponent({
         };
     },
     components: {
-        polkadotProvider,
+        ApiLoader,
         Spinner,
     },
 });

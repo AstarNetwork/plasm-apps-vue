@@ -3,34 +3,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 import { providePolkadotContainer } from '@/api/polkadot';
-import { providerEndpoints } from '@/config';
-
-interface ConnectionStat {
-    error?: Error;
-    isLoading: boolean;
-}
+import { ApiPromise } from '@polkadot/api';
 
 export default defineComponent({
     name: 'polkadot-provider',
-    async setup() {
-        const connectionStatus = reactive<ConnectionStat>({
-            isLoading: true,
-        });
-
-        try {
-            await providePolkadotContainer(providerEndpoints[0].endpoint);
-
-            connectionStatus.isLoading = false;
-        } catch (err) {
-            console.error(err);
-            connectionStatus.error = err;
+    props: {
+        polkadotApi: ApiPromise,
+    },
+    setup(props) {
+        // we use the api instance that was passed as a prop to inject data
+        // note: trying to use the `provide()` function within a promise wrapper may cause unexpected behavior
+        if (props.polkadotApi) {
+            providePolkadotContainer(props.polkadotApi);
         }
-
-        return {
-            connectionStatus,
-        };
     },
 });
 </script>
