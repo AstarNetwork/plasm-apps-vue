@@ -1,16 +1,23 @@
 <template>
-    <keep-alive>
-        <component :is="layout">
-            <router-view />
-        </component>
-    </keep-alive>
+    <Suspense>
+        <template #default>
+            <api-loader>
+                <component :is="layout">
+                    <router-view />
+                </component>
+            </api-loader>
+        </template>
+        <template #fallback>
+            <spinner />
+        </template>
+    </Suspense>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { store } from './store';
-import { ActionTypes } from './store/action-types';
+import ApiLoader from '@/hooks/providers/ApiLoader.vue';
+import Spinner from '@/components/Spinner.vue';
 
 const defaultLayout = 'default';
 
@@ -19,13 +26,15 @@ export default defineComponent({
     setup() {
         const { currentRoute } = useRouter();
 
-        store.dispatch(ActionTypes.GET_NETWORK_API);
-
         const layout = computed(() => `${currentRoute.value.meta.layout || defaultLayout}-layout`);
 
         return {
             layout,
         };
+    },
+    components: {
+        ApiLoader,
+        Spinner,
     },
 });
 </script>

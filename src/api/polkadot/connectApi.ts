@@ -15,7 +15,7 @@ interface InjectedAccountExt {
 
 const injectedPromise = web3Enable('polkadot-js/apps');
 
-async function loadOnReady(api: ApiPromise): Promise<void> {
+async function loadAccounts(api: ApiPromise): Promise<void> {
     const [systemChain, injectedAccounts] = await Promise.all([
         api.rpc.system.chain() as any,
         web3Accounts().then((accounts): InjectedAccountExt[] =>
@@ -44,28 +44,24 @@ async function loadOnReady(api: ApiPromise): Promise<void> {
     );
 }
 
-export async function connectApi(url: string): Promise<ApiPromise> {
-    const provider = new WsProvider(url);
+export const connectApi = async (endpoint: string): Promise<ApiPromise> => {
+    const provider = new WsProvider(endpoint);
 
     const types = Object.values(plasmDefinitions).reduce(
         (res, { types }): object => ({ ...res, ...types }),
         {},
     );
 
-    const api = new ApiPromise({
+    const api = await new ApiPromise({
         provider,
         types,
-    });
-    api.on('connected', (): void => console.log(`Connected to ${url}`));
-    api.on('disconnected', (): void => console.log(`Disconnected from ${url}`));
-    await api.isReady;
+    }).isReady;
+
     try {
-        await loadOnReady(api);
+        await loadAccounts(api);
     } catch (error) {
         console.error('Unable to load chain', error);
     }
 
-    injectedPromise.then((): void => {}).catch((error: Error) => console.error(error));
-
     return api;
-}
+};
