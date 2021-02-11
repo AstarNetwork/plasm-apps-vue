@@ -14,6 +14,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node-version }}
+            - name: Install Yarn
+              run: npm install -g yarn
             - name: lint
               run: |
                   yarn install --frozen-lockfile
@@ -31,6 +33,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node-version }}
+            - name: Install Yarn
+              run: npm install -g yarn
             - name: test
               run: |
                   yarn install --frozen-lockfile
@@ -38,7 +42,6 @@ jobs:
 
     build_code:
         name: Build Code
-        if: "! contains(github.event.head_commit.message, '[CI Skip]')"
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -51,6 +54,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node-version }}
+            - name: Install Yarn
+              run: npm install -g yarn
             - name: build
               env:
                   CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
