@@ -5,12 +5,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch } from 'vue';
 import { useApi } from '@/hooks/useApi';
 
 export default defineComponent({
     setup() {
         const { api, testCounter, setCounter } = useApi();
+
+        watch(
+            () => testCounter,
+            (testCounter) => {
+                console.log('testCounter triggered');
+                console.log(testCounter);
+            },
+        );
 
         return {
             api,
