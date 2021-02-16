@@ -16,7 +16,7 @@ interface InjectedAccountExt {
 
 const injectedPromise = web3Enable('polkadot-js/apps');
 
-export const loadAccounts = async (api: ApiPromise) => {
+const loadAccounts = async (api: ApiPromise) => {
     // wait for the WASM crypto libraries to load first
     await cryptoWaitReady();
 
@@ -46,8 +46,6 @@ export const loadAccounts = async (api: ApiPromise) => {
         },
         injectedAccounts,
     );
-
-    return keyring;
 };
 
 export const connectApi = async (endpoint: string) => {
@@ -62,6 +60,12 @@ export const connectApi = async (endpoint: string) => {
         provider,
         types,
     }).isReady;
+
+    try {
+        await loadAccounts(api);
+    } catch (err) {
+        console.error(err);
+    }
 
     // load the web3 extension
     injectedPromise.then((): void => {}).catch((error: Error) => console.error(error));

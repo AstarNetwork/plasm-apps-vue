@@ -1,6 +1,5 @@
-import { usePolkadotContainerContext } from '@/api';
 import { useIsMountedRef } from './useIsMountedRef';
-import { reactive, toRefs, readonly, onMounted, watchEffect } from 'vue';
+import { reactive, toRefs, watchEffect } from 'vue';
 import { keyring } from '@polkadot/ui-keyring';
 
 interface UseAccounts {
@@ -17,25 +16,23 @@ export const useAccount = () => {
     const mountedRef = useIsMountedRef();
 
     // set the initial value
-    let state = reactive<UseAccounts>({
+    const state = reactive<UseAccounts>({
         allAccounts: [],
         hasAccounts: false,
         isAccount: () => false,
     });
 
     watchEffect((onInvalidate) => {
+        // fixme: this part is showing an error when fetching accounts
         const subscription = keyring.accounts.subject.subscribe((accounts) => {
             // only subscribe to the keyring if the component that originally called this hook is still mounted
             if (mountedRef.value) {
-                const allAccounts = accounts ? Object.keys(accounts) : [];
-                const hasAccounts = allAccounts.length !== 0;
-                const isAccount = (address: string) => allAccounts.includes(address);
+                // fixme: this is an unintuitive method to assign values. We need to find a scalable method
+                state.allAccounts = accounts ? Object.keys(accounts) : [];
+                state.hasAccounts = state.allAccounts.length !== 0;
+                state.isAccount = (address: string) => state.allAccounts.includes(address);
 
-                state = reactive({
-                    allAccounts,
-                    hasAccounts,
-                    isAccount,
-                });
+                console.log(state);
             }
         });
 
@@ -45,5 +42,5 @@ export const useAccount = () => {
         });
     });
 
-    return toRefs(readonly(state));
+    return toRefs(state);
 };

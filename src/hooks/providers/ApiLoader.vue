@@ -1,5 +1,5 @@
 <template>
-    <polkadot-provider :polkadotApi="api" :keyring="keyring">
+    <polkadot-provider :polkadotApi="api">
         <slot />
     </polkadot-provider>
 </template>
@@ -8,7 +8,7 @@
 import { defineComponent, ref } from 'vue';
 import PolkadotProvider from './PolkadotProvider.vue';
 import { providerEndpoints } from '@/config';
-import { connectApi, loadAccounts } from '@/api/polkadot';
+import { connectApi } from '@/api/polkadot';
 
 export default defineComponent({
     name: 'api-loader',
@@ -19,10 +19,8 @@ export default defineComponent({
         const endpoint = ref(dusty);
 
         const api = await connectApi(endpoint.value);
-        const keyring = await loadAccounts(api);
         return {
             api,
-            keyring,
         };
     },
     components: {
