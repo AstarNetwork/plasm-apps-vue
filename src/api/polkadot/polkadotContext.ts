@@ -1,15 +1,19 @@
 import { provide, inject, reactive, toRefs, readonly } from 'vue';
-import { ApiPromise } from '@polkadot/api/promise';
-import keyring from '@polkadot/ui-keyring';
+import { ApiPromise } from '@polkadot/api';
+import { keyring } from '@polkadot/ui-keyring';
 import type { KeyringPair } from '@polkadot/keyring/types';
-import { AccountInfo, Balance } from '../models';
+import { Balance } from '../models';
 import { UnsubscribePromise } from '@polkadot/api/types';
 // note: this is a simplified Redux-like state management pattern using the Vue composition API.
 // unlike Vuex; this method is not very strict, meaning that if someone really wanted to,
 // they could just directly inject the raw state symbol and mutate it
 
+// type alias for the global keyring instance
+type KeyringUi = typeof keyring;
+
 interface ProviderState {
     api: null | ApiPromise;
+    keyring: null | KeyringUi;
     currentAccount: null | KeyringPair;
     currentBalance: null | Balance;
     unsubscribeAccountInfo: null | UnsubscribePromise;
@@ -20,6 +24,7 @@ interface ProviderState {
 const state = reactive<ProviderState>({
     // start with an empty api object
     api: null,
+    keyring: null,
     // start with an empty object
     currentAccount: null,
     currentBalance: null,
@@ -32,6 +37,9 @@ const state = reactive<ProviderState>({
 const mutations = {
     setApi: (apiInst: ApiPromise) => {
         state.api = apiInst;
+    },
+    setKeyring: (keyringInst: KeyringUi) => {
+        state.keyring = keyringInst;
     },
     setCurrentAccount: (accountIndex: number) => {
         const api = state.api;
@@ -74,8 +82,9 @@ type StateMutations = typeof mutations;
 const STATE_SYMBOL = Symbol('polkadot API read state');
 const MUTATION_SYMBOL = Symbol('polkadot API state mutation');
 
-export const providePolkadotContainer = (initApi: ApiPromise) => {
+export const providePolkadotContainer = (initApi: ApiPromise, keyringInst: KeyringUi) => {
     mutations.setApi(initApi);
+    mutations.setKeyring(keyringInst);
 
     // provide a readonly reference of the current state and mutation methods
     provide(STATE_SYMBOL, toRefs(readonly(state)));

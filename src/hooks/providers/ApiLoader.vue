@@ -1,22 +1,28 @@
 <template>
-    <polkadot-provider :polkadotApi="api">
+    <polkadot-provider :polkadotApi="api" :keyring="keyring">
         <slot />
     </polkadot-provider>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import PolkadotProvider from './PolkadotProvider.vue';
-import { localNode } from '@/config';
-import { connectApi } from '@/api/polkadot';
+import { providerEndpoints } from '@/config';
+import { connectApi, loadAccounts } from '@/api/polkadot';
 
 export default defineComponent({
     name: 'api-loader',
     async setup() {
-        const api = await connectApi(localNode.endpoint);
+        const dusty = providerEndpoints[1].endpoint;
+        //const local = providerEndpoints[2].endpoint;
 
+        const endpoint = ref(dusty);
+
+        const api = await connectApi(endpoint.value);
+        const keyring = await loadAccounts(api);
         return {
             api,
+            keyring,
         };
     },
     components: {
