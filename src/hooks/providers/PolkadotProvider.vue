@@ -3,14 +3,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { providePolkadotContainer } from '@/api/polkadot';
 import { ApiPromise } from '@polkadot/api';
 
 export default defineComponent({
     name: 'polkadot-provider',
     props: {
-        polkadotApi: ApiPromise,
+        polkadotApi: { type: Object as PropType<ApiPromise>, required: true },
     },
     setup(props) {
         // we use the api instance that was passed as a prop to inject data

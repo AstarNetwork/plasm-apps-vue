@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import PolkadotProvider from './PolkadotProvider.vue';
 import { providerEndpoints } from '@/config';
 import { connectApi } from '@/api/polkadot';
@@ -13,8 +13,12 @@ import { connectApi } from '@/api/polkadot';
 export default defineComponent({
     name: 'api-loader',
     async setup() {
-        const api = await connectApi(providerEndpoints[0].endpoint);
+        const dusty = providerEndpoints[1].endpoint;
+        //const local = providerEndpoints[2].endpoint;
 
+        const endpoint = ref(dusty);
+
+        const api = await connectApi(endpoint.value);
         return {
             api,
         };
