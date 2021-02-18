@@ -18,10 +18,8 @@ export function useBalance(api: ApiPromise | null, address?: string) {
         console.log(balanceAccountValue);
         if (balanceAccountValue && api) {
             console.log(api.isReady);
-            api.isReady.then(() => {
-                unsub.value = api.query.system.account(balanceAccountValue, (result) => {
-                    balance.value = result.data.free.toBn();
-                });
+            unsub.value = api.query.system.account(balanceAccountValue, (result) => {
+                balance.value = result.data.free.toBn();
             });
         }
     });

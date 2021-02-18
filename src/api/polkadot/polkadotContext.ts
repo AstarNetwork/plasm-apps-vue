@@ -9,7 +9,7 @@ import { UnsubscribePromise } from '@polkadot/api/types';
 // they could just directly inject the raw state symbol and mutate it
 
 interface ProviderState {
-    api: null | ApiPromise;
+    api: ApiPromise;
     currentAccount: null | KeyringPair;
     currentBalance: null | Balance;
     unsubscribeAccountInfo: null | UnsubscribePromise;
@@ -19,7 +19,7 @@ interface ProviderState {
 // global state that holds the reference to the API instance. This will be exposed as a readonly reference
 const state = reactive<ProviderState>({
     // start with an empty api object
-    api: null,
+    api: new ApiPromise(),
     // start with an empty object
     currentAccount: null,
     currentBalance: null,
@@ -84,8 +84,8 @@ export const providePolkadotContainer = (initApi: ApiPromise) => {
 
 export const usePolkadotContainerContext = () => {
     // allow access to the readonly state provided by the container
-    return {
+    return toRefs({
         ...inject<ProviderState>(STATE_SYMBOL),
         ...inject<StateMutations>(MUTATION_SYMBOL),
-    };
+    });
 };
