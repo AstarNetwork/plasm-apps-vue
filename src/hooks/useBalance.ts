@@ -1,7 +1,6 @@
-import { ref, onUnmounted, watch, Ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useApi } from '@/hooks';
 import BN from 'bn.js';
-import { VoidFn } from '@polkadot/api/types';
 import { useCall } from './useCall';
 import { AccountInfo } from '@polkadot/types/interfaces';
 
