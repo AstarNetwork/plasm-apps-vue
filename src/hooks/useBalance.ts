@@ -1,34 +1,30 @@
-import { ref, onUnmounted, onMounted, watchEffect, Ref } from 'vue';
+import { ref, onUnmounted, watch, Ref } from 'vue';
 import { useApi } from '@/hooks';
 import BN from 'bn.js';
-import { UnsubscribePromise } from '@polkadot/api/types';
-import { ApiPromise } from '@polkadot/api';
+import { VoidFn } from '@polkadot/api/types';
+import { useCall } from './useCall';
+import { AccountInfo } from '@polkadot/types/interfaces';
 
-export function useBalance(api: ApiPromise | null, address?: string) {
+export function useBalance(address?: string) {
+    const { api: apiRef } = useApi();
+
     const balance = ref(new BN(0));
-    const balanceAccount = ref(address);
-    const setBalanceAccount = (address: string) => {
-        balanceAccount.value = address;
-    };
-    const unsub: Ref<null | UnsubscribePromise> = ref(null);
 
-    watchEffect(() => {
-        console.log('watchEffect triggered');
-        const balanceAccountValue = balanceAccount.value;
-        console.log(balanceAccountValue);
-        if (balanceAccountValue && api) {
-            console.log(api.isReady);
-            unsub.value = api.query.system.account(balanceAccountValue, (result) => {
-                balance.value = result.data.free.toBn();
-            });
-        }
-    });
+    const { value: accountInfoRef, setCallParams: setBalanceAccount } = useCall(
+        'system',
+        'account',
+        [address],
+    );
 
-    onUnmounted(() => {
-        console.log('onUnmounted');
-        (async function () {
-            await unsub.value?.then();
-        });
-    });
+    watch(
+        () => accountInfoRef?.value,
+        (accountInfo) => {
+            // TODO assertation
+            if (accountInfo) {
+                balance.value = ((accountInfo as unknown) as AccountInfo).data.free.toBn();
+            }
+        },
+    );
+
     return { balance, setBalanceAccount };
 }

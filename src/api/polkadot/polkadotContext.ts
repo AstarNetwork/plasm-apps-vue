@@ -9,21 +9,21 @@ import { UnsubscribePromise } from '@polkadot/api/types';
 // they could just directly inject the raw state symbol and mutate it
 
 interface ProviderState {
-    api: ApiPromise;
-    currentAccount: null | KeyringPair;
-    currentBalance: null | Balance;
-    unsubscribeAccountInfo: null | UnsubscribePromise;
+    api?: ApiPromise;
+    currentAccount?: KeyringPair;
+    currentBalance?: Balance;
+    unsubscribeAccountInfo?: UnsubscribePromise;
     testCounter: number;
 }
 
 // global state that holds the reference to the API instance. This will be exposed as a readonly reference
 const state = reactive<ProviderState>({
     // start with an empty api object
-    api: new ApiPromise(),
+    api: undefined,
     // start with an empty object
-    currentAccount: null,
-    currentBalance: null,
-    unsubscribeAccountInfo: null,
+    currentAccount: undefined,
+    currentBalance: undefined,
+    unsubscribeAccountInfo: undefined,
     // fixme: this value is purely for testing the injection method
     testCounter: 0,
 });
@@ -35,7 +35,7 @@ const mutations = {
     },
     setCurrentAccount: (accountIndex: number) => {
         const api = state.api;
-        if (api === null) {
+        if (!api) {
             return;
         }
 
