@@ -84,8 +84,8 @@ export const providePolkadotContainer = (initApi: ApiPromise) => {
 
 export const usePolkadotContainerContext = () => {
     // allow access to the readonly state provided by the container
-    return toRefs({
-        ...inject<ProviderState>(STATE_SYMBOL),
+    return {
+        ...toRefs(reactive({ ...inject<ProviderState>(STATE_SYMBOL) })),
         ...inject<StateMutations>(MUTATION_SYMBOL),
-    });
+    };
 };
