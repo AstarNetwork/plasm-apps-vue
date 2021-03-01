@@ -23,7 +23,7 @@ export const providerEndpoints: ChainProvider[] = [
         networkAlias: 'dusty-testnet',
         displayName: 'Dusty Plasm Network',
         info: 'The test network of the layer 2 scaling blockchain, Dusty Plasm Network',
-        endpoint: 'wss://rpc.plasmnet.io/',
+        endpoint: 'wss://rpc.dusty.plasmnet.io/',
     },
     localNode,
 ];
