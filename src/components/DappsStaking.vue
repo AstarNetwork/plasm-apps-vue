@@ -173,24 +173,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { useApi } from '@/hooks/useApi';
 
 export default defineComponent({
     setup() {
-        const { api, testCounter, setCounter } = useApi();
-
-        const counter = ref(testCounter);
-
-        watchEffect(() => {
-            console.log('testCounter triggered');
-            console.log(counter.value);
-        });
+        const { api } = useApi();
 
         return {
             api,
-            counter,
-            setCounter,
         };
     },
 });
