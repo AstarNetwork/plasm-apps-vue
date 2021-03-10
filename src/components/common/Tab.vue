@@ -5,10 +5,11 @@
             v-for="num in labelsNumArray"
             :to="{ path: labels[num].path }"
             :key="num"
-            v-on:click="change(num)"
-            v-bind:class="[active === num ? activeLinkClass : inactiveLinkClass]"
+            v-bind:class="[active === labels[num].path ? activeLinkClass : inactiveLinkClass]"
         >
-            <span v-bind:class="[active === num ? activeSpanClass : inactiveSpanClass]">
+            <span
+                v-bind:class="[active === labels[num].path ? activeSpanClass : inactiveSpanClass]"
+            >
                 {{ labels[num].label }}
             </span>
         </router-link>
@@ -16,7 +17,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive, ref } from 'vue';
+import { computed, defineComponent, PropType, reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
     props: {
@@ -24,11 +26,9 @@ export default defineComponent({
     },
 
     setup(props) {
-        console.log(props.labels[0].path);
-        const active = ref(0);
-        const change = (num: number) => {
-            active.value = num;
-        };
+        const route = useRoute();
+        // when `route.path` is `/dapps/dapps-staking`, `active` is `dapps-staking`.
+        const active = computed(() => route.path.split('/')[2]);
         const classes = reactive({
             activeLinkClass: 'border-gray-200 dark:border-darkGray-600 border rounded-t-md',
             inactiveLinkClass: 'border-gray-50 dark:border-darkGray-900 border rounded-t-md',
@@ -41,7 +41,6 @@ export default defineComponent({
         return {
             labelsNumArray,
             active,
-            change,
             ...props,
             ...classes,
         };

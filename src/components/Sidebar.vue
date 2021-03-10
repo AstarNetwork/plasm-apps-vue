@@ -23,7 +23,7 @@
             <nav class="mt-10">
                 <router-link
                     class="flex items-center mt-4 py-2 px-6 border-l-4"
-                    :class="[$route.name === 'Balance' ? activeClass : inactiveClass]"
+                    :class="[$route.path.split('/')[1] === 'balance' ? activeClass : inactiveClass]"
                     to="/balance"
                 >
                     <span class="h-5 w-5">Balance</span>
@@ -31,7 +31,7 @@
 
                 <router-link
                     class="flex items-center mt-4 py-2 px-6 border-l-4"
-                    :class="[$route.name === 'dApps' ? activeClass : inactiveClass]"
+                    :class="[$route.path.split('/')[1] === 'dapps' ? activeClass : inactiveClass]"
                     to="/dapps"
                 >
                     <span class="h-5 w-5">dApps</span>
@@ -39,7 +39,7 @@
 
                 <router-link
                     class="flex items-center mt-4 py-2 px-6 border-l-4"
-                    :class="[$route.name === 'Staking' ? activeClass : inactiveClass]"
+                    :class="[$route.path.split('/')[1] === 'staking' ? activeClass : inactiveClass]"
                     to="/staking"
                 >
                     <span class="h-5 w-5">Staking</span>
@@ -47,7 +47,7 @@
 
                 <router-link
                     class="flex items-center mt-4 py-2 px-6 border-l-4"
-                    :class="[$route.name === 'History' ? activeClass : inactiveClass]"
+                    :class="[$route.path.split('/')[1] === 'history' ? activeClass : inactiveClass]"
                     to="/history"
                 >
                     <span class="h-5 w-5">History</span>
@@ -55,7 +55,9 @@
 
                 <router-link
                     class="flex items-center mt-4 py-2 px-6 border-l-4"
-                    :class="[$route.name === 'Lockdrop' ? activeClass : inactiveClass]"
+                    :class="[
+                        $route.path.split('/')[1] === 'lockdrop' ? activeClass : inactiveClass,
+                    ]"
                     to="/lockdrop"
                 >
                     <span class="h-5 w-5">Lockdrop</span>
