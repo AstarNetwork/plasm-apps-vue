@@ -17,6 +17,6 @@ yarn
 ## Serving
 
 ```bash
-# connect to dusty node
+# connect to dusty node by default
 yarn start
 ```
