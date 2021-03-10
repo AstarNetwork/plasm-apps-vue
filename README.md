@@ -1,22 +1,22 @@
 # Plasm apps
 
-A vue version of plasm-apps. This repository will eventually replace the current plasm-apps.
+The single place to interact with all blockchain networks within the Plasm Ecosystem.
+
+This project is still under heavy development.
+You can check the static page design from the following links.
+
+- <https://ayumitk.github.io/plasm-app-ui/>
+- <https://github.com/ayumitk/plasm-app-ui>
 
 ## Set up
 
-```
-yarn install
+```bash
+yarn
 ```
 
-## Run web app
+## Serving
 
-```
+```bash
 # connect to dusty node
-yarn serve:dusty
-
-# connect to plasm node
-yarn serve:plasm
-
-# connect to local node
-yarn serve:local
+yarn start
 ```
