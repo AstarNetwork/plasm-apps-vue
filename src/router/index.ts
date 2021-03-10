@@ -5,6 +5,8 @@ import DApps from '@/views/DApps.vue';
 import Staking from '@/views/Staking.vue';
 import History from '@/views/History.vue';
 import Lockdrop from '@/views/Lockdrop.vue';
+import DappsStaking from '@/components/DappsStaking.vue';
+import CreateDapps from '@/components/CreateDapps.vue';
 
 const routes: RouteRecordRaw[] = [
     {
@@ -20,6 +22,20 @@ const routes: RouteRecordRaw[] = [
         path: '/dapps',
         name: 'dApps',
         component: DApps,
+        children: [
+            {
+                path: '',
+                redirect: '/dapps/dapps-staking',
+            },
+            {
+                path: 'dapps-staking',
+                component: DappsStaking,
+            },
+            {
+                path: 'create-dapps',
+                component: CreateDapps,
+            },
+        ],
     },
     {
         path: '/staking',

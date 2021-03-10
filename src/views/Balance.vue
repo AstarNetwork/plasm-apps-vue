@@ -3,7 +3,6 @@
     <p class="text-gray-400">Account: {{ allAccounts ? allAccounts[0] : 'no account selected' }}</p>
     <p class="text-gray-400">Balance: {{ balance ? balance.toString(10) : 'cannot read' }}</p>
     <p class="text-gray-400">Counter: {{ testCounter ? testCounter.toString() : '0' }}</p>
-
     <p class="text-gray-400">{{ api ? api.isConnected : 'no api' }}</p>
 </template>
 
