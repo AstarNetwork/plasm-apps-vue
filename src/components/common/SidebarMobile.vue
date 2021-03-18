@@ -15,21 +15,14 @@
                     >
                         <span class="sr-only">Close sidebar</span>
                         <!-- Heroicon name: outline/x -->
-                        <svg
+                        <icon-base
                             class="h-6 w-6 text-white dark:text-darkGray-300"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                             aria-hidden="true"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
+                            <icon-outline-x />
+                        </icon-base>
                     </button>
                 </div>
                 <SidebarCommon />
@@ -45,9 +38,11 @@
 import { defineComponent } from 'vue';
 import SidebarCommon from '@/components/common/SidebarCommon.vue';
 import { useSidebar } from '@/hooks';
+import IconBase from '../icons/IconBase.vue';
+import IconOutlineX from '../icons/IconOutlineX.vue';
 
 export default defineComponent({
-    components: { SidebarCommon },
+    components: { SidebarCommon, IconBase, IconOutlineX },
     setup() {
         const { isOpen } = useSidebar();
         return {
