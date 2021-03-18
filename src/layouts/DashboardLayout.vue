@@ -1,10 +1,9 @@
 <template>
     <div class="h-screen flex overflow-hidden bg-gray-50 dark:bg-darkGray-900">
-        <SidebarMobile />
-        <SidebarDesktop />
+        <Sidebar />
         <div class="flex flex-col w-0 flex-1 overflow-y-auto lg:overflow-hidden">
             <!-- <%- include('./components/common/_header-mobile'); -%> -->
-            <HeaderMobile />
+            <Header />
             <main
                 class="flex-1 relative z-0 lg:overflow-y-auto overflow-x-hidden focus:outline-none"
             >
@@ -19,15 +18,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import SidebarMobile from '@/components/common/SidebarMobile.vue';
-import SidebarDesktop from '@/components/common/SidebarDesktop.vue';
-import HeaderMobile from '@/components/common/HeaderMobile.vue';
+import Header from '@/components/common/Header.vue';
+import Sidebar from '@/components/Sidebar.vue';
 
 export default defineComponent({
     components: {
-        SidebarMobile,
-        SidebarDesktop,
-        HeaderMobile,
+        Header,
+        Sidebar,
     },
 });
 </script>
