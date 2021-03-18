@@ -1,16 +1,17 @@
 <template>
     <!-- Off-canvas menu for mobile -->
-    <div class="hidden">
+    <div :class="isOpen ? 'block' : 'hidden'" class="lg:hidden">
         <div class="fixed inset-0 flex z-40">
             <div class="fixed inset-0">
                 <div class="absolute inset-0 bg-gray-900 dark:bg-black opacity-75"></div>
             </div>
             <div
-                class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-darkGray-800 overflow-y-auto overflow-x-hidden"
+                class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-darkGray-800 overflow-visible"
             >
                 <div class="absolute top-0 right-0 -mr-12 pt-2">
                     <button
                         class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                        @click="isOpen = false"
                     >
                         <span class="sr-only">Close sidebar</span>
                         <!-- Heroicon name: outline/x -->
@@ -43,9 +44,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SidebarCommon from '@/components/common/SidebarCommon.vue';
+import { useSidebar } from '@/hooks';
 
 export default defineComponent({
     components: { SidebarCommon },
-    setup() {},
+    setup() {
+        const { isOpen } = useSidebar();
+        return {
+            isOpen,
+        };
+    },
 });
 </script>

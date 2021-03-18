@@ -4,6 +4,7 @@
     >
         <button
             class="-ml-3 p-2 rounded-full hover:bg-blue-100 dark:hover:bg-darkGray-600 hover:text-gray-900 focus:outline-none focus:ring focus:ring-blue-100 focus:bg-blue-50 group"
+            @click="isOpen = true"
         >
             <span class="sr-only">Open sidebar</span>
             <!-- Heroicon name: outline/menu -->
@@ -60,11 +61,17 @@
 </template>
 
 <script lang="ts">
+import { useSidebar } from '@/hooks';
 import { defineComponent } from 'vue';
 import Logotype from './Logotype.vue';
 
 export default defineComponent({
     components: { Logotype },
-    setup() {},
+    setup() {
+        const { isOpen } = useSidebar();
+        return {
+            isOpen,
+        };
+    },
 });
 </script>

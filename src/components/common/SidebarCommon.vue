@@ -1,12 +1,5 @@
 <template>
-    <div class="flex-1 flex flex-col pt-10 lg:overflow-y-auto">
-        <!-- Backdrop -->
-        <div
-            :class="isOpen ? 'block' : 'hidden'"
-            @click="isOpen = false"
-            class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"
-        ></div>
-        <!-- End Backdrop -->
+    <div class="flex-1 flex flex-col pt-10 overflow-y-auto">
         <div class="flex items-center justify-center flex-shrink-0">
             <img class="w-10 h-10" src="@/assets/img/plasm.png" />
             <logotype />
