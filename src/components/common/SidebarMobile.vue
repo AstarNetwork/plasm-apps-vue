@@ -25,7 +25,7 @@
                         </icon-base>
                     </button>
                 </div>
-                <SidebarCommon />
+                <sidebar-common />
             </div>
             <div class="flex-shrink-0 w-14">
                 <!-- Force sidebar to shrink to fit close icon -->

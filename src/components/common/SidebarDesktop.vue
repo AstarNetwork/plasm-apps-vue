@@ -3,7 +3,7 @@
     <div class="hidden lg:flex lg:flex-shrink-0">
         <div class="flex flex-col w-64">
             <div class="flex flex-col h-0 flex-1 shadow bg-white dark:bg-darkGray-800">
-                <SidebarCommon />
+                <sidebar-common />
             </div>
         </div>
     </div>

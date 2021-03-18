@@ -125,8 +125,8 @@
     </div>
 
     <div class="flex-shrink-0 p-4 border-t border-gray-200 dark:border-darkGray-600">
-        <SocialMediaLinks />
-        <LightDarkMode />
+        <social-media-links />
+        <light-dark-mode />
     </div>
 </template>
 

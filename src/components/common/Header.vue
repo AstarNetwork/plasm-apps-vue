@@ -20,7 +20,7 @@
 
         <div class="flex items-center justify-center">
             <img class="w-8 h-8 sm:w-10 sm:h-10" src="@/assets/img/plasm.png" />
-            <Logotype />
+            <logotype />
         </div>
 
         <button

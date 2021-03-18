@@ -1,9 +1,9 @@
 <template>
     <div class="h-screen flex overflow-hidden bg-gray-50 dark:bg-darkGray-900">
-        <Sidebar />
+        <sidebar />
         <div class="flex flex-col w-0 flex-1 overflow-y-auto lg:overflow-hidden">
             <!-- <%- include('./components/common/_header-mobile'); -%> -->
-            <Header />
+            <plasm-header />
             <main
                 class="flex-1 relative z-0 lg:overflow-y-auto overflow-x-hidden focus:outline-none"
             >
@@ -18,12 +18,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import Header from '@/components/common/Header.vue';
+import PlasmHeader from '@/components/common/Header.vue';
 import Sidebar from '@/components/Sidebar.vue';
 
 export default defineComponent({
     components: {
-        Header,
+        PlasmHeader,
         Sidebar,
     },
 });
