@@ -31,6 +31,12 @@
         <Token />
       </div>
     </div>
+
+    <!-- Modals -->
+    <!-- <ModalNetwork /> -->
+    <!-- <ModalAccount /> -->
+    <!-- <ModalTransferAmount /> -->
+    <!-- <ModalTransferToken /> -->
   </main>
 </template>
 
@@ -42,7 +48,11 @@ import AddressChange from '@/components/common/AddressChange.vue';
 import Address from '@/components/balance/Address.vue'; 
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import Token from '@/components/balance/Token.vue'; 
-import TotalBalance from '@/components/balance/TotalBalance.vue'; 
+import TotalBalance from '@/components/balance/TotalBalance.vue';
+import ModalNetwork from '@/components/balance/ModalNetwork.vue';
+import ModalAccount from '@/components/balance/ModalAccount.vue';
+import ModalTransferAmount from '@/components/balance/ModalTransferAmount.vue';
+import ModalTransferToken from '@/components/balance/ModalTransferToken.vue';
 
 export default defineComponent({
   components: {
@@ -51,7 +61,11 @@ export default defineComponent({
     Address,
     PlmBalance,
     Token,
-    TotalBalance
+    TotalBalance,
+    ModalNetwork,
+    ModalAccount,
+    ModalTransferAmount,
+    ModalTransferToken
   },
   setup() {
     const { api, testCounter } = useApi();
@@ -60,10 +74,10 @@ export default defineComponent({
     const { balance } = useBalance(addr);
 
     return {
-        api,
-        balance,
-        allAccounts,
-        testCounter,
+      api,
+      balance,
+      allAccounts,
+      testCounter,
     };
   },
 });
