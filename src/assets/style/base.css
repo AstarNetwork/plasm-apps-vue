@@ -5,3 +5,11 @@
 @import 'tailwindcss/components';
 
 @import 'tailwindcss/utilities';
+
+.tooltip:hover span {
+    @apply block;
+}
+
+.checkbox:checked + span {
+    @apply block;
+}
