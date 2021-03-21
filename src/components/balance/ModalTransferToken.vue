@@ -35,7 +35,7 @@
                   <label
                     class="rounded-lg border border-blue-500 bg-blue-200 dark:bg-blue-500 bg-opacity-10 px-4 py-5 cursor-pointer relative block text-center">
                     <div class="h-10 w-10 rounded-full overflow-hidden mx-auto mb-2">
-                      <img src="images/ACA.96bf6b59.svg" class="h-full w-full">
+                      <img src="@/assets/img/ACA.96bf6b59.svg" class="h-full w-full">
                     </div>
                     <div>
                       <p class="text-blue-500 dark:text-blue-400 font-bold text-lg leading-tight">ACA</p>
@@ -56,7 +56,7 @@
                   <label
                     class="rounded-lg border border-gray-300 dark:border-darkGray-600 bg-white dark:bg-darkGray-900 hover:bg-gray-50 dark:hover:bg-darkGray-800 px-4 py-5 cursor-pointer group relative block text-center">
                     <div class="h-10 w-10 rounded-full overflow-hidden mx-auto mb-2">
-                      <img src="images/ACA.96bf6b59.svg" class="h-full w-full">
+                      <img src="@/assets/img/ACA.96bf6b59.svg" class="h-full w-full">
                     </div>
                     <div>
                       <p
@@ -71,7 +71,7 @@
                   <label
                     class="rounded-lg border border-gray-300 dark:border-darkGray-600 bg-white dark:bg-darkGray-900 hover:bg-gray-50 dark:hover:bg-darkGray-800 px-4 py-5 cursor-pointer group relative block text-center">
                     <div class="h-10 w-10 rounded-full overflow-hidden mx-auto mb-2">
-                      <img src="images/ACA.96bf6b59.svg" class="h-full w-full">
+                      <img src="@/assets/img/ACA.96bf6b59.svg" class="h-full w-full">
                     </div>
                     <div>
                       <p
@@ -91,6 +91,7 @@
             Confirm
           </button>
           <button type="button"
+            @click="closeModal"
             class="inline-flex items-center px-6 py-2 border border-gray-300 dark:border-darkGray-600 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1">
             Cancel
           </button>
@@ -104,5 +105,15 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
 
+  setup (props, { emit }) {
+    
+    const closeModal = () => {
+      emit("update:is-open", false)
+    }
+
+    return {
+      closeModal
+    }
+  }
 })
 </script>

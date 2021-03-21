@@ -7,6 +7,8 @@ import History from '@/views/History.vue';
 import Lockdrop from '@/views/Lockdrop.vue';
 import DappsStaking from '@/components/DappsStaking.vue';
 import CreateDapps from '@/components/CreateDapps.vue';
+import BalancePlasm from '@/components/balance/BalancePlasm.vue';
+import CrossChain from '@/components/balance/CrossChain.vue';
 
 const routes: RouteRecordRaw[] = [
     {
@@ -17,6 +19,20 @@ const routes: RouteRecordRaw[] = [
         path: '/balance',
         name: 'Balance',
         component: Balance,
+        children: [
+            {
+                path: '',
+                redirect: '/balance/balance-plasm'
+            },
+            {
+                path: 'balance-plasm',
+                component: BalancePlasm
+            },
+            {
+                path: 'cross-chain',
+                component: CrossChain
+            }
+        ]
     },
     {
         path: '/dapps',

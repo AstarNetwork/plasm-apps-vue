@@ -3,7 +3,7 @@
     <div class="flex justify-between">
       <div class="flex items-center">
         <div class="h-10 w-10 rounded-full overflow-hidden mr-2">
-          <img src="images/ACA.96bf6b59.svg" class="h-full w-full">
+          <img src="@/assets/img/ACA.96bf6b59.svg" class="h-full w-full">
         </div>
         <div>
           <p class="text-blue-900 dark:text-darkGray-100 font-bold text-lg leading-tight">ACA</p>
@@ -32,6 +32,7 @@
 
     <div class="text-center">
       <button type="button"
+        @click="openTransferModal"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400">
         Transfer
       </button>
@@ -42,6 +43,14 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  setup (props, { emit }) {
+    const openTransferModal = (): void => {
+      emit("update:is-open-transfer", true)
+    }
 
+    return {
+      openTransferModal
+    }
+  }
 })
 </script>

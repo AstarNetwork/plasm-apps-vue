@@ -140,6 +140,7 @@
             Confirm
           </button>
           <button type="button"
+            @click="closeModal"
             class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1">
             Cancel
           </button>
@@ -155,6 +156,16 @@ import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOpt
 export default defineComponent({
   components: {
     ModalSelectAccountOption
+  },
+  setup (props, { emit }) {
+    
+    const closeModal = () => {
+      emit("update:is-open", false)
+    }
+
+    return {
+      closeModal
+    }
   }
 })
 </script>

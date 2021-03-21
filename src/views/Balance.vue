@@ -11,74 +11,30 @@
             { label: 'Cross-chain', path: 'cross-chain' },
           ]"
         />
-        <AddressChange />
+        <!-- <AddressChange /> -->
       </div>
 
-      <div class="grid lg:grid-cols-2 gap-4 mb-4">
-        <Address />
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <TotalBalance />
-        <PlmBalance />
-      </div>
-
-      <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Token />
-        <Token />
-        <Token />
-      </div>
+      <router-view />
     </div>
-
-    <!-- Modals -->
-    <!-- <ModalNetwork /> -->
-    <!-- <ModalAccount /> -->
-    <!-- <ModalTransferAmount /> -->
-    <!-- <ModalTransferToken /> -->
   </main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useApi, useAccount, useBalance } from '@/hooks';
+// import { useApi, useAccount, useBalance } from '@/hooks';
 import Tab from '@/components/common/Tab.vue';
-import AddressChange from '@/components/common/AddressChange.vue';
-import Address from '@/components/balance/Address.vue'; 
-import PlmBalance from '@/components/balance/PlmBalance.vue';
-import Token from '@/components/balance/Token.vue'; 
-import TotalBalance from '@/components/balance/TotalBalance.vue';
-import ModalNetwork from '@/components/balance/ModalNetwork.vue';
-import ModalAccount from '@/components/balance/ModalAccount.vue';
-import ModalTransferAmount from '@/components/balance/ModalTransferAmount.vue';
-import ModalTransferToken from '@/components/balance/ModalTransferToken.vue';
+// import AddressChange from '@/components/common/AddressChange.vue';
 
 export default defineComponent({
   components: {
     Tab,
-    AddressChange,
-    Address,
-    PlmBalance,
-    Token,
-    TotalBalance,
-    ModalNetwork,
-    ModalAccount,
-    ModalTransferAmount,
-    ModalTransferToken
+    // AddressChange
   },
   setup() {
-    const { api, testCounter } = useApi();
-    const { allAccounts } = useAccount();
-    const addr = 'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E';
-    const { balance } = useBalance(addr);
-
-    return {
-      api,
-      balance,
-      allAccounts,
-      testCounter,
-    };
+    // const { api, testCounter } = useApi();
+    // const { allAccounts } = useAccount();
+    // const addr = 'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E';
+    // const { balance } = useBalance(addr);
   },
 });
 </script>

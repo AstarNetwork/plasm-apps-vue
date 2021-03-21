@@ -63,6 +63,7 @@
 
       <div class="mt-3 text-center mb-6 sm:mb-0">
         <button type="button"
+          @click="openTransferModal"
           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-0.5">
           Transfer
         </button>
@@ -102,6 +103,14 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  setup (props, { emit }) {
+    const openTransferModal = (): void => {
+      emit("update:is-open-transfer", true)
+    }
 
+    return {
+      openTransferModal
+    }
+  }
 })
 </script>
