@@ -1,12 +1,8 @@
 <template>
-  <div>
-    CrossChain
-  </div>
+  <div>CrossChain</div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({
-
-})
+export default defineComponent({});
 </script>

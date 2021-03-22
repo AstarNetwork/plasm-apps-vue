@@ -9,63 +9,67 @@ import { UnsubscribePromise } from '@polkadot/api/types';
 // they could just directly inject the raw state symbol and mutate it
 
 interface ProviderState {
-    api?: ApiPromise;
-    currentAccount?: KeyringPair;
-    currentBalance?: Balance;
-    unsubscribeAccountInfo?: UnsubscribePromise;
-    testCounter: number;
+  api?: ApiPromise;
+  currentAccount?: KeyringPair;
+  currentBalance?: Balance;
+  unsubscribeAccountInfo?: UnsubscribePromise;
+  testCounter: number;
 }
 
 // global state that holds the reference to the API instance. This will be exposed as a readonly reference
 const state = reactive<ProviderState>({
-    // start with an empty api object
-    api: undefined,
-    // start with an empty object
-    currentAccount: undefined,
-    currentBalance: undefined,
-    unsubscribeAccountInfo: undefined,
-    // fixme: this value is purely for testing the injection method
-    testCounter: 0,
+  // start with an empty api object
+  api: undefined,
+  // start with an empty object
+  currentAccount: undefined,
+  currentBalance: undefined,
+  unsubscribeAccountInfo: undefined,
+  // fixme: this value is purely for testing the injection method
+  testCounter: 0,
 });
 
 // methods that can mutate the global state
 const mutations = {
-    setApi: (apiInst: ApiPromise) => {
-        state.api = apiInst;
-    },
-    setCurrentAccount: (accountIndex: number) => {
-        const api = state.api;
-        if (!api) {
-            return;
-        }
+  setApi: (apiInst: ApiPromise) => {
+    state.api = apiInst;
+  },
+  setCurrentAccount: (accountIndex: number) => {
+    const api = state.api;
+    if (!api) {
+      return;
+    }
 
-        const accounts = keyring.getPairs();
-        const accountsLength = accounts.length;
-        if (accountsLength === 0 || accountIndex > accountsLength || accountIndex < 0) {
-            return;
-        }
-        // unsubscribe previous AccountInfo
-        const unsub = state.unsubscribeAccountInfo;
-        if (unsub) {
-            (async function () {
-                (await unsub)();
-            })();
-        }
+    const accounts = keyring.getPairs();
+    const accountsLength = accounts.length;
+    if (
+      accountsLength === 0 ||
+      accountIndex > accountsLength ||
+      accountIndex < 0
+    ) {
+      return;
+    }
+    // unsubscribe previous AccountInfo
+    const unsub = state.unsubscribeAccountInfo;
+    if (unsub) {
+      (async function () {
+        (await unsub)();
+      })();
+    }
 
-        const currentAccount = accounts[accountIndex];
-        state.currentAccount = currentAccount;
+    const currentAccount = accounts[accountIndex];
+    state.currentAccount = currentAccount;
 
-        // subscribe current AccountInfo
-        state.unsubscribeAccountInfo = api.query.system.account(
-            currentAccount.address,
-            (result) => {
-                state.currentBalance = result.data.free.toBn();
-            },
-        );
-    },
-    setCounter: (val: number) => {
-        state.testCounter = val;
-    },
+    // subscribe current AccountInfo
+    state.unsubscribeAccountInfo = api.query.system.account(
+      currentAccount.address,
+      (result) => {
+        state.currentBalance = result.data.free.toBn();
+      }
+    );
+  },
+  setCounter: (val: number) => {
+    state.testCounter = val;
+  },
 };
 
 type StateMutations = typeof mutations;
@@ -75,17 +79,17 @@ const STATE_SYMBOL = Symbol('polkadot API read state');
 const MUTATION_SYMBOL = Symbol('polkadot API state mutation');
 
 export const providePolkadotContainer = (initApi: ApiPromise) => {
-    mutations.setApi(initApi);
+  mutations.setApi(initApi);
 
-    // provide a readonly reference of the current state and mutation methods
-    provide(STATE_SYMBOL, toRefs(readonly(state)));
-    provide(MUTATION_SYMBOL, mutations);
+  // provide a readonly reference of the current state and mutation methods
+  provide(STATE_SYMBOL, toRefs(readonly(state)));
+  provide(MUTATION_SYMBOL, mutations);
 };
 
 export const usePolkadotContainerContext = () => {
-    // allow access to the readonly state provided by the container
-    return {
-        ...toRefs(reactive({ ...inject<ProviderState>(STATE_SYMBOL) })),
-        ...inject<StateMutations>(MUTATION_SYMBOL),
-    };
+  // allow access to the readonly state provided by the container
+  return {
+    ...toRefs(reactive({ ...inject<ProviderState>(STATE_SYMBOL) })),
+    ...inject<StateMutations>(MUTATION_SYMBOL),
+  };
 };

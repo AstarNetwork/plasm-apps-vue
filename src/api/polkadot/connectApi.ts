@@ -7,68 +7,72 @@ import * as plasmDefinitions from '@plasm/types/interfaces/definitions';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
 interface InjectedAccountExt {
-    address: string;
-    meta: {
-        name: string;
-        source: string;
-    };
+  address: string;
+  meta: {
+    name: string;
+    source: string;
+  };
 }
 
 const injectedPromise = web3Enable('polkadot-js/apps');
 
 const loadAccounts = async (api: ApiPromise) => {
-    // wait for the WASM crypto libraries to load first
-    await cryptoWaitReady();
+  // wait for the WASM crypto libraries to load first
+  await cryptoWaitReady();
 
-    const [systemChain, injectedAccounts] = await Promise.all([
-        api.rpc.system.chain() as any,
-        web3Accounts().then((accounts): InjectedAccountExt[] =>
-            accounts.map(
-                ({ address, meta }): InjectedAccountExt => ({
-                    address,
-                    meta: {
-                        ...meta,
-                        name: `${meta.name} (${
-                            meta.source === 'polkadot-js' ? 'extension' : meta.source
-                        })`,
-                    },
-                }),
-            ),
-        ),
-    ]);
-    const isDevelopment = isTestChain(systemChain ? systemChain.toString() : '<unknown>');
+  const [systemChain, injectedAccounts] = await Promise.all([
+    api.rpc.system.chain() as any,
+    web3Accounts().then((accounts): InjectedAccountExt[] =>
+      accounts.map(
+        ({ address, meta }): InjectedAccountExt => ({
+          address,
+          meta: {
+            ...meta,
+            name: `${meta.name} (${
+              meta.source === 'polkadot-js' ? 'extension' : meta.source
+            })`,
+          },
+        })
+      )
+    ),
+  ]);
+  const isDevelopment = isTestChain(
+    systemChain ? systemChain.toString() : '<unknown>'
+  );
 
-    keyring.loadAll(
-        {
-            genesisHash: api.genesisHash,
-            isDevelopment,
-            type: 'ed25519',
-        },
-        injectedAccounts,
-    );
+  keyring.loadAll(
+    {
+      genesisHash: api.genesisHash,
+      isDevelopment,
+      type: 'ed25519',
+    },
+    injectedAccounts
+  );
 };
 
 export const connectApi = async (endpoint: string) => {
-    const provider = new WsProvider(endpoint);
+  const provider = new WsProvider(endpoint);
 
-    const types = Object.values(plasmDefinitions).reduce(
-        (res, { types }): object => ({ ...res, ...types }),
-        {},
-    );
+  const types = Object.values(plasmDefinitions).reduce(
+    (res, { types }): object => ({ ...res, ...types }),
+    {}
+  );
 
-    const api = await new ApiPromise({
-        provider,
-        types,
-    }).isReady;
+  const api = await new ApiPromise({
+    provider,
+    types,
+  }).isReady;
 
-    try {
-        await loadAccounts(api);
-    } catch (err) {
-        console.error(err);
-    }
+  try {
+    await loadAccounts(api);
+  } catch (err) {
+    console.error(err);
+  }
 
-    // load the web3 extension
-    injectedPromise.then((): void => {}).catch((error: Error) => console.error(error));
+  // load the web3 extension
+  injectedPromise
+    .then((): void => {})
+    .catch((error: Error) => console.error(error));
 
-    return api;
+  return api;
 };

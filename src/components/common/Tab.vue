@@ -5,10 +5,14 @@
       v-for="num in labelsNumArray"
       :to="{ path: labels[num].path }"
       :key="num"
-      v-bind:class="[active === labels[num].path ? activeLinkClass : inactiveLinkClass]"
+      v-bind:class="[
+        active === labels[num].path ? activeLinkClass : inactiveLinkClass,
+      ]"
     >
       <span
-        v-bind:class="[active === labels[num].path ? activeSpanClass : inactiveSpanClass]"
+        v-bind:class="[
+          active === labels[num].path ? activeSpanClass : inactiveSpanClass,
+        ]"
       >
         {{ labels[num].label }}
       </span>
@@ -22,7 +26,10 @@ import { useRoute } from 'vue-router';
 
 export default defineComponent({
   props: {
-    labels: { type: Array as PropType<Array<{ label: string; path: string }>>, required: true },
+    labels: {
+      type: Array as PropType<Array<{ label: string; path: string }>>,
+      required: true,
+    },
   },
 
   setup(props) {
@@ -30,14 +37,18 @@ export default defineComponent({
     // when `route.path` is `/dapps/dapps-staking`, `active` is `dapps-staking`.
     const active = computed(() => route.path.split('/')[2]);
     const classes = reactive({
-      activeLinkClass: 'border-gray-200 dark:border-darkGray-600 border rounded-t-md',
-      inactiveLinkClass: 'border-gray-50 dark:border-darkGray-900 border rounded-t-md',
+      activeLinkClass:
+        'border-gray-200 dark:border-darkGray-600 border rounded-t-md',
+      inactiveLinkClass:
+        'border-gray-50 dark:border-darkGray-900 border rounded-t-md',
       activeSpanClass:
         'block bg-gray-50 dark:bg-darkGray-900 -mb-px whitespace-nowrap py-3 sm:py-5 px-8 text-blue-900 dark:text-darkGray-300 font-medium rounded-t-md border-gray-50 dark:border-darkGray-900 border-b',
       inactiveSpanClass:
         'block bg-gray-50 dark:bg-darkGray-900 -mb-px whitespace-nowrap py-3 sm:py-5 px-8 text-blue-500 dark:text-blue-400 font-medium rounded-t-md border-gray-200 dark:border-darkGray-600 border-b hover:text-blue-400 dark:hover:text-blue-300',
     });
-    const labelsNumArray = computed(() => [...Array(props.labels.length).keys()]);
+    const labelsNumArray = computed(() => [
+      ...Array(props.labels.length).keys(),
+    ]);
     return {
       labelsNumArray,
       active,

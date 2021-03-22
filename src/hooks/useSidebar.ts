@@ -1,11 +1,11 @@
 import { reactive, toRefs } from 'vue';
 
 const state = reactive({
-    isOpen: false,
+  isOpen: false,
 });
 
 export function useSidebar() {
-    return {
-        ...toRefs(state),
-    };
+  return {
+    ...toRefs(state),
+  };
 }

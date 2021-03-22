@@ -8,11 +8,13 @@
         </icon-base>
       </div>
       <div class="ml-3">
-        <h3 class="text-sm font-bold text-blue-500">Support dApps and Earn PLMs</h3>
+        <h3 class="text-sm font-bold text-blue-500">
+          Support dApps and Earn PLMs
+        </h3>
         <div class="mt-2 text-sm text-blue-700">
           <p>
-            PLM holders can stake PLMs on dApps so that both application developers and
-            PLM holders receive staking rewards.
+            PLM holders can stake PLMs on dApps so that both application
+            developers and PLM holders receive staking rewards.
             <a href="#" class="text-blue-500 underline hover:text-blue-400"
               >Learn more hear</a
             >.
@@ -22,7 +24,9 @@
     </div>
   </div>
 
-  <h2 class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight">
+  <h2
+    class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
+  >
     Team and Projects Building on Plasm Network
   </h2>
 
@@ -40,7 +44,9 @@
           <option>#Parachains</option>
           <option>#Others</option>
         </select>
-        <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+        <span
+          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+        >
           <!-- Heroicon name: solid/selector -->
           <icon-base
             class="h-5 w-5 text-gray-400 dark:text-darkGray-400"
@@ -61,7 +67,9 @@
           <option>#Yours</option>
           <option>#Staked</option>
         </select>
-        <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+        <span
+          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+        >
           <!-- Heroicon name: solid/selector -->
           <icon-base
             class="h-5 w-5 text-gray-400 dark:text-darkGray-400"

@@ -3,7 +3,11 @@
     <!-- TODO: Links -->
     <a href="#" :class="classes.link">
       <!-- original icon -->
-      <icon-base :class="classes.iconBase" viewBox="0 0 512 512" iconName="Twitter">
+      <icon-base
+        :class="classes.iconBase"
+        viewBox="0 0 512 512"
+        iconName="Twitter"
+      >
         <icon-twitter />
       </icon-base>
       <!-- Tooltip -->
@@ -12,7 +16,11 @@
 
     <a href="#" :class="classes.link">
       <!-- original icon -->
-      <icon-base :class="classes.iconBase" viewBox="0 0 448 512" iconName="Telegram">
+      <icon-base
+        :class="classes.iconBase"
+        viewBox="0 0 448 512"
+        iconName="Telegram"
+      >
         <icon-telegram />
       </icon-base>
       <!-- Tooltip -->
@@ -21,7 +29,11 @@
 
     <a href="#" :class="classes.link">
       <!-- original icon -->
-      <icon-base :class="classes.iconBase" viewBox="0 0 448 512" iconName="Discord">
+      <icon-base
+        :class="classes.iconBase"
+        viewBox="0 0 448 512"
+        iconName="Discord"
+      >
         <icon-discord />
       </icon-base>
       <!-- Tooltip -->
@@ -30,7 +42,11 @@
 
     <a href="#" :class="classes.link">
       <!-- original icon -->
-      <icon-base :class="classes.iconBase" viewBox="0 0 496 512" iconName="GitHub">
+      <icon-base
+        :class="classes.iconBase"
+        viewBox="0 0 496 512"
+        iconName="GitHub"
+      >
         <icon-github />
       </icon-base>
 
@@ -65,7 +81,14 @@ import IconGithub from '../icons/IconGithub.vue';
 import IconDiscord from '../icons/IconDiscord.vue';
 
 export default defineComponent({
-  components: { IconBase, IconTwitter, IconTelegram, IconDocument, IconGithub, IconDiscord },
+  components: {
+    IconBase,
+    IconTwitter,
+    IconTelegram,
+    IconDocument,
+    IconGithub,
+    IconDiscord,
+  },
   setup() {
     const classes = reactive({
       link:

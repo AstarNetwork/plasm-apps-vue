@@ -4,7 +4,11 @@
       type="button"
       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
     >
-      <icon-base class="w-5 h-5 text-white -ml-1" stroke="currentColor" icon-name="plus">
+      <icon-base
+        class="w-5 h-5 text-white -ml-1"
+        stroke="currentColor"
+        icon-name="plus"
+      >
         <icon-plus />
       </icon-base>
       Create your dApp
@@ -25,7 +29,11 @@
     </button>
   </div>
 
-  <h2 class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight">Contract</h2>
+  <h2
+    class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
+  >
+    Contract
+  </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
     <!-- <%- include('./components/dapps/_contract-item'); -%>

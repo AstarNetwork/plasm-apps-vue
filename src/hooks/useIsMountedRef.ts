@@ -1,17 +1,17 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 export const useIsMountedRef = () => {
-    const isMounted = ref(false);
+  const isMounted = ref(false);
 
-    // todo: add context check for the current component
+  // todo: add context check for the current component
 
-    onMounted(() => {
-        isMounted.value = true;
-    });
+  onMounted(() => {
+    isMounted.value = true;
+  });
 
-    onUnmounted(() => {
-        isMounted.value = false;
-    });
+  onUnmounted(() => {
+    isMounted.value = false;
+  });
 
-    return isMounted;
+  return isMounted;
 };

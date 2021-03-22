@@ -19,8 +19,14 @@
 
     <!-- Modals -->
     <ModalAccount v-if="modalAccount" v-model:isOpen="modalAccount" />
-    <ModalTransferAmount v-if="modalTransferAmount" v-model:isOpen="modalTransferAmount" />
-    <ModalTransferToken v-if="modalTransferToken" v-model:isOpen="modalTransferToken" />
+    <ModalTransferAmount
+      v-if="modalTransferAmount"
+      v-model:isOpen="modalTransferAmount"
+    />
+    <ModalTransferToken
+      v-if="modalTransferToken"
+      v-model:isOpen="modalTransferToken"
+    />
   </div>
 </template>
 <script lang="ts">

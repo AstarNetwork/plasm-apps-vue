@@ -8,12 +8,16 @@
     <div class="p-4">
       <button
         type="button"
-        @click="modalNetwork=true"
+        @click="modalNetwork = true"
         class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
       >
         Plasm Network (Mainnet)
         <!-- Heroicon name: solid/chevron-down -->
-        <icon-base class="-mr-1 ml-2 h-4 w-4" viewBox="0 0 20 20" aria-hidden="true">
+        <icon-base
+          class="-mr-1 ml-2 h-4 w-4"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
           <icon-solid-chevron-down />
         </icon-base>
       </button>
@@ -23,13 +27,17 @@
       <router-link
         to="/balance"
         :class="[
-          $route.path.split('/')[1] === 'balance' ? activeLinkClass : inactiveLinkClass,
+          $route.path.split('/')[1] === 'balance'
+            ? activeLinkClass
+            : inactiveLinkClass,
         ]"
       >
         <!-- original icon -->
         <icon-base
           :class="[
-            $route.path.split('/')[1] === 'balance' ? activeSvgClass : inactiveSvgClass,
+            $route.path.split('/')[1] === 'balance'
+              ? activeSvgClass
+              : inactiveSvgClass,
           ]"
           viewBox="0 0 24 24"
         >
@@ -43,20 +51,26 @@
           >
             <span>AddressName</span><span class="ml-2">100PLM</span>
           </p>
-          <p class="text-xs text-gray-500 dark:text-darkGray-400">5Hn8MM......2dZzwc</p>
+          <p class="text-xs text-gray-500 dark:text-darkGray-400">
+            5Hn8MM......2dZzwc
+          </p>
         </span>
       </router-link>
 
       <router-link
         to="/dapps"
         :class="[
-          $route.path.split('/')[1] === 'dapps' ? activeLinkClass : inactiveLinkClass,
+          $route.path.split('/')[1] === 'dapps'
+            ? activeLinkClass
+            : inactiveLinkClass,
         ]"
       >
         <!-- original icon -->
         <icon-base
           :class="[
-            $route.path.split('/')[1] === 'dapps' ? activeSvgClass : inactiveSvgClass,
+            $route.path.split('/')[1] === 'dapps'
+              ? activeSvgClass
+              : inactiveSvgClass,
           ]"
           viewBox="0 0 24 24"
         >
@@ -68,13 +82,17 @@
       <router-link
         to="/staking"
         :class="[
-          $route.path.split('/')[1] === 'staking' ? activeLinkClass : inactiveLinkClass,
+          $route.path.split('/')[1] === 'staking'
+            ? activeLinkClass
+            : inactiveLinkClass,
         ]"
       >
         <!-- original icon -->
         <icon-base
           :class="[
-            $route.path.split('/')[1] === 'staking' ? activeSvgClass : inactiveSvgClass,
+            $route.path.split('/')[1] === 'staking'
+              ? activeSvgClass
+              : inactiveSvgClass,
           ]"
           viewBox="0 0 24 24"
         >
@@ -86,7 +104,9 @@
       <router-link
         to="/lockdrop"
         :class="[
-          $route.path.split('/')[1] === 'lockdrop' ? activeLinkClass : inactiveLinkClass,
+          $route.path.split('/')[1] === 'lockdrop'
+            ? activeLinkClass
+            : inactiveLinkClass,
         ]"
       >
         <!-- Heroicon name: outline/lock-closed -->
@@ -108,13 +128,17 @@
       <router-link
         to="/history"
         :class="[
-          $route.path.split('/')[1] === 'history' ? activeLinkClass : inactiveLinkClass,
+          $route.path.split('/')[1] === 'history'
+            ? activeLinkClass
+            : inactiveLinkClass,
         ]"
       >
         <!-- original icon -->
         <icon-base
           :class="[
-            $route.path.split('/')[1] === 'history' ? activeSvgClass : inactiveSvgClass,
+            $route.path.split('/')[1] === 'history'
+              ? activeSvgClass
+              : inactiveSvgClass,
           ]"
           viewBox="0 0 24 24"
         >
@@ -125,11 +149,13 @@
     </nav>
   </div>
 
-  <div class="flex-shrink-0 p-4 border-t border-gray-200 dark:border-darkGray-600">
+  <div
+    class="flex-shrink-0 p-4 border-t border-gray-200 dark:border-darkGray-600"
+  >
     <social-media-links />
     <light-dark-mode />
   </div>
-  
+
   <!-- Modals -->
   <ModalNetwork v-if="modalNetwork" v-model:isOpen="modalNetwork" />
 </template>
@@ -161,7 +187,7 @@ export default defineComponent({
     IconBalance,
     IconHistory,
     IconSolidChevronDown,
-    ModalNetwork
+    ModalNetwork,
   },
   setup() {
     const { isOpen } = useSidebar();

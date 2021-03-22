@@ -3,7 +3,9 @@
   <div :class="isOpen ? 'block' : 'hidden'" class="lg:hidden">
     <div class="fixed inset-0 flex z-40">
       <div class="fixed inset-0">
-        <div class="absolute inset-0 bg-gray-900 dark:bg-black opacity-75"></div>
+        <div
+          class="absolute inset-0 bg-gray-900 dark:bg-black opacity-75"
+        ></div>
       </div>
       <div
         class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-darkGray-800 overflow-visible"
