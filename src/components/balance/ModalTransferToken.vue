@@ -87,6 +87,7 @@
         </div>
         <div class="mt-5 sm:mt-6 flex justify-center flex-row-reverse">
           <button type="button"
+            @click="closeModal"
             class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1">
             Confirm
           </button>
