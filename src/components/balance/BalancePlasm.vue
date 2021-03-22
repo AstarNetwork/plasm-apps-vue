@@ -24,14 +24,20 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import Address from '@/components/balance/Address.vue'; 
+import { defineComponent, reactive, toRefs } from 'vue';
+import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
 import Token from '@/components/balance/Token.vue';
 import ModalAccount from '@/components/balance/ModalAccount.vue';
 import ModalTransferAmount from '@/components/balance/ModalTransferAmount.vue';
 import ModalTransferToken from '@/components/balance/ModalTransferToken.vue';
+
+interface Modal {
+  modalAccount: boolean;
+  modalTransferAmount: boolean;
+  modalTransferToken: boolean;
+}
 
 export default defineComponent({
   components: {
@@ -41,18 +47,18 @@ export default defineComponent({
     Token,
     ModalAccount,
     ModalTransferAmount,
-    ModalTransferToken
+    ModalTransferToken,
   },
   setup() {
-    const modalAccount = ref(false);
-    const modalTransferAmount = ref(false);
-    const modalTransferToken = ref(false);
+    const stateModal = reactive<Modal>({
+      modalAccount: false,
+      modalTransferAmount: false,
+      modalTransferToken: false,
+    });
 
     return {
-      modalAccount,
-      modalTransferAmount,
-      modalTransferToken,
+      ...toRefs(stateModal),
     };
-  }
-})
+  },
+});
 </script>
