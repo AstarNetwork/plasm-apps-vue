@@ -16,10 +16,10 @@ jobs:
                   node-version: ${{ matrix.node-version }}
             - name: Install Yarn
               run: npm install -g yarn
-            - name: lint
+            - name: lint checks
               run: |
                   yarn install --frozen-lockfile
-                  yarn lint
+                  yarn lint:check
 
     test:
         name: Testing
