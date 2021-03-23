@@ -4,13 +4,13 @@ import BN from 'bn.js';
 export type Address = string;
 export type Balance = BN;
 export type BalanceFull = {
-    free: Balance;
-    reserved: Balance;
-    miscFrozen: Balance;
-    feeFrozen: Balance;
+  free: Balance;
+  reserved: Balance;
+  miscFrozen: Balance;
+  feeFrozen: Balance;
 };
 export type AccountInfo = {
-    nonce: number;
-    refcount: number;
-    data: BalanceFull;
+  nonce: number;
+  refcount: number;
+  data: BalanceFull;
 };

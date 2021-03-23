@@ -7,6 +7,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
+        "lint:check": "vue-cli-service lint --no-fix",
         "test": "jest ./src --passWithNoTests"
     },
     "dependencies": {

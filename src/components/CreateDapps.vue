@@ -1,42 +1,50 @@
 <template>
-    <div class="mt-3 mb-12">
-        <button
-            type="button"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
-        >
-            <icon-base class="w-5 h-5 text-white -ml-1" stroke="currentColor" icon-name="plus">
-                <icon-plus />
-            </icon-base>
-            Create your dApp
-        </button>
-        <button
-            type="button"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
-        >
-            <icon-base
-                class="w-5 h-5 text-blue-500 dark:text-blue-400 -ml-1 dark:group-hover:text-blue-300"
-                icon-name="plus"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-            >
-                <icon-plus />
-            </icon-base>
-            Add an existing code hash
-        </button>
-    </div>
+  <div class="mt-3 mb-12">
+    <button
+      type="button"
+      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
+    >
+      <icon-base
+        class="w-5 h-5 text-white -ml-1"
+        stroke="currentColor"
+        icon-name="plus"
+      >
+        <icon-plus />
+      </icon-base>
+      Create your dApp
+    </button>
+    <button
+      type="button"
+      class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
+    >
+      <icon-base
+        class="w-5 h-5 text-blue-500 dark:text-blue-400 -ml-1 dark:group-hover:text-blue-300"
+        icon-name="plus"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <icon-plus />
+      </icon-base>
+      Add an existing code hash
+    </button>
+  </div>
 
-    <h2 class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight">Contract</h2>
+  <h2
+    class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
+  >
+    Contract
+  </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-        <!-- <%- include('./components/dapps/_contract-item'); -%>
-                    <%- include('./components/dapps/_contract-item'); -%>
-                      <%- include('./components/dapps/_contract-item'); -%>
-                        <%- include('./components/dapps/_contract-item'); -%>
-                          <%- include('./components/dapps/_contract-item'); -%>
-                            <%- include('./components/dapps/_contract-item'); -%>
-                              <%- include('./components/dapps/_contract-item'); -%>
-                                <%- include('./components/dapps/_contract-item'); -%> -->
-    </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+    <!-- <%- include('./components/dapps/_contract-item'); -%>
+          <%- include('./components/dapps/_contract-item'); -%>
+            <%- include('./components/dapps/_contract-item'); -%>
+            <%- include('./components/dapps/_contract-item'); -%>
+              <%- include('./components/dapps/_contract-item'); -%>
+              <%- include('./components/dapps/_contract-item'); -%>
+                <%- include('./components/dapps/_contract-item'); -%>
+                <%- include('./components/dapps/_contract-item'); -%> -->
+  </div>
 </template>
 
 <script lang="ts">
@@ -46,13 +54,13 @@ import IconPlus from './icons/IconPlus.vue';
 import IconBase from './icons/IconBase.vue';
 
 export default defineComponent({
-    components: { IconPlus, IconBase },
-    setup() {
-        const { api } = useApi();
+  components: { IconPlus, IconBase },
+  setup() {
+    const { api } = useApi();
 
-        return {
-            api,
-        };
-    },
+    return {
+      api,
+    };
+  },
 });
 </script>
