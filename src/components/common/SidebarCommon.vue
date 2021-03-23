@@ -31,6 +31,8 @@
             ? activeLinkClass
             : inactiveLinkClass,
         ]"
+        class="items-center justify-center"
+        style="height: 104px"
       >
         <!-- original icon -->
         <icon-base

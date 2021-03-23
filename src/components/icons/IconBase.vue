@@ -4,6 +4,7 @@
     :width="width"
     :height="height"
     :viewBox="viewBox"
+    :fill="fill"
     :aria-labelledby="iconName"
     role="presentation"
   >
@@ -34,6 +35,10 @@ export default defineComponent({
     viewBox: {
       type: String,
       default: '0 0 24 24',
+    },
+    fill: {
+      type: String,
+      default: 'none',
     },
     iconColor: {
       type: String,

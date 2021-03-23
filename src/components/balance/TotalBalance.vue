@@ -13,43 +13,29 @@
       </p>
       <p class="text-xs text-center">
         <span class="text-red-300 dark:text-red-400">-$698.68 (3.14%)</span>
-        <span class="text-red-300 dark:text-red-400">
-          <!-- Heroicon name: outline/trending-down -->
-          <svg
+        <span class="text-red-300 dark:text-red-400 mx-1">
+          <icon-base
             class="w-4 h-4 inline"
-            xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-            />
-          </svg>
+            <icon-trending-down />
+          </icon-base>
         </span>
         <span>24h</span>
       </p>
       <p class="text-xs text-center">
         <span class="text-green-300 dark:text-green-400">+$698.68 (3.14%)</span>
-        <span class="text-green-300 dark:text-green-400">
-          <!-- Heroicon name: outline/trending-up -->
-          <svg
+        <span class="text-green-300 dark:text-green-400 mx-1">
+          <icon-base
             class="w-4 h-4 inline"
-            xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-            />
-          </svg>
+            <icon-trending-up />
+          </icon-base>
         </span>
         <span>24h</span>
       </p>
@@ -58,6 +44,15 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import IconBase from '@/components/icons/IconBase.vue';
+import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
+import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
-export default defineComponent({});
+export default defineComponent({
+  components: {
+    IconBase,
+    IconTrendingDown,
+    IconTrendingUp,
+  },
+});
 </script>

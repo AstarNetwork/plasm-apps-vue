@@ -28,20 +28,13 @@
               >
               <span class="block font-semibold text-2xl mb-1">0 XXX</span>
               <span class="block font-normal text-sm mb-2">≈US $0</span>
-              <!-- Heroicon name: solid/chevron-down -->
-              <svg
+
+              <icon-base
                 class="h-6 w-6 dark:text-darkGray-300 absolute top-1/2 right-5 -mt-2"
-                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+                <icon-solid-chevron-down />
+              </icon-base>
             </button>
 
             <form>
@@ -61,123 +54,9 @@
                         <div
                           class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-3 flex-shrink-0"
                         >
-                          <svg class="h-full w-full" viewBox="0 0 64 64">
-                            <circle cx="32" cy="32" fill="#eee" r="32"></circle>
-                            <circle
-                              cx="32"
-                              cy="8"
-                              fill="hsl(230, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="32"
-                              cy="20"
-                              fill="hsl(90, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="21.607695154586736"
-                              cy="14"
-                              fill="hsl(320, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="11.215390309173472"
-                              cy="20"
-                              fill="hsl(230, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="21.607695154586736"
-                              cy="26"
-                              fill="hsl(90, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="11.215390309173472"
-                              cy="32"
-                              fill="hsl(320, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="11.215390309173472"
-                              cy="44"
-                              fill="hsl(230, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="21.607695154586736"
-                              cy="38"
-                              fill="hsl(90, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="21.607695154586736"
-                              cy="50"
-                              fill="hsl(320, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="32"
-                              cy="56"
-                              fill="hsl(230, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="32"
-                              cy="44"
-                              fill="hsl(90, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="42.392304845413264"
-                              cy="50"
-                              fill="hsl(320, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="52.78460969082653"
-                              cy="44"
-                              fill="hsl(230, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="42.392304845413264"
-                              cy="38"
-                              fill="hsl(90, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="52.78460969082653"
-                              cy="32"
-                              fill="hsl(320, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="52.78460969082653"
-                              cy="20"
-                              fill="hsl(230, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="42.392304845413264"
-                              cy="26"
-                              fill="hsl(90, 93%, 75%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="42.392304845413264"
-                              cy="14"
-                              fill="hsl(320, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                            <circle
-                              cx="32"
-                              cy="32"
-                              fill="hsl(151, 93%, 35%)"
-                              r="5"
-                            ></circle>
-                          </svg>
+                          <icon-base class="h-full w-full" viewBox="0 0 64 64">
+                            <icon-account-sample />
+                          </icon-base>
                         </div>
                         <div>
                           <div class="text-sm font-medium">Account Option</div>
@@ -194,20 +73,14 @@
                     <span
                       class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                     >
-                      <!-- Heroicon name: solid/selector -->
-                      <svg
+                      <icon-base
                         class="h-5 w-5 text-gray-400 dark:text-darkGray-300"
-                        xmlns="http://www.w3.org/2000/svg"
+                        icon-name="selector"
                         viewBox="0 0 20 20"
-                        fill="currentColor"
                         aria-hidden="true"
                       >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                        <icon-solid-selector />
+                      </icon-base>
                     </span>
                   </button>
 
@@ -224,9 +97,9 @@
                     >
                       <!-- Select option -->
                       <ModalSelectAccountOption />
+                      <!-- <ModalSelectAccountOption />
                       <ModalSelectAccountOption />
-                      <ModalSelectAccountOption />
-                      <ModalSelectAccountOption />
+                      <ModalSelectAccountOption /> -->
                     </ul>
                   </div>
                 </div>
@@ -276,20 +149,14 @@
                     type="button"
                     class="bg-blue-100 dark:bg-blue-200 hover:bg-blue-200 dark:hover:bg-blue-300 text-xs rounded-full p-2 text-blue-900 dark:text-darkGray-900 absolute left-3 top-1/2 -mt-4 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-300"
                   >
-                    <svg
+                    <icon-base
                       class="w-5 h-5"
-                      xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                      />
-                    </svg>
+                      <icon-exchange />
+                    </icon-base>
                   </button>
                 </div>
               </div>
@@ -319,10 +186,20 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
+import IconBase from '@/components/icons/IconBase.vue';
+import IconSolidChevronDown from '@/components/icons/IconSolidChevronDown.vue';
+import IconAccountSample from '@/components/icons/IconAccountSample.vue';
+import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
+import IconExchange from '@/components/icons/IconExchange.vue';
 
 export default defineComponent({
   components: {
     ModalSelectAccountOption,
+    IconBase,
+    IconSolidChevronDown,
+    IconAccountSample,
+    IconSolidSelector,
+    IconExchange,
   },
   setup(props, { emit }) {
     const closeModal = () => {

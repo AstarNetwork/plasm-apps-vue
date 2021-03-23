@@ -28,20 +28,12 @@
               >
               <span class="block font-semibold text-2xl mb-1">0 XXX</span>
               <span class="block font-normal text-sm mb-2">≈US $0</span>
-              <!-- Heroicon name: solid/chevron-down -->
-              <svg
+              <icon-base
                 class="h-6 w-6 dark:text-darkGray-300 absolute top-1/2 right-5 -mt-2"
-                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+                <icon-solid-chevron-down />
+              </icon-base>
             </button>
 
             <fieldset>
@@ -72,22 +64,15 @@
                     <div
                       class="bg-blue-500 rounded-full p-1 absolute top-2 right-2"
                     >
-                      <!-- Heroicon name: outline/check -->
-                      <svg
+                      <icon-base
                         class="h-3 w-3 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                         aria-hidden="true"
                       >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="3"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                        <icon-check />
+                      </icon-base>
                     </div>
                   </label>
                 </li>
@@ -172,8 +157,16 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import IconBase from '@/components/icons/IconBase.vue';
+import IconSolidChevronDown from '@/components/icons/IconSolidChevronDown.vue';
+import IconCheck from '@/components/icons/IconCheck.vue';
 
 export default defineComponent({
+  components: {
+    IconBase,
+    IconSolidChevronDown,
+    IconCheck,
+  },
   setup(props, { emit }) {
     const closeModal = () => {
       emit('update:is-open', false);
