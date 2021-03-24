@@ -50,8 +50,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useApi } from '@/hooks/useApi';
-import IconPlus from './icons/IconPlus.vue';
-import IconBase from './icons/IconBase.vue';
+import IconPlus from '@/components/icons/IconPlus.vue';
+import IconBase from '@/components/icons/IconBase.vue';
 
 export default defineComponent({
   components: { IconPlus, IconBase },

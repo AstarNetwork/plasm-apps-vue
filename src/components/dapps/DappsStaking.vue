@@ -47,7 +47,6 @@
         <span
           class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
         >
-          <!-- Heroicon name: solid/selector -->
           <icon-base
             class="h-5 w-5 text-gray-400 dark:text-darkGray-400"
             icon-name="selector"
@@ -70,7 +69,6 @@
         <span
           class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
         >
-          <!-- Heroicon name: solid/selector -->
           <icon-base
             class="h-5 w-5 text-gray-400 dark:text-darkGray-400"
             icon-name="selector"
@@ -150,26 +148,32 @@
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-    <!-- <%- include('./components/dapps/_dapps-item', {name:'Polkadot.js'}); -%>
-          <%- include('./components/dapps/_dapps-item', {name:'Subscan'}); -%>
-            <%- include('./components/dapps/_dapps-item', {name:'MetaMask'}); -%>
-            <%- include('./components/dapps/_dapps-item', {name:'Chainlink'}); -%>
-              <%- include('./components/dapps/_dapps-item', {name:'Polkadot.js'}); -%>
-              <%- include('./components/dapps/_dapps-item', {name:'Subscan'}); -%>
-                <%- include('./components/dapps/_dapps-item', {name:'MetaMask'}); -%>
-                <%- include('./components/dapps/_dapps-item', {name:'Chainlink'}); -%> -->
+    <DappsItem name="Polkadot.js" icon="logo-polkadot-js.png" />
+    <DappsItem name="Subscan" icon="logo-subscan.png" />
+    <DappsItem name="MetaMask" icon="logo-metamask.png" />
+    <DappsItem name="Chainlink" icon="logo-chainlink.png" />
+    <DappsItem name="Polkadot.js" icon="logo-polkadot-js.png" />
+    <DappsItem name="Subscan" icon="logo-subscan.png" />
+    <DappsItem name="MetaMask" icon="logo-metamask.png" />
+    <DappsItem name="Chainlink" icon="logo-chainlink.png" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useApi } from '@/hooks/useApi';
-import IconBase from './icons/IconBase.vue';
-import IconSolidExclamationCircle from './icons/IconSolidExclamationCircle.vue';
-import IconSolidSelector from './icons/IconSolidSelector.vue';
+import IconBase from '@/components/icons/IconBase.vue';
+import IconSolidExclamationCircle from '@/components/icons/IconSolidExclamationCircle.vue';
+import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
+import DappsItem from '@/components/dapps/DappsItem.vue';
 
 export default defineComponent({
-  components: { IconBase, IconSolidExclamationCircle, IconSolidSelector },
+  components: {
+    IconBase,
+    IconSolidExclamationCircle,
+    IconSolidSelector,
+    DappsItem,
+  },
   setup() {
     const { api } = useApi();
 

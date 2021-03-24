@@ -5,8 +5,8 @@ import DApps from '@/views/DApps.vue';
 import Staking from '@/views/Staking.vue';
 import History from '@/views/History.vue';
 import Lockdrop from '@/views/Lockdrop.vue';
-import DappsStaking from '@/components/DappsStaking.vue';
-import CreateDapps from '@/components/CreateDapps.vue';
+import DappsStaking from '@/components/dapps/DappsStaking.vue';
+import CreateDapps from '@/components/dapps/CreateDapps.vue';
 import BalancePlasm from '@/components/balance/BalancePlasm.vue';
 import CrossChain from '@/components/balance/CrossChain.vue';
 
