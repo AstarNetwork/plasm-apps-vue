@@ -1,5 +1,5 @@
 <template>
-  <nav class="ml-12 -mb-px flex justify-items-center" aria-label="Tabs">
+  <nav class="md:ml-12 -mb-px flex justify-items-center" aria-label="Tabs">
     <router-link
       append
       v-for="num in labelsNumArray"
@@ -42,9 +42,9 @@ export default defineComponent({
       inactiveLinkClass:
         'border-gray-50 dark:border-darkGray-900 border rounded-t-md',
       activeSpanClass:
-        'block bg-gray-50 dark:bg-darkGray-900 -mb-px whitespace-nowrap py-3 sm:py-5 px-8 text-blue-900 dark:text-darkGray-300 font-medium rounded-t-md border-gray-50 dark:border-darkGray-900 border-b',
+        'block bg-gray-50 dark:bg-darkGray-900 -mb-px whitespace-nowrap py-3 sm:py-5 px-3 md:px-8 text-blue-900 dark:text-darkGray-300 font-medium rounded-t-md border-gray-50 dark:border-darkGray-900 border-b',
       inactiveSpanClass:
-        'block bg-gray-50 dark:bg-darkGray-900 -mb-px whitespace-nowrap py-3 sm:py-5 px-8 text-blue-500 dark:text-blue-400 font-medium rounded-t-md border-gray-200 dark:border-darkGray-600 border-b hover:text-blue-400 dark:hover:text-blue-300',
+        'block bg-gray-50 dark:bg-darkGray-900 -mb-px whitespace-nowrap py-3 sm:py-5 px-3 md:px-8 text-blue-500 dark:text-blue-400 font-medium rounded-t-md border-gray-200 dark:border-darkGray-600 border-b hover:text-blue-400 dark:hover:text-blue-300',
     });
     const labelsNumArray = computed(() => [
       ...Array(props.labels.length).keys(),

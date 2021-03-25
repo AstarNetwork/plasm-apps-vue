@@ -1,6 +1,4 @@
 <template>
-  <!-- <%- include('./components/common/_header-mobile'); -%> -->
-
   <div
     class="sm:flex items-end border-b border-gray-300 dark:border-darkGray-600 mb-8 -mx-4 sm:-mx-8 px-4 sm:px-8"
   >
@@ -15,7 +13,6 @@
         { label: 'Create dApps', path: 'create-dapps' },
       ]"
     />
-    <!-- <%- include('./components/common/_address-change'); -%> -->
   </div>
   <router-view />
 </template>
