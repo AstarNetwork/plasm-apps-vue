@@ -28,9 +28,8 @@ const loadAccounts = async (api: ApiPromise) => {
           address,
           meta: {
             ...meta,
-            name: `${meta.name} (${
-              meta.source === 'polkadot-js' ? 'extension' : meta.source
-            })`,
+            name: `${meta.name} (${meta.source === 'polkadot-js' ? 'extension' : meta.source
+              })`,
           },
         })
       )
@@ -71,7 +70,7 @@ export const connectApi = async (endpoint: string) => {
 
   // load the web3 extension
   injectedPromise
-    .then((): void => {})
+    .then((): void => { })
     .catch((error: Error) => console.error(error));
 
   return api;

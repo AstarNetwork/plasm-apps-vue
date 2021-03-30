@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="grid lg:grid-cols-2 gap-4 mb-4">
-      <Address v-model:isOpen="modalAccount" />
+      <Address
+        :address="defaultAccount"
+        :address-name="defaultAccountName"
+        v-model:isOpen="modalAccount"
+      />
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -31,6 +35,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
+import { useApi, useAccount, useBalance } from '@/hooks';
+
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
@@ -62,8 +68,18 @@ export default defineComponent({
       modalTransferToken: false,
     });
 
+    const { api } = useApi();
+    const { defaultAccount, defaultAccountName } = useAccount();
+    // const defaultAccount = ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E');
+
+    const { balance } = useBalance(defaultAccount);
+
     return {
       ...toRefs(stateModal),
+      api,
+      balance,
+      defaultAccount,
+      defaultAccountName,
     };
   },
 });

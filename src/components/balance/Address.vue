@@ -15,10 +15,10 @@
         </div>
         <div>
           <p class="text-blue-900 dark:text-darkGray-100 font-bold">
-            AddressName
+            {{ addressName }}
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400">
-            5Hn8MM......2dZzwc
+            {{ shortenAddress }}
           </p>
         </div>
       </div>
@@ -58,7 +58,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, toRefs } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconChevronDown from '@/components/icons/IconChevronDown.vue';
@@ -71,13 +71,33 @@ export default defineComponent({
     IconChevronDown,
     IconDocumentDuplicate,
   },
+  props: {
+    address: {
+      type: String,
+      required: true,
+    },
+    addressName: {
+      type: String,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const openModal = () => {
       emit('update:is-open', true);
     };
 
+    const { address, addressName } = toRefs(props);
+
+    const shortenAddress = computed(() => {
+      return `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
+        -6
+      )}`;
+    });
+
     return {
       openModal,
+      shortenAddress,
+      addressName,
     };
   },
 });

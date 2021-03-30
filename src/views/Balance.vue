@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-// import { useApi, useAccount, useBalance } from '@/hooks';
 import Tab from '@/components/common/Tab.vue';
 // import AddressChange from '@/components/common/AddressChange.vue';
 
@@ -29,12 +28,6 @@ export default defineComponent({
   components: {
     Tab,
     // AddressChange
-  },
-  setup() {
-    // const { api, testCounter } = useApi();
-    // const { allAccounts } = useAccount();
-    // const addr = 'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E';
-    // const { balance } = useBalance(addr);
   },
 });
 </script>
