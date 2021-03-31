@@ -13,6 +13,7 @@ import { connectApi } from '@/api/polkadot';
 export default defineComponent({
   name: 'api-loader',
   async setup() {
+    // const mainnet = providerEndpoints[0].endpoint;
     const dusty = providerEndpoints[1].endpoint;
     //const local = providerEndpoints[2].endpoint;
 

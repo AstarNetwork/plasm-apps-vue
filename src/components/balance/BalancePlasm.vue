@@ -10,7 +10,10 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       <TotalBalance />
-      <PlmBalance v-model:isOpenTransfer="modalTransferAmount" />
+      <PlmBalance
+        v-model:isOpenTransfer="modalTransferAmount"
+        :balance="balance"
+      />
     </div>
 
     <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>
@@ -22,7 +25,12 @@
     </div>
 
     <!-- Modals -->
-    <ModalAccount v-if="modalAccount" v-model:isOpen="modalAccount" />
+    <ModalAccount
+      v-if="modalAccount"
+      v-model:isOpen="modalAccount"
+      :all-accounts="allAccounts"
+      :all-account-names="allAccountNames"
+    />
     <ModalTransferAmount
       v-if="modalTransferAmount"
       v-model:isOpen="modalTransferAmount"
@@ -69,7 +77,12 @@ export default defineComponent({
     });
 
     const { api } = useApi();
-    const { defaultAccount, defaultAccountName } = useAccount();
+    const {
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+    } = useAccount();
     // const defaultAccount = ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E');
 
     const { balance } = useBalance(defaultAccount);
@@ -78,6 +91,8 @@ export default defineComponent({
       ...toRefs(stateModal),
       api,
       balance,
+      allAccounts,
+      allAccountNames,
       defaultAccount,
       defaultAccountName,
     };

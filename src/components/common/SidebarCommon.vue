@@ -51,10 +51,11 @@
           <p
             class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
           >
-            <span>AddressName</span><span class="ml-2">100PLM</span>
+            <span>{{ defaultAccountName }}</span
+            ><span class="ml-2">{{ formatBalance }}PLM</span>
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400">
-            5Hn8MM......2dZzwc
+            {{ shortenAddress }}
           </p>
         </span>
       </router-link>
@@ -163,7 +164,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, computed } from 'vue';
+import { useAccount, useBalance } from '@/hooks';
 import { useSidebar } from '@/hooks/useSidebar';
 import Logotype from './Logotype.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
@@ -204,10 +206,26 @@ export default defineComponent({
         'text-gray-500 dark:text-darkGray-300 group-hover:text-gray-700 dark:group-hover:text-white h-6 w-6',
     });
 
+    const { defaultAccount, defaultAccountName } = useAccount();
+
+    const shortenAddress = computed(() => {
+      return `${defaultAccount.value.slice(0, 6)}${'.'.repeat(
+        6
+      )}${defaultAccount.value.slice(-6)}`;
+    });
+
+    const { balance } = useBalance(defaultAccount);
+    const formatBalance = computed(() => {
+      return balance.value.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+
     return {
       isOpen,
       modalNetwork,
       ...classes,
+      shortenAddress,
+      defaultAccountName,
+      formatBalance,
     };
   },
 });

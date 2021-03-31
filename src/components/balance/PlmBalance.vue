@@ -19,8 +19,10 @@
       <div class="flex justify-center mt-4 sm:mt-8 lg:mt-6">
         <div>
           <p class="font-semibold text-center">
-            <span class="text-4xl tracking-tight leading-tight">1,200</span
-            ><span class="text-2xl">PLM</span>
+            <span class="text-4xl tracking-tight leading-tight">{{
+              formatBalance
+            }}</span>
+            <span class="text-2xl ml-1">PLM</span>
           </p>
           <p
             class="text-right text-gray-500 dark:text-darkGray-400 mb-2 text-sm"
@@ -83,7 +85,8 @@
         <div>Transferable</div>
         <div>
           <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">100</span>PLM
+            <span class="text-2xl leading-tight">{{ formatBalance }}</span
+            >PLM
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
             ≈US $10
@@ -96,20 +99,7 @@
         <div>dApps staking</div>
         <div>
           <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">100</span>PLM
-          </p>
-          <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
-            ≈US $10
-          </p>
-        </div>
-      </div>
-      <div
-        class="flex justify-between items-center bg-blue-50 dark:bg-darkGray-700 rounded-lg py-3 px-4"
-      >
-        <div>Transferable</div>
-        <div>
-          <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">100</span>PLM
+            <span class="text-2xl leading-tight">0</span>PLM
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
             ≈US $10
@@ -120,7 +110,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs, computed } from 'vue';
+import BN from 'bn.js';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
@@ -133,13 +124,26 @@ export default defineComponent({
     IconTrendingDown,
     IconTrendingUp,
   },
+  props: {
+    balance: {
+      type: BN,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const openTransferModal = (): void => {
       emit('update:is-open-transfer', true);
     };
 
+    const { balance } = toRefs(props);
+
+    const formatBalance = computed(() => {
+      return balance.value.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+
     return {
       openTransferModal,
+      formatBalance,
     };
   },
 });

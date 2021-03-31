@@ -24,11 +24,19 @@
                 class="max-h-56 rounded-md py-1 text-base overflow-auto focus:outline-none"
               >
                 <!-- Select option -->
-                <ModalAccountOption :checked="true" />
-                <ModalAccountOption :checked="false" />
-                <ModalAccountOption :checked="false" />
-                <ModalAccountOption :checked="false" />
-                <ModalAccountOption :checked="false" />
+                <!-- <div v-for="(account, index) in allAccounts" :key="index">
+                  {{ account }}
+                  {{ allAccountNames[index] }}
+                </div> -->
+                <ModalAccountOption
+                  v-for="(account, index) in allAccounts"
+                  :key="index"
+                  :key-idx="index"
+                  :address="account"
+                  :addressName="allAccountNames[index]"
+                  :checked="selAccount === index"
+                  v-model:selOption="selAccount"
+                />
               </ul>
             </div>
           </div>
@@ -54,20 +62,36 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs, ref } from 'vue';
 import ModalAccountOption from '@/components/balance/ModalAccountOption.vue';
 
 export default defineComponent({
   components: {
     ModalAccountOption,
   },
+  props: {
+    allAccounts: {
+      type: Array,
+      required: true,
+    },
+    allAccountNames: {
+      type: Array,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const closeModal = () => {
       emit('update:is-open', false);
     };
 
+    const { allAccounts, allAccountNames } = toRefs(props);
+    const selAccount = ref(0);
+
     return {
       closeModal,
+      allAccounts,
+      allAccountNames,
+      selAccount,
     };
   },
 });

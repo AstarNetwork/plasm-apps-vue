@@ -5,6 +5,7 @@ import { keyring } from '@polkadot/ui-keyring';
 
 interface UseAccounts {
   allAccounts: string[];
+  allAccountNames: string[];
   defaultAccount: string;
   defaultAccountName: string;
   hasAccounts: boolean;
@@ -21,6 +22,7 @@ export const useAccount = () => {
   // set the initial value
   const state = reactive<UseAccounts>({
     allAccounts: [],
+    allAccountNames: [],
     defaultAccount: '',
     defaultAccountName: '',
     hasAccounts: false,
@@ -36,11 +38,11 @@ export const useAccount = () => {
   watchEffect((onInvalidate) => {
     // fixme: this part is showing an error when fetching accounts
     const subscription = keyring.accounts.subject.subscribe((accounts) => {
-      console.log('gg', accounts)
       // only subscribe to the keyring if the component that originally called this hook is still mounted
       if (mountedRef.value) {
         // fixme: this is an unintuitive method to assign values. We need to find a scalable method
         state.allAccounts = accounts ? Object.keys(accounts) : [];
+        state.allAccountNames = accounts ? Object.values(accounts).map(obj => obj.option.name) : [];
         state.defaultAccount = state.allAccounts.length > 0 ? Object.keys(accounts)[0] : '';
         state.defaultAccountName = state.allAccounts.length > 0 ? Object.values(accounts)[0].option.name : '';
         state.hasAccounts = state.allAccounts.length !== 0;
