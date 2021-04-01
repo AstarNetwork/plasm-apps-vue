@@ -30,7 +30,7 @@ export const useAccount = () => {
   });
 
   const accounts = keyring.getAccounts();
-  console.log('fff', accounts)
+  console.log('accounts', accounts);
   accounts.forEach(({ address, meta, publicKey }) =>
     console.log(address, JSON.stringify(meta), u8aToHex(publicKey))
   );
@@ -42,9 +42,12 @@ export const useAccount = () => {
       if (mountedRef.value) {
         // fixme: this is an unintuitive method to assign values. We need to find a scalable method
         state.allAccounts = accounts ? Object.keys(accounts) : [];
-        state.allAccountNames = accounts ? Object.values(accounts).map(obj => obj.option.name) : [];
-        state.defaultAccount = state.allAccounts.length > 0 ? Object.keys(accounts)[0] : '';
-        state.defaultAccountName = state.allAccounts.length > 0 ? Object.values(accounts)[0].option.name : '';
+        state.allAccountNames = accounts ?
+          Object.values(accounts).map(obj => obj.option.name) : [];
+        state.defaultAccount = state.allAccounts.length > 0 ?
+          Object.keys(accounts)[0] : '';
+        state.defaultAccountName = state.allAccounts.length > 0 ?
+          Object.values(accounts)[0].option.name : '';
         state.hasAccounts = state.allAccounts.length !== 0;
         state.isAccount = (address: string) =>
           state.allAccounts.includes(address);

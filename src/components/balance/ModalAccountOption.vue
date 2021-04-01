@@ -72,7 +72,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const { keyIdx, address, addressName } = toRefs(props);
+    const { address } = toRefs(props);
 
     const shortenAddress = computed(() => {
       return address.value
@@ -89,9 +89,7 @@ export default defineComponent({
     const { balance } = useBalance(address);
 
     return {
-      keyIdx,
       shortenAddress,
-      addressName,
       balance,
       onChange,
     };

@@ -86,7 +86,7 @@ export default defineComponent({
       emit('update:is-open', true);
     };
 
-    const { address, addressName } = toRefs(props);
+    const { address } = toRefs(props);
 
     const shortenAddress = computed(() => {
       return `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
@@ -97,7 +97,6 @@ export default defineComponent({
     return {
       openModal,
       shortenAddress,
-      addressName,
     };
   },
 });

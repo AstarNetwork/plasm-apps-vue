@@ -29,7 +29,7 @@ export function useBalance(addressRef?: Ref<string>) {
       );
     },
     { immediate: true }
-  )
+  );
 
 
   return { balance };

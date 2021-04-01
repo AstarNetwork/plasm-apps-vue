@@ -89,13 +89,10 @@ export default defineComponent({
       emit('update:select-account', accountIdx);
     };
 
-    const { allAccounts, allAccountNames } = toRefs(props);
     const selAccount = ref(0);
 
     return {
       closeModal,
-      allAccounts,
-      allAccountNames,
       selAccount,
       selectAccount,
     };

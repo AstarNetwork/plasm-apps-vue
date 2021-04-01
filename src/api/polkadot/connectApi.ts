@@ -28,8 +28,8 @@ const loadAccounts = async (api: ApiPromise) => {
           address,
           meta: {
             ...meta,
-            name: `${meta.name} (${meta.source === 'polkadot-js' ? 'extension' : meta.source
-              })`,
+            name: `${meta.name} (
+              ${meta.source === 'polkadot-js' ? 'extension' : meta.source})`,
           },
         })
       )
