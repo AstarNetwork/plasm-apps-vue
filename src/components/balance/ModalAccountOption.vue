@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="text-sm">100PLM</div>
+        <div class="text-sm">{{ balance }}PLM</div>
 
         <div class="relative w-5 h-5">
           <input
@@ -45,6 +45,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed, toRefs } from 'vue';
+import { useBalance } from '@/hooks';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 
@@ -85,10 +86,13 @@ export default defineComponent({
       emit('update:sel-option', keyIdx);
     };
 
+    const { balance } = useBalance(address);
+
     return {
       keyIdx,
       shortenAddress,
       addressName,
+      balance,
       onChange,
     };
   },

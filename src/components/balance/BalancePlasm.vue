@@ -28,6 +28,7 @@
     <ModalAccount
       v-if="modalAccount"
       v-model:isOpen="modalAccount"
+      v-model:selectAccount="currentAccountIdx"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
     />
@@ -42,7 +43,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, ref, watch } from 'vue';
 import { useApi, useAccount, useBalance } from '@/hooks';
 
 import Address from '@/components/balance/Address.vue';
@@ -86,6 +87,14 @@ export default defineComponent({
     // const defaultAccount = ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E');
 
     const { balance } = useBalance(defaultAccount);
+    const currentAccountIdx = ref(0);
+
+    watch(currentAccountIdx, () => {
+      console.log('ggg', currentAccountIdx.value);
+
+      defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+      defaultAccountName.value = allAccountNames.value[currentAccountIdx.value];
+    });
 
     return {
       ...toRefs(stateModal),
@@ -95,6 +104,7 @@ export default defineComponent({
       allAccountNames,
       defaultAccount,
       defaultAccountName,
+      currentAccountIdx,
     };
   },
 });
