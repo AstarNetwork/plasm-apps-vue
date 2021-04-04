@@ -11,7 +11,7 @@
         @click="modalNetwork = true"
         class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
       >
-        Plasm Network (Mainnet)
+        {{ currentNetworkName }}
         <!-- Heroicon name: solid/chevron-down -->
         <icon-base
           class="-mr-1 ml-2 h-4 w-4"
@@ -160,13 +160,19 @@
   </div>
 
   <!-- Modals -->
-  <ModalNetwork v-if="modalNetwork" v-model:isOpen="modalNetwork" />
+  <ModalNetwork
+    v-if="modalNetwork"
+    :network-idx="currentNetworkIdx"
+    v-model:isOpen="modalNetwork"
+    v-model:selectNetwork="currentNetworkIdx"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from 'vue';
+import { defineComponent, ref, reactive, computed, watch } from 'vue';
 import { useAccount, useBalance } from '@/hooks';
 import { useSidebar } from '@/hooks/useSidebar';
+import { providerEndpoints } from '@/config/chainEndpoints';
 import Logotype from './Logotype.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
@@ -218,6 +224,13 @@ export default defineComponent({
     const formatBalance = computed(() => {
       return balance.value.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     });
+    const currentNetworkIdx = ref(0);
+    const currentNetworkName = ref(providerEndpoints[0].displayName);
+
+    watch(currentNetworkIdx, (networkIdx) => {
+      console.log('sss', networkIdx);
+      currentNetworkName.value = providerEndpoints[networkIdx].displayName;
+    });
 
     return {
       isOpen,
@@ -226,6 +239,8 @@ export default defineComponent({
       shortenAddress,
       defaultAccountName,
       formatBalance,
+      currentNetworkIdx,
+      currentNetworkName,
     };
   },
 });

@@ -9,7 +9,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      <TotalBalance />
+      <TotalBalance :balance="balance" />
       <PlmBalance
         v-model:isOpenTransfer="modalTransferAmount"
         :balance="balance"
@@ -28,6 +28,7 @@
     <ModalAccount
       v-if="modalAccount"
       v-model:isOpen="modalAccount"
+      :account-idx="currentAccountIdx"
       v-model:selectAccount="currentAccountIdx"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
@@ -78,6 +79,7 @@ export default defineComponent({
     });
 
     const { api } = useApi();
+
     const {
       allAccounts,
       allAccountNames,
@@ -86,7 +88,10 @@ export default defineComponent({
     } = useAccount();
     // const defaultAccount = ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E');
 
-    const { balance } = useBalance(defaultAccount);
+    // const { balance } = useBalance(defaultAccount);
+    const { balance } = useBalance(
+      ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E')
+    );
     const currentAccountIdx = ref(0);
 
     watch(currentAccountIdx, () => {

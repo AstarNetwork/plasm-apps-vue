@@ -23,11 +23,6 @@
               <ul
                 class="max-h-56 rounded-md py-1 text-base overflow-auto focus:outline-none"
               >
-                <!-- Select option -->
-                <!-- <div v-for="(account, index) in allAccounts" :key="index">
-                  {{ account }}
-                  {{ allAccountNames[index] }}
-                </div> -->
                 <ModalAccountOption
                   v-for="(account, index) in allAccounts"
                   :key="index"
@@ -78,6 +73,10 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    accountIdx: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const closeModal = () => {
@@ -89,7 +88,7 @@ export default defineComponent({
       emit('update:select-account', accountIdx);
     };
 
-    const selAccount = ref(0);
+    const selAccount = ref(props.accountIdx);
 
     return {
       closeModal,
