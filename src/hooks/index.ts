@@ -4,6 +4,7 @@ export * from './useAccount';
 export * from './useApi';
 export * from './useBalance';
 export * from './useSidebar';
+export * from './useAddresses';
 
 interface Runtime {
   app?: App;

@@ -5,6 +5,7 @@ import { State } from './state';
 export type Mutations<S = State> = {
   [MutationTypes.SET_NETWORK_API](state: S, payload: any): void;
   [MutationTypes.SET_INITIALIZED](state: S): void;
+  [MutationTypes.SET_CURRENT_NETWORK_IDX](state: S, networkIdx: Number): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -13,5 +14,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.SET_INITIALIZED](state) {
     state.initialized = true;
+  },
+  [MutationTypes.SET_CURRENT_NETWORK_IDX](state, networkIdx) {
+    state.currentNetworkIdx = networkIdx;
   },
 };

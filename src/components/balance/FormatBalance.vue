@@ -3,16 +3,13 @@
 </template>
 <script lang="ts">
 //https://github.com/polkadot-js/apps/blob/86284f815500d9edd25228db603a18983e46878d/packages/react-query/src/FormatBalance.tsx#L34
-import { defineComponent, reactive, toRefs, ref, watch } from 'vue';
-import { useApi } from '@/hooks';
-import { Compact } from '@polkadot/types';
+import { defineComponent } from 'vue';
+// import { useApi } from '@/hooks';
 import { Registry } from '@polkadot/types/types';
-import BN from 'bn.js';
 
 export default defineComponent({
   setup() {
-    const { api } = useApi();
-
+    // const { api } = useApi();
     // getFormat(api.registry, formatIndex)
   },
   methods: {

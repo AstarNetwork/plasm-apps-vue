@@ -166,6 +166,9 @@ export default defineComponent({
     };
 
     const selectNetwork = (networkIdx: number): void => {
+      localStorage.setItem('networkIdx', networkIdx.toString());
+      location.reload();
+
       emit('update:is-open', false);
       emit('update:select-network', networkIdx);
     };

@@ -15,6 +15,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
 import { useRouter } from 'vue-router';
 import ApiLoader from '@/hooks/providers/ApiLoader.vue';
 import Spinner from '@/components/Spinner.vue';
@@ -29,6 +31,12 @@ export default defineComponent({
     const layout = computed(
       () => `${currentRoute.value.meta.layout || defaultLayout}-layout`
     );
+
+    const store = useStore();
+    const networkIdx = localStorage.getItem('networkIdx');
+    if (networkIdx) {
+      store.commit(MutationTypes.SET_CURRENT_NETWORK_IDX, parseInt(networkIdx));
+    }
 
     return {
       layout,

@@ -5,21 +5,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { useStore } from 'vuex';
+import { ActionTypes } from '@/store/action-types';
 import PolkadotProvider from './PolkadotProvider.vue';
 import { providerEndpoints } from '@/config';
-import { connectApi } from '@/api/polkadot';
 
 export default defineComponent({
   name: 'api-loader',
   async setup() {
-    // const mainnet = providerEndpoints[0].endpoint;
-    const dusty = providerEndpoints[1].endpoint;
-    //const local = providerEndpoints[2].endpoint;
+    const store = useStore();
 
-    const endpoint = ref(dusty);
+    const api = computed(() => store.getters.api);
 
-    const api = await connectApi(endpoint.value);
+    const networkIdx = computed(() => store.getters.networkIdx);
+    store.dispatch(
+      ActionTypes.GET_NETWORK_API,
+      providerEndpoints[networkIdx.value].endpoint
+    );
+
     return {
       api,
     };

@@ -8,7 +8,7 @@ export async function subscribeAccountInfo(
   ref: Ref<AccountInfo>
 ) {
   const api = getters.api(state);
-  const unsub = await api.query.system.account(account, (res) => {
+  const unsub = await api?.query.system.account(account, (res) => {
     // TODO: Validation
     const accountInfo = (res.toJSON() as unknown) as AccountInfo;
     ref.value = accountInfo;
@@ -26,13 +26,13 @@ export async function getAccountInfo(account: Address) {
 
 export async function getBalance(account: Address) {
   const api = getters.api(state);
-  const accountInfo = await api.query.system.account(account);
-  return accountInfo.data.free.toBn();
+  const accountInfo = await api?.query.system.account(account);
+  return accountInfo?.data.free.toBn();
 }
 
 export function subscribeBalance(account: Address, balance: Ref<Balance>) {
   const api = getters.api(state);
-  const unsub = api.query.system.account(account, (res) => {
+  const unsub = api?.query.system.account(account, (res) => {
     // TODO: Validation
     balance.value = res.data.free.toBn();
   });

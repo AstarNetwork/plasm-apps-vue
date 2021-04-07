@@ -47,9 +47,9 @@
 <script lang="ts">
 import { defineComponent, toRefs, computed } from 'vue';
 import BN from 'bn.js';
-import IconBase from '@/components/icons/IconBase.vue';
-import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
-import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
+// import IconBase from '@/components/icons/IconBase.vue';
+// import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
+// import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
 export default defineComponent({
   props: {
@@ -58,12 +58,12 @@ export default defineComponent({
       required: true,
     },
   },
-  components: {
-    IconBase,
-    IconTrendingDown,
-    IconTrendingUp,
-  },
-  setup(props, { emit }) {
+  // components: {
+  //   IconBase,
+  //   IconTrendingDown,
+  //   IconTrendingUp,
+  // },
+  setup(props) {
     const { balance } = toRefs(props);
 
     const formatBalance = computed(() => {

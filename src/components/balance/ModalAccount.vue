@@ -57,7 +57,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import ModalAccountOption from '@/components/balance/ModalAccountOption.vue';
 
 export default defineComponent({

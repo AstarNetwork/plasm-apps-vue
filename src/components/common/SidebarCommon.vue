@@ -170,6 +170,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { ActionTypes } from '@/store/action-types';
 import { useAccount, useBalance } from '@/hooks';
 import { useSidebar } from '@/hooks/useSidebar';
 import { providerEndpoints } from '@/config/chainEndpoints';
@@ -212,6 +214,8 @@ export default defineComponent({
         'text-gray-500 dark:text-darkGray-300 group-hover:text-gray-700 dark:group-hover:text-white h-6 w-6',
     });
 
+    const store = useStore();
+
     const { defaultAccount, defaultAccountName } = useAccount();
 
     const shortenAddress = computed(() => {
@@ -224,12 +228,19 @@ export default defineComponent({
     const formatBalance = computed(() => {
       return balance.value.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     });
-    const currentNetworkIdx = ref(0);
-    const currentNetworkName = ref(providerEndpoints[0].displayName);
+
+    const currentNetworkIdx = computed(() => store.getters.networkIdx);
+    const currentNetworkName = ref(
+      providerEndpoints[currentNetworkIdx.value].displayName
+    );
 
     watch(currentNetworkIdx, (networkIdx) => {
-      console.log('sss', networkIdx);
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
+
+      store.dispatch(
+        ActionTypes.GET_NETWORK_API,
+        providerEndpoints[networkIdx].endpoint
+      );
     });
 
     return {
