@@ -45,7 +45,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed, toRefs } from 'vue';
-import { useBalance } from '@/hooks';
+// import { useBalance } from '@/hooks';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 
@@ -86,11 +86,11 @@ export default defineComponent({
       emit('update:sel-option', keyIdx);
     };
 
-    const { balance } = useBalance(address);
+    // const { balance } = useBalance(address);
 
     return {
       shortenAddress,
-      balance,
+      // balance,
       onChange,
     };
   },

@@ -20,8 +20,8 @@ export default defineComponent({
   setup() {
     const { api, testCounter } = useApi();
     const { allAccounts } = useAccount();
-    const addr = ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E');
-    const { balance } = useBalance(addr);
+    const addr = 'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E';
+    const { balance } = useBalance(ref(addr));
 
     return {
       api,

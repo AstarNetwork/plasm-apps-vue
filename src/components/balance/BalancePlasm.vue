@@ -29,7 +29,6 @@
       v-if="modalAccount"
       v-model:isOpen="modalAccount"
       :account-idx="currentAccountIdx"
-      v-model:selectAccount="currentAccountIdx"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
     />
@@ -44,9 +43,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, ref, watch } from 'vue';
-import { useApi, useAccount, useBalance } from '@/hooks';
-
+import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import { useAccount, useBalance } from '@/hooks';
+import { useStore } from 'vuex';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
@@ -78,32 +77,28 @@ export default defineComponent({
       modalTransferToken: false,
     });
 
-    const { api } = useApi();
-
     const {
       allAccounts,
       allAccountNames,
       defaultAccount,
       defaultAccountName,
     } = useAccount();
-    // const defaultAccount = ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E');
+    // const defaultAccount = ref(
+    //   'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E'
+    // );
 
-    // const { balance } = useBalance(defaultAccount);
-    const { balance } = useBalance(
-      ref('Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E')
-    );
-    const currentAccountIdx = ref(0);
+    const store = useStore();
+    const { balance } = useBalance(defaultAccount);
+
+    const currentAccountIdx = computed(() => store.getters.accountIdx);
 
     watch(currentAccountIdx, () => {
-      console.log('ggg', currentAccountIdx.value);
-
       defaultAccount.value = allAccounts.value[currentAccountIdx.value];
       defaultAccountName.value = allAccountNames.value[currentAccountIdx.value];
     });
 
     return {
       ...toRefs(stateModal),
-      api,
       balance,
       allAccounts,
       allAccountNames,

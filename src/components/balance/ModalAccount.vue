@@ -58,6 +58,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
 import ModalAccountOption from '@/components/balance/ModalAccountOption.vue';
 
 export default defineComponent({
@@ -83,9 +85,12 @@ export default defineComponent({
       emit('update:is-open', false);
     };
 
+    const store = useStore();
+
     const selectAccount = (accountIdx: Number) => {
+      store.commit(MutationTypes.SET_CURRENT_ACCOUNT_IDX, accountIdx);
+
       emit('update:is-open', false);
-      emit('update:select-account', accountIdx);
     };
 
     const selAccount = ref(props.accountIdx);
