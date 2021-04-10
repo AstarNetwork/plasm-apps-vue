@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="text-sm">{{ balance }}PLM</div>
+        <!-- <div class="text-sm">{{ balance }}PLM</div> -->
 
         <div class="relative w-5 h-5">
           <input
