@@ -1,22 +1,14 @@
-import { ref, onUnmounted, watch, Ref, reactive, toRefs } from 'vue';
+import { ref, onUnmounted, watch, Ref } from 'vue';
 import { useIsMountedRef } from './useIsMountedRef';
-import { Codec } from '@polkadot/types/types';
 import { VoidFn } from '@polkadot/api/types';
 import { useApi } from '@/hooks';
 import BN from 'bn.js';
-import { AccountInfo } from '@polkadot/types/interfaces';
 
-interface UseCall {
-  value?: Codec;
-}
-
-function useCall(section: string, method: string, addressRef: Ref<string>) {
+function useCall(addressRef: Ref<string>) {
   const mountedRef = useIsMountedRef();
 
   const { api: apiRef } = useApi();
-  const state = reactive<UseCall>({
-    value: undefined,
-  });
+  const balanceRef = ref(new BN(0));
 
   const unsub: Ref<VoidFn | undefined> = ref();
 
@@ -31,19 +23,13 @@ function useCall(section: string, method: string, addressRef: Ref<string>) {
           unsub.value();
           unsub.value = undefined;
         }
-        if (
-          address &&
-          api &&
-          api.query[section] &&
-          api.query[section][method]
-        ) {
+        if (address && api) {
           api.isReady.then(async () => {
-            unsub.value = await api.queryMulti(
-              [[api.query[section][method], address]],
-              ([result]) => {
-                state.value = result;
-              }
-            );
+            const {
+              data: { free },
+            } = await api.query.system.account(address);
+            balanceRef.value = free.toBn();
+            console.log(`The balances is ${free}`);
           });
         }
       }
@@ -58,20 +44,20 @@ function useCall(section: string, method: string, addressRef: Ref<string>) {
     }
   });
   return {
-    ...toRefs(state),
+    balanceRef,
   };
 }
 
 export function useBalance(addressRef: Ref<string>) {
   const balance = ref(new BN(0));
 
-  const { value: accountInfoRef } = useCall('system', 'account', addressRef);
+  const { balanceRef } = useCall(addressRef);
 
   watch(
-    () => accountInfoRef?.value,
-    (accountInfo) => {
-      if (accountInfo) {
-        balance.value = ((accountInfo as unknown) as AccountInfo).data.free.toBn();
+    () => balanceRef?.value,
+    (bal) => {
+      if (bal) {
+        balance.value = bal;
         console.log('b', balance.value.toString(10));
       }
     },
