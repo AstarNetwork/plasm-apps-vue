@@ -113,6 +113,7 @@
                         type="text"
                         placeholder="IP Address / Domain"
                         class="appearance-none bg-gray-50 dark:bg-darkGray-800 block w-full border border-gray-300 dark:border-darkGray-600 focus:ring-blue-500 focus:border-blue-500 rounded-md px-2 py-2 focus:outline-none text-sm text-gray-700 dark:text-darkGray-100 focus:bg-white dark:focus:bg-darkGray-900 placeholder-gray-300 dark:placeholder-darkGray-600"
+                        v-model="customEndpoint"
                       />
                     </div>
                   </label>
@@ -161,12 +162,18 @@ export default defineComponent({
     const classRadioTxtOff =
       'font-medium text-gray-500 dark:text-darkGray-400 group-hover:text-gray-700 dark:group-hover:text-darkGray-300 text-sm';
 
+    const customEndpoint = ref('');
+
     const closeModal = (): void => {
       emit('update:is-open', false);
     };
 
     const selectNetwork = (networkIdx: number): void => {
       localStorage.setItem('networkIdx', networkIdx.toString());
+      if (customEndpoint.value) {
+        const endpoint = `ws://${customEndpoint.value}`;
+        localStorage.setItem('customEndpoint', endpoint);
+      }
       location.reload();
 
       emit('update:is-open', false);
@@ -177,6 +184,7 @@ export default defineComponent({
 
     return {
       closeModal,
+      customEndpoint,
       selectNetwork,
       selNetwork,
       classRadioOn,

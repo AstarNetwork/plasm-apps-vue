@@ -34,8 +34,12 @@ export default defineComponent({
 
     const store = useStore();
     const networkIdx = localStorage.getItem('networkIdx');
+    const customEndpoint = localStorage.getItem('customEndpoint');
     if (networkIdx) {
       store.commit(MutationTypes.SET_CURRENT_NETWORK_IDX, parseInt(networkIdx));
+    }
+    if (customEndpoint) {
+      store.commit(MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT, customEndpoint);
     }
 
     return {

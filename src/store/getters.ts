@@ -7,6 +7,7 @@ export type Getters = {
   initialized(state: State): boolean;
   networkIdx(state: State): Number;
   accountIdx(state: State): Number;
+  customEndpoint(state: State): string;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -21,5 +22,8 @@ export const getters: GetterTree<State, State> & Getters = {
   },
   accountIdx: (state) => {
     return state.currentAccountIdx;
+  },
+  customEndpoint: (state) => {
+    return state.currentCustomEndpoint;
   },
 };

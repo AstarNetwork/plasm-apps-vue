@@ -112,15 +112,15 @@
 <script lang="ts">
 import { defineComponent, toRefs, computed } from 'vue';
 import BN from 'bn.js';
-// import IconBase from '@/components/icons/IconBase.vue';
-// import IconAccountSample from '@/components/icons/IconAccountSample.vue';
+import IconBase from '@/components/icons/IconBase.vue';
+import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 // import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
 // import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
 export default defineComponent({
   components: {
-    // IconBase,
-    // IconAccountSample,
+    IconBase,
+    IconAccountSample,
     // IconTrendingDown,
     // IconTrendingUp,
   },

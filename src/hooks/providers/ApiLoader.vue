@@ -16,7 +16,11 @@ export default defineComponent({
   async setup() {
     const store = useStore();
     const networkIdx = computed(() => store.getters.networkIdx);
-    const endpoint = providerEndpoints[networkIdx.value].endpoint;
+    let endpoint = providerEndpoints[networkIdx.value].endpoint;
+    if (networkIdx.value == 3) {
+      const customEndpoint = computed(() => store.getters.customEndpoint);
+      endpoint = customEndpoint.value;
+    }
 
     const api = await connectApi(endpoint);
 

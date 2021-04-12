@@ -5,6 +5,7 @@ export type State = {
   initialized: boolean;
   currentNetworkIdx: Number;
   currentAccountIdx: Number;
+  currentCustomEndpoint: string;
 };
 
 export const state: State = {
@@ -12,4 +13,5 @@ export const state: State = {
   initialized: false,
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
+  currentCustomEndpoint: '',
 };
