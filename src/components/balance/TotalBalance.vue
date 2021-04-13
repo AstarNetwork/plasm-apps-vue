@@ -47,6 +47,7 @@
 <script lang="ts">
 import { defineComponent, toRefs, computed } from 'vue';
 import BN from 'bn.js';
+import * as plasmUtils from '@/helper';
 // import IconBase from '@/components/icons/IconBase.vue';
 // import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
 // import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
@@ -67,7 +68,12 @@ export default defineComponent({
     const { balance } = toRefs(props);
 
     const formatBalance = computed(() => {
-      return balance.value.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      // FIXME: the tokenDecimal value is the current default for Plasm mainnet. We should dynamically parse this from the chain.
+      const tokenDecimal = 10;
+      return plasmUtils.reduceBalanceToDenom(
+        balance.value.clone(),
+        tokenDecimal
+      );
     });
 
     return {
