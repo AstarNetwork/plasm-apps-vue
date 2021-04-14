@@ -35,6 +35,11 @@
     <ModalTransferAmount
       v-if="modalTransferAmount"
       v-model:isOpen="modalTransferAmount"
+      :all-accounts="allAccounts"
+      :all-account-names="allAccountNames"
+      :address="defaultAccount"
+      :address-name="defaultAccountName"
+      :balance="balance"
     />
     <ModalTransferToken
       v-if="modalTransferToken"
