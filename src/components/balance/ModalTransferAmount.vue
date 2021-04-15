@@ -135,11 +135,12 @@
                         min="0"
                         pattern="^[0-9]*(\.)?[0-9]*$"
                         placeholder="0.0"
-                        value=""
+                        :value="transferAmt"
                       />
                     </div>
                     <button
                       type="button"
+                      @click="setMaxAmount(balance)"
                       class="bg-blue-100 dark:bg-blue-200 hover:bg-blue-200 dark:hover:bg-blue-300 text-xs rounded-full px-3 py-2 text-blue-900 dark:text-darkGray-900 mx-3 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-300"
                     >
                       MAX
@@ -239,6 +240,7 @@ export default defineComponent({
     // const { balance } = toRefs(props);
 
     const selAccount = ref(0);
+    const transferAmt = ref(new BN(0));
 
     const defaultAccount = ref(props.allAccounts[0] as string);
     const defaultAccountName = ref(props.allAccountNames[0]);
@@ -273,7 +275,13 @@ export default defineComponent({
       defaultAccountName,
       shortenDefaultAddress,
       openOption,
+      transferAmt,
     };
+  },
+  methods: {
+    setMaxAmount(balance: BN) {
+      this.transferAmt = balance;
+    },
   },
 });
 </script>
