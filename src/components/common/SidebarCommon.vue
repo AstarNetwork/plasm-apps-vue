@@ -51,8 +51,8 @@
           <p
             class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
           >
-            <span>{{ defaultAccountName }}</span
-            ><span class="ml-2">{{ formatBalance }}PLM</span>
+            <span>{{ defaultAccountName }}</span>
+            <!-- <span class="ml-2">{{ formatBalance }}PLM</span> -->
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400">
             {{ shortenAddress }}
@@ -171,7 +171,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useAccount, useBalance } from '@/hooks';
+import { useAccount } from '@/hooks';
 import { useSidebar } from '@/hooks/useSidebar';
 import { providerEndpoints } from '@/config/chainEndpoints';
 import Logotype from './Logotype.vue';
@@ -228,11 +228,6 @@ export default defineComponent({
       )}${defaultAccount.value.slice(-6)}`;
     });
 
-    const { balance } = useBalance(defaultAccount);
-    const formatBalance = computed(() => {
-      return balance.value.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    });
-
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
     watch(currentAccountIdx, () => {
@@ -255,7 +250,6 @@ export default defineComponent({
       ...classes,
       shortenAddress,
       defaultAccountName,
-      formatBalance,
       currentNetworkIdx,
       currentNetworkName,
     };

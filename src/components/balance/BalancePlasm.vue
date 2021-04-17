@@ -9,7 +9,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      <TotalBalance :balance="balance" />
+      <TotalBalance />
       <PlmBalance
         v-model:isOpenTransfer="modalTransferAmount"
         :balance="balance"
@@ -43,7 +43,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+  watch,
+  provide,
+} from 'vue';
 import { useAccount, useBalance } from '@/hooks';
 import { useStore } from 'vuex';
 import Address from '@/components/balance/Address.vue';
@@ -89,13 +96,19 @@ export default defineComponent({
 
     const store = useStore();
     const { balance } = useBalance(defaultAccount);
+    provide('balance', balance);
 
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
-    watch(currentAccountIdx, () => {
-      defaultAccount.value = allAccounts.value[currentAccountIdx.value];
-      defaultAccountName.value = allAccountNames.value[currentAccountIdx.value];
-    });
+    watch(
+      currentAccountIdx,
+      () => {
+        defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+        defaultAccountName.value =
+          allAccountNames.value[currentAccountIdx.value];
+      },
+      { immediate: true }
+    );
 
     return {
       ...toRefs(stateModal),
