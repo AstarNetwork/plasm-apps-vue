@@ -20,34 +20,32 @@
             </icon-base>
           </div>
           <div>
-            <div class="text-sm font-medium">Account Option</div>
+            <div class="text-sm font-medium">{{ addressName }}</div>
             <div class="text-xs text-gray-500 dark:text-darkGray-400">
-              5Hn8MM....2dZzwc
+              {{ shortenAddress }}
             </div>
           </div>
         </div>
 
-        <div class="text-sm">100PLM</div>
+        <!-- <div class="text-sm">{{ balance }}PLM</div> -->
 
         <div class="relative w-5 h-5">
-          <!-- <% if (checked==='on' ) { %> -->
           <input
             name="choose_account"
             type="radio"
             class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
-            checked
+            :value="keyIdx"
+            :checked="checked"
+            @change="onChange(keyIdx)"
           />
-          <!-- <% } else if (checked==='off' ) { %>
-                <input name="choose_account" type="radio"
-                    class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500">
-                <% } %> -->
         </div>
       </label>
     </li>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, toRefs } from 'vue';
+// import { useBalance } from '@/hooks';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 
@@ -55,6 +53,46 @@ export default defineComponent({
   components: {
     IconBase,
     IconAccountSample,
+  },
+  props: {
+    keyIdx: {
+      type: Number,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    addressName: {
+      type: String,
+      required: true,
+    },
+    checked: {
+      type: Boolean,
+    },
+  },
+  setup(props, { emit }) {
+    const { address } = toRefs(props);
+
+    const shortenAddress = computed(() => {
+      return address.value
+        ? `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
+            -6
+          )}`
+        : '';
+    });
+
+    const onChange = (keyIdx: Number) => {
+      emit('update:sel-option', keyIdx);
+    };
+
+    // const { balance } = useBalance(address);
+
+    return {
+      shortenAddress,
+      // balance,
+      onChange,
+    };
   },
 });
 </script>

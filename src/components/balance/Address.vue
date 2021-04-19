@@ -15,10 +15,10 @@
         </div>
         <div>
           <p class="text-blue-900 dark:text-darkGray-100 font-bold">
-            AddressName
+            {{ addressName }}
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400">
-            5Hn8MM......2dZzwc
+            {{ shortenAddress }}
           </p>
         </div>
       </div>
@@ -44,6 +44,7 @@
       <button
         type="button"
         class="tooltip p-4 sm:p-5 rounded-full hover:bg-gray-100 dark:hover:bg-darkGray-600 focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 focus:bg-blue-50 dark:focus:bg-darkGray-900 relative group"
+        @click="copyAddress"
       >
         <icon-document-duplicate />
 
@@ -53,12 +54,14 @@
         >
           Copy
         </span>
+
+        <input type="hidden" id="hiddenAddr" :value="address" />
       </button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, toRefs } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconChevronDown from '@/components/icons/IconChevronDown.vue';
@@ -71,14 +74,43 @@ export default defineComponent({
     IconChevronDown,
     IconDocumentDuplicate,
   },
+  props: {
+    address: {
+      type: String,
+      required: true,
+    },
+    addressName: {
+      type: String,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const openModal = () => {
       emit('update:is-open', true);
     };
 
+    const { address } = toRefs(props);
+
+    const shortenAddress = computed(() => {
+      return `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
+        -6
+      )}`;
+    });
+
     return {
       openModal,
+      shortenAddress,
     };
+  },
+  methods: {
+    copyAddress() {
+      var copyAddr = document.querySelector('#hiddenAddr') as HTMLInputElement;
+      copyAddr.setAttribute('type', 'text');
+      copyAddr.select();
+      document.execCommand('copy');
+      copyAddr.setAttribute('type', 'hidden');
+      window.getSelection()?.removeAllRanges();
+    },
   },
 });
 </script>

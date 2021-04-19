@@ -1,28 +1,68 @@
-import { ref, watch } from 'vue';
+import { ref, onUnmounted, watch, Ref } from 'vue';
+import { useIsMountedRef } from './useIsMountedRef';
+import { VoidFn } from '@polkadot/api/types';
 import { useApi } from '@/hooks';
 import BN from 'bn.js';
-import { useCall } from './useCall';
-import { AccountInfo } from '@polkadot/types/interfaces';
 
-export function useBalance(address?: string) {
+function useCall(addressRef: Ref<string>) {
+  const mountedRef = useIsMountedRef();
+
   const { api: apiRef } = useApi();
+  const balanceRef = ref(new BN(0));
 
-  const balance = ref(new BN(0));
-
-  const {
-    value: accountInfoRef,
-    setCallParams: setBalanceAccount,
-  } = useCall('system', 'account', [address]);
+  const unsub: Ref<VoidFn | undefined> = ref();
 
   watch(
-    () => accountInfoRef?.value,
-    (accountInfo) => {
-      // TODO assertation
-      if (accountInfo) {
-        balance.value = ((accountInfo as unknown) as AccountInfo).data.free.toBn();
+    () => addressRef.value,
+    (address) => {
+      console.log('addr', address);
+
+      const api = apiRef?.value;
+      if (mountedRef) {
+        if (unsub.value) {
+          unsub.value();
+          unsub.value = undefined;
+        }
+        if (address && api) {
+          api.isReady.then(async () => {
+            const {
+              data: { free },
+            } = await api.query.system.account(address);
+            balanceRef.value = free.toBn();
+            console.log(`The balances is ${free}`);
+          });
+        }
       }
-    }
+    },
+    { immediate: true }
   );
 
-  return { balance, setBalanceAccount };
+  onUnmounted(() => {
+    const unsubFn = unsub.value;
+    if (unsubFn) {
+      unsubFn();
+    }
+  });
+  return {
+    balanceRef,
+  };
+}
+
+export function useBalance(addressRef: Ref<string>) {
+  const balance = ref(new BN(0));
+
+  const { balanceRef } = useCall(addressRef);
+
+  watch(
+    () => balanceRef?.value,
+    (bal) => {
+      if (bal) {
+        balance.value = bal;
+        console.log('b', balance.value.toString(10));
+      }
+    },
+    { immediate: true }
+  );
+
+  return { balance };
 }

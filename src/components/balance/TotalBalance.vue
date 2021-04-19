@@ -8,10 +8,12 @@
     >
       <p class="text-lg font-bold mb-4 sm:mb-12 lg:mb-10">Total Balance</p>
       <p class="font-semibold text-center mb-2">
-        <span class="text-3xl">≈US $</span
-        ><span class="text-4xl tracking-tight leading-tight">120</span>
+        <!-- <span class="text-3xl">≈US $</span> -->
+        <span class="text-4xl tracking-tight leading-tight"
+          ><format-balance
+        /></span>
       </p>
-      <p class="text-xs text-center">
+      <!-- <p class="text-xs text-center">
         <span class="text-red-300 dark:text-red-400">-$698.68 (3.14%)</span>
         <span class="text-red-300 dark:text-red-400 mx-1">
           <icon-base
@@ -38,21 +40,23 @@
           </icon-base>
         </span>
         <span>24h</span>
-      </p>
+      </p> -->
     </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import IconBase from '@/components/icons/IconBase.vue';
-import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
-import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
+import FormatBalance from '@/components/balance/FormatBalance.vue';
+// import IconBase from '@/components/icons/IconBase.vue';
+// import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
+// import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
 export default defineComponent({
   components: {
-    IconBase,
-    IconTrendingDown,
-    IconTrendingUp,
+    // IconBase,
+    // IconTrendingDown,
+    // IconTrendingUp,
+    FormatBalance,
   },
 });
 </script>

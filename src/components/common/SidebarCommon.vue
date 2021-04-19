@@ -11,7 +11,7 @@
         @click="modalNetwork = true"
         class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
       >
-        Plasm Network (Mainnet)
+        {{ currentNetworkName }}
         <!-- Heroicon name: solid/chevron-down -->
         <icon-base
           class="-mr-1 ml-2 h-4 w-4"
@@ -51,10 +51,11 @@
           <p
             class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
           >
-            <span>AddressName</span><span class="ml-2">100PLM</span>
+            <span>{{ defaultAccountName }}</span>
+            <!-- <span class="ml-2">{{ formatBalance }}PLM</span> -->
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400">
-            5Hn8MM......2dZzwc
+            {{ shortenAddress }}
           </p>
         </span>
       </router-link>
@@ -159,12 +160,20 @@
   </div>
 
   <!-- Modals -->
-  <ModalNetwork v-if="modalNetwork" v-model:isOpen="modalNetwork" />
+  <ModalNetwork
+    v-if="modalNetwork"
+    :network-idx="currentNetworkIdx"
+    v-model:isOpen="modalNetwork"
+    v-model:selectNetwork="currentNetworkIdx"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useAccount } from '@/hooks';
 import { useSidebar } from '@/hooks/useSidebar';
+import { providerEndpoints } from '@/config/chainEndpoints';
 import Logotype from './Logotype.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
@@ -204,10 +213,45 @@ export default defineComponent({
         'text-gray-500 dark:text-darkGray-300 group-hover:text-gray-700 dark:group-hover:text-white h-6 w-6',
     });
 
+    const store = useStore();
+
+    const {
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+    } = useAccount();
+
+    const shortenAddress = computed(() => {
+      return `${defaultAccount.value.slice(0, 6)}${'.'.repeat(
+        6
+      )}${defaultAccount.value.slice(-6)}`;
+    });
+
+    const currentAccountIdx = computed(() => store.getters.accountIdx);
+
+    watch(currentAccountIdx, () => {
+      defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+      defaultAccountName.value = allAccountNames.value[currentAccountIdx.value];
+    });
+
+    const currentNetworkIdx = computed(() => store.getters.networkIdx);
+    const currentNetworkName = ref(
+      providerEndpoints[currentNetworkIdx.value].displayName
+    );
+
+    watch(currentNetworkIdx, (networkIdx) => {
+      currentNetworkName.value = providerEndpoints[networkIdx].displayName;
+    });
+
     return {
       isOpen,
       modalNetwork,
       ...classes,
+      shortenAddress,
+      defaultAccountName,
+      currentNetworkIdx,
+      currentNetworkName,
     };
   },
 });

@@ -21,13 +21,13 @@
         <p class="font-bold text-blue-900 dark:text-darkGray-100 text-right">
           <span class="text-2xl leading-tight">100</span>PLM
         </p>
-        <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
+        <!-- <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
           ≈US $10
-        </p>
+        </p> -->
       </div>
     </div>
 
-    <p class="text-xs mb-2 text-right">
+    <!-- <p class="text-xs mb-2 text-right">
       <span class="text-green-500">+$698.68 (3.14%)</span>
       <span class="text-green-500 mx-1">
         <icon-base
@@ -40,7 +40,7 @@
         </icon-base>
       </span>
       <span class="text-gray-500 dark:text-darkGray-400">24h</span>
-    </p>
+    </p> -->
 
     <div class="text-center">
       <button
@@ -55,13 +55,13 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import IconBase from '@/components/icons/IconBase.vue';
-import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
+// import IconBase from '@/components/icons/IconBase.vue';
+// import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
 export default defineComponent({
   components: {
-    IconBase,
-    IconTrendingUp,
+    // IconBase,
+    // IconTrendingUp,
   },
   setup(props, { emit }) {
     const openTransferModal = (): void => {

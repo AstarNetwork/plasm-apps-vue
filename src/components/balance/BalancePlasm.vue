@@ -1,24 +1,37 @@
 <template>
   <div>
     <div class="grid lg:grid-cols-2 gap-4 mb-4">
-      <Address v-model:isOpen="modalAccount" />
+      <Address
+        :address="defaultAccount"
+        :address-name="defaultAccountName"
+        v-model:isOpen="modalAccount"
+      />
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       <TotalBalance />
-      <PlmBalance v-model:isOpenTransfer="modalTransferAmount" />
+      <PlmBalance
+        v-model:isOpenTransfer="modalTransferAmount"
+        :balance="balance"
+      />
     </div>
 
     <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <Token v-model:isOpenTransfer="modalTransferToken" />
-      <Token v-model:isOpenTransfer="modalTransferToken" />
-      <Token v-model:isOpenTransfer="modalTransferToken" />
+      <!-- <Token v-model:isOpenTransfer="modalTransferToken" />
+      <Token v-model:isOpenTransfer="modalTransferToken" /> -->
     </div>
 
     <!-- Modals -->
-    <ModalAccount v-if="modalAccount" v-model:isOpen="modalAccount" />
+    <ModalAccount
+      v-if="modalAccount"
+      v-model:isOpen="modalAccount"
+      :account-idx="currentAccountIdx"
+      :all-accounts="allAccounts"
+      :all-account-names="allAccountNames"
+    />
     <ModalTransferAmount
       v-if="modalTransferAmount"
       v-model:isOpen="modalTransferAmount"
@@ -30,7 +43,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+  watch,
+  provide,
+} from 'vue';
+import { useAccount, useBalance } from '@/hooks';
+import { useStore } from 'vuex';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
@@ -62,8 +84,40 @@ export default defineComponent({
       modalTransferToken: false,
     });
 
+    const {
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+    } = useAccount();
+    // const defaultAccount = ref(
+    //   'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E'
+    // );
+
+    const store = useStore();
+    const { balance } = useBalance(defaultAccount);
+    provide('balance', balance);
+
+    const currentAccountIdx = computed(() => store.getters.accountIdx);
+
+    watch(
+      currentAccountIdx,
+      () => {
+        defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+        defaultAccountName.value =
+          allAccountNames.value[currentAccountIdx.value];
+      },
+      { immediate: true }
+    );
+
     return {
       ...toRefs(stateModal),
+      balance,
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+      currentAccountIdx,
     };
   },
 });

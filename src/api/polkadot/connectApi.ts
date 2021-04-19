@@ -28,9 +28,8 @@ const loadAccounts = async (api: ApiPromise) => {
           address,
           meta: {
             ...meta,
-            name: `${meta.name} (${
-              meta.source === 'polkadot-js' ? 'extension' : meta.source
-            })`,
+            name: `${meta.name} (
+              ${meta.source === 'polkadot-js' ? 'extension' : meta.source})`,
           },
         })
       )
@@ -44,7 +43,7 @@ const loadAccounts = async (api: ApiPromise) => {
     {
       genesisHash: api.genesisHash,
       isDevelopment,
-      type: 'ed25519',
+      ss58Format: 5,
     },
     injectedAccounts
   );
@@ -58,10 +57,16 @@ export const connectApi = async (endpoint: string) => {
     {}
   );
 
-  const api = await new ApiPromise({
+  const api = new ApiPromise({
     provider,
     types,
-  }).isReady;
+  });
+
+  try {
+    await api.isReadyOrError;
+  } catch (err) {
+    console.error('err', err);
+  }
 
   try {
     await loadAccounts(api);

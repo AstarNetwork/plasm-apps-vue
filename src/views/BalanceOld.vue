@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useApi, useAccount, useBalance } from '@/hooks';
 
 export default defineComponent({
@@ -21,7 +21,7 @@ export default defineComponent({
     const { api, testCounter } = useApi();
     const { allAccounts } = useAccount();
     const addr = 'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E';
-    const { balance } = useBalance(addr);
+    const { balance } = useBalance(ref(addr));
 
     return {
       api,

@@ -23,12 +23,15 @@
               <ul
                 class="max-h-56 rounded-md py-1 text-base overflow-auto focus:outline-none"
               >
-                <!-- Select option -->
-                <ModalAccountOption :checked="true" />
-                <ModalAccountOption :checked="false" />
-                <ModalAccountOption :checked="false" />
-                <ModalAccountOption :checked="false" />
-                <ModalAccountOption :checked="false" />
+                <ModalAccountOption
+                  v-for="(account, index) in allAccounts"
+                  :key="index"
+                  :key-idx="index"
+                  :address="account"
+                  :addressName="allAccountNames[index]"
+                  :checked="selAccount === index"
+                  v-model:selOption="selAccount"
+                />
               </ul>
             </div>
           </div>
@@ -36,7 +39,7 @@
         <div class="mt-6 flex justify-center flex-row-reverse">
           <button
             type="button"
-            @click="closeModal"
+            @click="selectAccount(selAccount)"
             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
           >
             Confirm
@@ -54,20 +57,48 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
 import ModalAccountOption from '@/components/balance/ModalAccountOption.vue';
 
 export default defineComponent({
   components: {
     ModalAccountOption,
   },
+  props: {
+    allAccounts: {
+      type: Array,
+      required: true,
+    },
+    allAccountNames: {
+      type: Array,
+      required: true,
+    },
+    accountIdx: {
+      type: Number,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const closeModal = () => {
       emit('update:is-open', false);
     };
 
+    const store = useStore();
+
+    const selectAccount = (accountIdx: Number) => {
+      store.commit(MutationTypes.SET_CURRENT_ACCOUNT_IDX, accountIdx);
+
+      emit('update:is-open', false);
+    };
+
+    const selAccount = ref(props.accountIdx);
+
     return {
       closeModal,
+      selAccount,
+      selectAccount,
     };
   },
 });

@@ -19,18 +19,19 @@
       <div class="flex justify-center mt-4 sm:mt-8 lg:mt-6">
         <div>
           <p class="font-semibold text-center">
-            <span class="text-4xl tracking-tight leading-tight">1,200</span
-            ><span class="text-2xl">PLM</span>
+            <span class="text-4xl tracking-tight leading-tight"
+              ><format-balance
+            /></span>
           </p>
-          <p
+          <!-- <p
             class="text-right text-gray-500 dark:text-darkGray-400 mb-2 text-sm"
           >
             ≈US $120
-          </p>
+          </p> -->
         </div>
       </div>
 
-      <p class="text-xs text-center">
+      <!-- <p class="text-xs text-center">
         <span class="text-red-500 dark:text-red-400">-$698.68 (3.14%)</span>
         <span class="text-red-500 dark:text-red-400 mx-1">
           <icon-base
@@ -57,7 +58,7 @@
           </icon-base>
         </span>
         <span class="text-gray-500 dark:text-darkGray-400">24h</span>
-      </p>
+      </p> -->
 
       <div class="mt-3 text-center mb-6 sm:mb-0">
         <button
@@ -83,11 +84,11 @@
         <div>Transferable</div>
         <div>
           <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">100</span>PLM
+            <span class="text-2xl leading-tight"><format-balance /></span>
           </p>
-          <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
+          <!-- <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
             ≈US $10
-          </p>
+          </p> -->
         </div>
       </div>
       <div
@@ -96,24 +97,11 @@
         <div>dApps staking</div>
         <div>
           <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">100</span>PLM
+            <span class="text-2xl leading-tight">0</span>
           </p>
-          <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
+          <!-- <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
             ≈US $10
-          </p>
-        </div>
-      </div>
-      <div
-        class="flex justify-between items-center bg-blue-50 dark:bg-darkGray-700 rounded-lg py-3 px-4"
-      >
-        <div>Transferable</div>
-        <div>
-          <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">100</span>PLM
-          </p>
-          <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
-            ≈US $10
-          </p>
+          </p> -->
         </div>
       </div>
     </div>
@@ -123,15 +111,17 @@
 import { defineComponent } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
-import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
-import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
+import FormatBalance from '@/components/balance/FormatBalance.vue';
+// import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
+// import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
 export default defineComponent({
   components: {
     IconBase,
     IconAccountSample,
-    IconTrendingDown,
-    IconTrendingUp,
+    // IconTrendingDown,
+    // IconTrendingUp,
+    FormatBalance,
   },
   setup(props, { emit }) {
     const openTransferModal = (): void => {
