@@ -1,27 +1,31 @@
 <template>
-  <div></div>
+  <div>{{ formatBalance }} {{ unitToken }}</div>
 </template>
 <script lang="ts">
-//https://github.com/polkadot-js/apps/blob/86284f815500d9edd25228db603a18983e46878d/packages/react-query/src/FormatBalance.tsx#L34
-import { defineComponent } from 'vue';
-// import { useApi } from '@/hooks';
-import { Registry } from '@polkadot/types/types';
+import { defineComponent, inject, computed, ref } from 'vue';
+
+import BN from 'bn.js';
+import * as plasmUtils from '@/helper';
 
 export default defineComponent({
   setup() {
-    // const { api } = useApi();
-    // getFormat(api.registry, formatIndex)
-  },
-  methods: {
-    getFormat(registry: Registry, formatIndex = 0): [number, string] {
-      const decimals = registry.chainDecimals;
-      const tokens = registry.chainTokens;
+    const decimal = inject('decimal', 10);
+    const unitToken = inject('unitToken', '');
+    const balance = inject('balance', ref(new BN(0)));
 
-      return [
-        formatIndex < decimals.length ? decimals[formatIndex] : decimals[0],
-        formatIndex < tokens.length ? tokens[formatIndex] : tokens[1],
-      ];
-    },
+    const formatBalance = computed(() => {
+      const tokenDecimal = decimal;
+      return plasmUtils.reduceBalanceToDenom(
+        balance.value.clone(),
+        tokenDecimal
+      );
+    });
+
+    return {
+      formatBalance,
+      unitToken,
+    };
   },
+  methods: {},
 });
 </script>

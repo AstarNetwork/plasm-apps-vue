@@ -12,17 +12,16 @@
           </icon-base>
         </div>
         <p class="text-blue-900 dark:text-darkGray-100 font-bold text-lg">
-          PLM Balance
+          {{ unitToken }} Balance
         </p>
       </div>
 
       <div class="flex justify-center mt-4 sm:mt-8 lg:mt-6">
         <div>
           <p class="font-semibold text-center">
-            <span class="text-4xl tracking-tight leading-tight">{{
-              formatBalance
-            }}</span>
-            <span class="text-2xl ml-1">PLM</span>
+            <span class="text-4xl tracking-tight leading-tight"
+              ><format-balance
+            /></span>
           </p>
           <!-- <p
             class="text-right text-gray-500 dark:text-darkGray-400 mb-2 text-sm"
@@ -85,8 +84,7 @@
         <div>Transferable</div>
         <div>
           <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">{{ formatBalance }}</span
-            >PLM
+            <span class="text-2xl leading-tight"><format-balance /></span>
           </p>
           <!-- <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
             ≈US $10
@@ -99,7 +97,7 @@
         <div>dApps staking</div>
         <div>
           <p class="font-bold text-right">
-            <span class="text-2xl leading-tight">0</span>PLM
+            <span class="text-2xl leading-tight">0</span>
           </p>
           <!-- <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
             ≈US $10
@@ -110,11 +108,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, computed } from 'vue';
-import BN from 'bn.js';
+import { defineComponent, inject } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
-import * as plasmUtils from '@/helper';
+import FormatBalance from '@/components/balance/FormatBalance.vue';
 // import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
 // import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
@@ -124,32 +121,18 @@ export default defineComponent({
     IconAccountSample,
     // IconTrendingDown,
     // IconTrendingUp,
-  },
-  props: {
-    balance: {
-      type: BN,
-      required: true,
-    },
+    FormatBalance,
   },
   setup(props, { emit }) {
     const openTransferModal = (): void => {
       emit('update:is-open-transfer', true);
     };
 
-    const { balance } = toRefs(props);
-
-    const formatBalance = computed(() => {
-      // FIXME: the tokenDecimal value is the current default for Plasm mainnet. We should dynamically parse this from the chain.
-      const tokenDecimal = 10;
-      return plasmUtils.reduceBalanceToDenom(
-        balance.value.clone(),
-        tokenDecimal
-      );
-    });
+    const unitToken = inject('unitToken', '');
 
     return {
       openTransferModal,
-      formatBalance,
+      unitToken,
     };
   },
 });

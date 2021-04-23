@@ -16,7 +16,7 @@
             <h3
               class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
             >
-              Transfer PLM
+              Transfer {{ unitToken }}
             </h3>
 
             <button
@@ -24,11 +24,11 @@
               class="w-full bg-blue-500 dark:bg-blue-800 text-white rounded-lg px-5 py-5 mb-4 relative hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400"
             >
               <span class="block text-left font-bold text-sm mb-2"
-                >PLM Balance</span
+                >{{ unitToken }} Balance</span
               >
               <span class="block font-semibold text-2xl mb-1"
-                >{{ formatBalance }} PLM</span
-              >
+                ><format-balance
+              /></span>
               <!-- <span class="block font-normal text-sm mb-2">≈US $0</span> -->
 
               <icon-base
@@ -63,12 +63,12 @@
                         </div>
                         <div>
                           <div class="text-sm font-medium">
-                            {{ defaultAccountName }}
+                            {{ toAccountName }}
                           </div>
                           <div
                             class="text-xs text-gray-500 dark:text-darkGray-400"
                           >
-                            {{ shortenDefaultAddress }}
+                            {{ shortenToAddress }}
                           </div>
                         </div>
                       </div>
@@ -135,12 +135,12 @@
                         min="0"
                         pattern="^[0-9]*(\.)?[0-9]*$"
                         placeholder="0.0"
-                        :value="transferAmt"
+                        v-model="transferAmt"
                       />
                     </div>
                     <button
                       type="button"
-                      @click="setMaxAmount(balance)"
+                      @click="setMaxAmount(formatBalance)"
                       class="bg-blue-100 dark:bg-blue-200 hover:bg-blue-200 dark:hover:bg-blue-300 text-xs rounded-full px-3 py-2 text-blue-900 dark:text-darkGray-900 mx-3 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-300"
                     >
                       MAX
@@ -148,7 +148,7 @@
                     <div
                       class="text-blue-900 dark:text-darkGray-100 text-lg border-l border-gray-300 dark:border-darkGray-500 px-3 py-4"
                     >
-                      PLM
+                      {{ unitToken }}
                     </div>
                   </div>
                   <!-- <div
@@ -178,7 +178,7 @@
         <div class="mt-6 flex justify-center flex-row-reverse">
           <button
             type="button"
-            @click="closeModal"
+            @click="transfer(transferAmt)"
             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
           >
             Confirm
@@ -196,11 +196,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, ref, watch } from 'vue';
+import { defineComponent, computed, inject, ref, watch } from 'vue';
 import BN from 'bn.js';
-import { useBalance } from '@/hooks';
+import { useApi } from '@/hooks';
+import { web3FromSource } from '@polkadot/extension-dapp';
 import * as plasmUtils from '@/helper';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
+import { ActionTypes } from '@/store/action-types';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
+import FormatBalance from '@/components/balance/FormatBalance.vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconSolidChevronDown from '@/components/icons/IconSolidChevronDown.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
@@ -215,6 +220,7 @@ export default defineComponent({
     IconAccountSample,
     IconSolidSelector,
     IconExchange,
+    FormatBalance,
   },
   props: {
     allAccounts: {
@@ -223,6 +229,14 @@ export default defineComponent({
     },
     allAccountNames: {
       type: Array,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    accountIdx: {
+      type: Number,
       required: true,
     },
     balance: {
@@ -237,45 +251,98 @@ export default defineComponent({
 
     const openOption = ref(false);
 
-    // const { balance } = toRefs(props);
+    const unitToken = inject('unitToken', '');
+    const decimal = inject('decimal', 10);
 
     const selAccount = ref(0);
     const transferAmt = ref(new BN(0));
 
-    const defaultAccount = ref(props.allAccounts[0] as string);
-    const defaultAccountName = ref(props.allAccountNames[0]);
+    const toAccount = ref(props.allAccounts[0] as string);
+    const toAccountName = ref(props.allAccountNames[0]);
 
-    const { balance } = useBalance(defaultAccount);
+    // const { balance } = useBalance(defaultAccount);
+    // provide('balance', balance);
 
     const formatBalance = computed(() => {
-      // FIXME: the tokenDecimal value is the current default for Plasm mainnet. We should dynamically parse this from the chain.
-      const tokenDecimal = 10;
+      const tokenDecimal = decimal;
       return plasmUtils.reduceBalanceToDenom(
-        balance.value.clone(),
+        props.balance.clone(),
         tokenDecimal
       );
     });
 
-    watch(selAccount, () => {
-      defaultAccount.value = props.allAccounts[selAccount.value] as string;
-      defaultAccountName.value = props.allAccountNames[selAccount.value];
+    const { api } = useApi();
+    const store = useStore();
 
-      openOption.value = false;
-    });
+    const transfer = async (transferAmt: BN) => {
+      console.log('transfer', transferAmt);
+      console.log('selAccount', toAccount.value);
 
-    const shortenDefaultAddress = computed(() => {
-      const address = defaultAccount.value as string;
+      try {
+        const injector = await web3FromSource('polkadot-js');
+        const transfer = await api?.value?.tx.balances.transfer(
+          toAccount.value,
+          1
+        );
+        transfer
+          ?.signAndSend(
+            props.address,
+            {
+              signer: injector.signer,
+            },
+            ({ status }) => {
+              if (status.isInBlock) {
+                console.log(
+                  `Completed at block hash #${status.asInBlock.toString()}`
+                );
+
+                store.dispatch(
+                  ActionTypes.SHOW_ALERT_MSG,
+                  `Completed at block hash #${status.asInBlock.toString()}`
+                );
+                //https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frpc.dusty.plasmnet.io%2F#/explorer/query/0x016d4778a119960d896a9304328d8cd77145e7f24bba790d5b0078b349bf6ea9
+              } else {
+                console.log(`Current status: ${status.type}`);
+              }
+            }
+          )
+          .catch((error: any) => {
+            console.log(':( transaction failed', error);
+          });
+        // console.log('Transfer sent with hash', hash?.toHex());
+      } catch (e) {
+        console.error(e);
+      } finally {
+        store.commit(MutationTypes.SET_LOADING, false);
+      }
+    };
+
+    watch(
+      selAccount,
+      () => {
+        toAccount.value = props.allAccounts[selAccount.value] as string;
+        toAccountName.value = props.allAccountNames[selAccount.value];
+
+        openOption.value = false;
+      },
+      { immediate: true }
+    );
+
+    const shortenToAddress = computed(() => {
+      const address = toAccount.value as string;
       return `${address.slice(0, 6)}${'.'.repeat(6)}${address.slice(-6)}`;
     });
 
     return {
       closeModal,
+      transfer,
       formatBalance,
       selAccount,
-      defaultAccountName,
-      shortenDefaultAddress,
+      toAccountName,
+      shortenToAddress,
       openOption,
       transferAmt,
+      unitToken,
     };
   },
   methods: {

@@ -11,6 +11,12 @@
       <spinner />
     </template>
   </Suspense>
+
+  <modal-loading v-if="isLoading" />
+
+  <transition name="fade">
+    <alert-box v-show="showAlertMsg" :msg="alertMsg" />
+  </transition>
 </template>
 
 <script lang="ts">
@@ -19,12 +25,20 @@ import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { useRouter } from 'vue-router';
 import ApiLoader from '@/hooks/providers/ApiLoader.vue';
-import Spinner from '@/components/Spinner.vue';
+import Spinner from '@/components/common/Spinner.vue';
+import ModalLoading from '@/components/common/ModalLoading.vue';
+import AlertBox from '@/components/common/AlertBox.vue';
 
 const defaultLayout = 'default';
 
 export default defineComponent({
   name: 'App',
+  components: {
+    ApiLoader,
+    Spinner,
+    ModalLoading,
+    AlertBox,
+  },
   setup() {
     const { currentRoute } = useRouter();
 
@@ -33,6 +47,11 @@ export default defineComponent({
     );
 
     const store = useStore();
+
+    const isLoading = computed(() => store.getters.isLoading);
+    const showAlertMsg = computed(() => store.getters.showAlertMsg);
+    const alertMsg = computed(() => store.getters.alertMsg);
+
     const networkIdx = localStorage.getItem('networkIdx');
     const customEndpoint = localStorage.getItem('customEndpoint');
     if (networkIdx) {
@@ -44,11 +63,10 @@ export default defineComponent({
 
     return {
       layout,
+      isLoading,
+      showAlertMsg,
+      alertMsg,
     };
-  },
-  components: {
-    ApiLoader,
-    Spinner,
   },
 });
 </script>
@@ -78,5 +96,13 @@ export default defineComponent({
 }
 .border-black-alt {
   border-color: #191919;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.8s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

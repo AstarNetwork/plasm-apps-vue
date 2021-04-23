@@ -65,7 +65,6 @@ export default defineComponent({
     });
 
     const onChange = (keyIdx: Number) => {
-      console.log('kk', keyIdx);
       emit('update:sel-option', keyIdx);
     };
 

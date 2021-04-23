@@ -43,7 +43,7 @@ const loadAccounts = async (api: ApiPromise) => {
     {
       genesisHash: api.genesisHash,
       isDevelopment,
-      type: 'ed25519',
+      ss58Format: 5,
     },
     injectedAccounts
   );
@@ -57,9 +57,15 @@ export const connectApi = async (endpoint: string) => {
     {}
   );
 
+  console.log('ty', types);
+
   const api = new ApiPromise({
     provider,
-    types,
+    types: {
+      ...types,
+      Address: 'MultiAddress',
+      LookupSource: 'MultiAddress',
+    },
   });
 
   try {

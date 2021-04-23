@@ -9,11 +9,8 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      <TotalBalance :balance="balance" />
-      <PlmBalance
-        v-model:isOpenTransfer="modalTransferAmount"
-        :balance="balance"
-      />
+      <TotalBalance />
+      <PlmBalance v-model:isOpenTransfer="modalTransferAmount" />
     </div>
 
     <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>
@@ -37,6 +34,7 @@
       v-model:isOpen="modalTransferAmount"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
+      :account-idx="currentAccountIdx"
       :address="defaultAccount"
       :address-name="defaultAccountName"
       :balance="balance"
@@ -48,8 +46,15 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
-import { useAccount, useBalance } from '@/hooks';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+  watch,
+  provide,
+} from 'vue';
+import { useAccount, useBalance, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
@@ -92,15 +97,32 @@ export default defineComponent({
     //   'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E'
     // );
 
+    const { api } = useApi();
+
+    const registry = api?.value?.registry;
+
+    const decimals = registry?.chainDecimals;
+    const tokens = registry?.chainTokens;
+    const decimal = (decimals || [])[0];
+    const unitToken = (tokens || [])[0];
+    provide('decimal', decimal);
+    provide('unitToken', unitToken);
+
     const store = useStore();
     const { balance } = useBalance(defaultAccount);
+    provide('balance', balance);
 
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
-    watch(currentAccountIdx, () => {
-      defaultAccount.value = allAccounts.value[currentAccountIdx.value];
-      defaultAccountName.value = allAccountNames.value[currentAccountIdx.value];
-    });
+    watch(
+      currentAccountIdx,
+      () => {
+        defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+        defaultAccountName.value =
+          allAccountNames.value[currentAccountIdx.value];
+      },
+      { immediate: true }
+    );
 
     return {
       ...toRefs(stateModal),

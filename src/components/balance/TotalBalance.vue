@@ -10,8 +10,8 @@
       <p class="font-semibold text-center mb-2">
         <!-- <span class="text-3xl">≈US $</span> -->
         <span class="text-4xl tracking-tight leading-tight"
-          >{{ formatBalance }} PLM</span
-        >
+          ><format-balance
+        /></span>
       </p>
       <!-- <p class="text-xs text-center">
         <span class="text-red-300 dark:text-red-400">-$698.68 (3.14%)</span>
@@ -45,40 +45,18 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, computed } from 'vue';
-import BN from 'bn.js';
-import * as plasmUtils from '@/helper';
+import { defineComponent } from 'vue';
+import FormatBalance from '@/components/balance/FormatBalance.vue';
 // import IconBase from '@/components/icons/IconBase.vue';
 // import IconTrendingDown from '@/components/icons/IconTrendingDown.vue';
 // import IconTrendingUp from '@/components/icons/IconTrendingUp.vue';
 
 export default defineComponent({
-  props: {
-    balance: {
-      type: BN,
-      required: true,
-    },
-  },
-  // components: {
-  //   IconBase,
-  //   IconTrendingDown,
-  //   IconTrendingUp,
-  // },
-  setup(props) {
-    const { balance } = toRefs(props);
-
-    const formatBalance = computed(() => {
-      // FIXME: the tokenDecimal value is the current default for Plasm mainnet. We should dynamically parse this from the chain.
-      const tokenDecimal = 10;
-      return plasmUtils.reduceBalanceToDenom(
-        balance.value.clone(),
-        tokenDecimal
-      );
-    });
-
-    return {
-      formatBalance,
-    };
+  components: {
+    // IconBase,
+    // IconTrendingDown,
+    // IconTrendingUp,
+    FormatBalance,
   },
 });
 </script>
