@@ -57,8 +57,6 @@ export const connectApi = async (endpoint: string) => {
     {}
   );
 
-  console.log('ty', types);
-
   const api = new ApiPromise({
     provider,
     types: {

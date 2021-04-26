@@ -132,6 +132,7 @@
                       <input
                         class="w-full text-blue-900 dark:text-darkGray-100 text-2xl focus:outline-none bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600"
                         inputmode="decimal"
+                        type="number"
                         min="0"
                         pattern="^[0-9]*(\.)?[0-9]*$"
                         placeholder="0.0"
@@ -255,7 +256,7 @@ export default defineComponent({
     const decimal = inject('decimal', 10);
 
     const selAccount = ref(0);
-    const transferAmt = ref(new BN(0));
+    const transferAmt = ref(0);
 
     const toAccount = ref(props.allAccounts[0] as string);
     const toAccountName = ref(props.allAccountNames[0]);
@@ -274,16 +275,27 @@ export default defineComponent({
     const { api } = useApi();
     const store = useStore();
 
-    const transfer = async (transferAmt: BN) => {
+    const transfer = async (transferAmt: number) => {
       console.log('transfer', transferAmt);
       console.log('selAccount', toAccount.value);
 
+      if (Number(transferAmt) === 0) {
+        console.log('The amount of token to be transmitted must not be zero');
+        store.dispatch(
+          ActionTypes.SHOW_ALERT_MSG,
+          `The amount of token to be transmitted must not be zero`
+        );
+        return;
+      }
+
       try {
+        const toAmt = plasmUtils.reduceDenomToBalance(transferAmt, decimal);
         const injector = await web3FromSource('polkadot-js');
         const transfer = await api?.value?.tx.balances.transfer(
           toAccount.value,
-          1
+          toAmt
         );
+        //1000000000000004 : 1 PLD
         transfer
           ?.signAndSend(
             props.address,
@@ -300,9 +312,17 @@ export default defineComponent({
                   ActionTypes.SHOW_ALERT_MSG,
                   `Completed at block hash #${status.asInBlock.toString()}`
                 );
-                //https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frpc.dusty.plasmnet.io%2F#/explorer/query/0x016d4778a119960d896a9304328d8cd77145e7f24bba790d5b0078b349bf6ea9
+
+                store.commit(MutationTypes.SET_LOADING, false);
+                emit('complete-transfer', true);
+
+                closeModal();
               } else {
                 console.log(`Current status: ${status.type}`);
+
+                if (status.type !== 'Finalized') {
+                  store.commit(MutationTypes.SET_LOADING, true);
+                }
               }
             }
           )
@@ -312,8 +332,6 @@ export default defineComponent({
         // console.log('Transfer sent with hash', hash?.toHex());
       } catch (e) {
         console.error(e);
-      } finally {
-        store.commit(MutationTypes.SET_LOADING, false);
       }
     };
 
@@ -346,7 +364,7 @@ export default defineComponent({
     };
   },
   methods: {
-    setMaxAmount(balance: BN) {
+    setMaxAmount(balance: number) {
       this.transferAmt = balance;
     },
   },

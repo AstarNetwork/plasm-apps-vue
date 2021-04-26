@@ -32,6 +32,7 @@
     <ModalTransferAmount
       v-if="modalTransferAmount"
       v-model:isOpen="modalTransferAmount"
+      v-on:completeTransfer="completeTransfer"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
       :account-idx="currentAccountIdx"
@@ -109,10 +110,19 @@ export default defineComponent({
     provide('unitToken', unitToken);
 
     const store = useStore();
+
     const { balance } = useBalance(defaultAccount);
     provide('balance', balance);
 
     const currentAccountIdx = computed(() => store.getters.accountIdx);
+
+    const completeTransfer = () => {
+      const { balance: balanceRef } = useBalance(defaultAccount);
+
+      watch(balanceRef, () => {
+        balance.value = balanceRef.value;
+      });
+    };
 
     watch(
       currentAccountIdx,
@@ -132,6 +142,7 @@ export default defineComponent({
       defaultAccount,
       defaultAccountName,
       currentAccountIdx,
+      completeTransfer,
     };
   },
 });
