@@ -22,7 +22,7 @@ export default defineComponent({
       endpoint = customEndpoint.value;
     }
 
-    const api = await connectApi(endpoint);
+    let api = await connectApi(endpoint);
 
     return {
       api,

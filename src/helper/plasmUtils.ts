@@ -13,8 +13,13 @@ export const reduceBalanceToDenom = (bal: BN, decimal: number) => {
   return formatted.toString();
 };
 
-export const reduceDenomToBalance = (bal: number, decimal: number) => {
-  const decPoint = new BN(10).pow(new BN(decimal));
+export const reduceDenomToBalance = (
+  bal: number,
+  unit: number,
+  decimal: number
+) => {
+  const unit_decimal = unit + decimal;
+  const decPoint = new BN(10).pow(new BN(unit_decimal));
   const formatted = decPoint.muln(Number(bal));
   return formatted;
 };

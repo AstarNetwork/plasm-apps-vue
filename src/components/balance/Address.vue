@@ -94,9 +94,11 @@ export default defineComponent({
     const { address } = toRefs(props);
 
     const shortenAddress = computed(() => {
-      return `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
-        -6
-      )}`;
+      return address.value
+        ? `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
+            -6
+          )}`
+        : '';
     });
 
     const store = useStore();
