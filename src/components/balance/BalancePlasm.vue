@@ -10,7 +10,10 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       <TotalBalance />
-      <PlmBalance v-model:isOpenTransfer="modalTransferAmount" />
+      <PlmBalance
+        :address="defaultAccount"
+        v-model:isOpenTransfer="modalTransferAmount"
+      />
     </div>
 
     <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>

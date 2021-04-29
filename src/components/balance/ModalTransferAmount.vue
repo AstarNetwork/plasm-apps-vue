@@ -290,11 +290,13 @@ export default defineComponent({
       console.log('selUnit', selectUnit.value);
 
       if (Number(transferAmt) === 0) {
-        console.log('The amount of token to be transmitted must not be zero');
         store.dispatch(
           ActionTypes.SHOW_ALERT_MSG,
           `The amount of token to be transmitted must not be zero`
         );
+        return;
+      } else if (!plasmUtils.isValidAddressPolkadotAddress(selAddress)) {
+        store.dispatch(ActionTypes.SHOW_ALERT_MSG, `The address is not valid`);
         return;
       }
 

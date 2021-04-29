@@ -64,7 +64,9 @@
         <button
           type="button"
           @click="openTransferModal"
+          :disabled="!address"
           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-0.5"
+          :class="!address ? 'disabled_btn' : ''"
         >
           Transfer
         </button>
@@ -123,6 +125,12 @@ export default defineComponent({
     // IconTrendingUp,
     FormatBalance,
   },
+  props: {
+    address: {
+      type: String,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const openTransferModal = (): void => {
       emit('update:is-open-transfer', true);
@@ -137,3 +145,8 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+.disabled_btn {
+  background: #c6d3e1 !important;
+}
+</style>
