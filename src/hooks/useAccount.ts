@@ -35,7 +35,6 @@ export const useAccount = () => {
   );
 
   watchEffect((onInvalidate) => {
-    // fixme: this part is showing an error when fetching accounts
     const subscription = keyring.accounts.subject.subscribe((accounts) => {
       // only subscribe to the keyring if the component that originally called this hook is still mounted
       // fixme: this is an unintuitive method to assign values. We need to find a scalable method

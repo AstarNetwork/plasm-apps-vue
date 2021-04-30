@@ -59,7 +59,11 @@ export const connectApi = async (endpoint: string) => {
 
   const api = new ApiPromise({
     provider,
-    types,
+    types: {
+      ...types,
+      Address: 'MultiAddress',
+      LookupSource: 'MultiAddress',
+    },
   });
 
   try {

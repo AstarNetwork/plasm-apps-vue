@@ -12,7 +12,7 @@
           </icon-base>
         </div>
         <p class="text-blue-900 dark:text-darkGray-100 font-bold text-lg">
-          PLM Balance
+          {{ unitToken }} Balance
         </p>
       </div>
 
@@ -64,7 +64,9 @@
         <button
           type="button"
           @click="openTransferModal"
+          :disabled="!address"
           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-0.5"
+          :class="!address ? 'disabled_btn' : ''"
         >
           Transfer
         </button>
@@ -108,7 +110,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import FormatBalance from '@/components/balance/FormatBalance.vue';
@@ -123,14 +125,28 @@ export default defineComponent({
     // IconTrendingUp,
     FormatBalance,
   },
+  props: {
+    address: {
+      type: String,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const openTransferModal = (): void => {
       emit('update:is-open-transfer', true);
     };
 
+    const unitToken = inject('unitToken', '');
+
     return {
       openTransferModal,
+      unitToken,
     };
   },
 });
 </script>
+<style scoped>
+.disabled_btn {
+  background: #c6d3e1 !important;
+}
+</style>

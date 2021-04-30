@@ -11,8 +11,8 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       <TotalBalance />
       <PlmBalance
+        :address="defaultAccount"
         v-model:isOpenTransfer="modalTransferAmount"
-        :balance="balance"
       />
     </div>
 
@@ -35,6 +35,13 @@
     <ModalTransferAmount
       v-if="modalTransferAmount"
       v-model:isOpen="modalTransferAmount"
+      v-on:completeTransfer="completeTransfer"
+      :all-accounts="allAccounts"
+      :all-account-names="allAccountNames"
+      :account-idx="currentAccountIdx"
+      :address="defaultAccount"
+      :address-name="defaultAccountName"
+      :balance="balance"
     />
     <ModalTransferToken
       v-if="modalTransferToken"
@@ -51,7 +58,7 @@ import {
   watch,
   provide,
 } from 'vue';
-import { useAccount, useBalance } from '@/hooks';
+import { useAccount, useBalance, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
@@ -94,11 +101,31 @@ export default defineComponent({
     //   'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E'
     // );
 
+    const { api } = useApi();
+
+    const registry = api?.value?.registry;
+
+    const decimals = registry?.chainDecimals;
+    const tokens = registry?.chainTokens;
+    const decimal = (decimals || [])[0];
+    const unitToken = (tokens || [])[0];
+    provide('decimal', decimal);
+    provide('unitToken', unitToken);
+
     const store = useStore();
+
     const { balance } = useBalance(defaultAccount);
     provide('balance', balance);
 
     const currentAccountIdx = computed(() => store.getters.accountIdx);
+
+    const completeTransfer = () => {
+      const { balance: balanceRef } = useBalance(defaultAccount);
+
+      watch(balanceRef, () => {
+        balance.value = balanceRef.value;
+      });
+    };
 
     watch(
       currentAccountIdx,
@@ -118,6 +145,7 @@ export default defineComponent({
       defaultAccount,
       defaultAccountName,
       currentAccountIdx,
+      completeTransfer,
     };
   },
 });

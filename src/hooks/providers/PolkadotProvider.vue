@@ -6,6 +6,8 @@
 import { defineComponent, PropType } from 'vue';
 import { providePolkadotContainer } from '@/api/polkadot';
 import { ApiPromise } from '@polkadot/api';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
   name: 'polkadot-provider',
@@ -13,9 +15,9 @@ export default defineComponent({
     polkadotApi: { type: Object as PropType<ApiPromise>, required: true },
   },
   setup(props) {
-    // we use the api instance that was passed as a prop to inject data
-    // note: trying to use the `provide()` function within a promise wrapper may cause unexpected behavior
     if (props.polkadotApi) {
+      const store = useStore();
+      store.commit(MutationTypes.SET_NETWORK_API, props.polkadotApi);
       providePolkadotContainer(props.polkadotApi);
     }
   },

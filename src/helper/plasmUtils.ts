@@ -1,3 +1,5 @@
+const { decodeAddress, encodeAddress } = require('@polkadot/keyring');
+const { hexToU8a, isHex } = require('@polkadot/util');
 import BN from 'bn.js';
 
 /**
@@ -11,4 +13,25 @@ export const reduceBalanceToDenom = (bal: BN, decimal: number) => {
   const decPoint = new BN(10).pow(new BN(decimal));
   const formatted = bal.div(decPoint);
   return formatted.toString();
+};
+
+export const reduceDenomToBalance = (
+  bal: number,
+  unit: number,
+  decimal: number
+) => {
+  const unit_decimal = unit + decimal;
+  const decPoint = new BN(10).pow(new BN(unit_decimal));
+  const formatted = decPoint.muln(Number(bal));
+  return formatted;
+};
+
+export const isValidAddressPolkadotAddress = (address: string) => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

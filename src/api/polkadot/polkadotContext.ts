@@ -13,7 +13,6 @@ interface ProviderState {
   currentAccount?: KeyringPair;
   currentBalance?: Balance;
   unsubscribeAccountInfo?: UnsubscribePromise;
-  testCounter: number;
 }
 
 // global state that holds the reference to the API instance. This will be exposed as a readonly reference
@@ -24,8 +23,6 @@ const state = reactive<ProviderState>({
   currentAccount: undefined,
   currentBalance: undefined,
   unsubscribeAccountInfo: undefined,
-  // fixme: this value is purely for testing the injection method
-  testCounter: 0,
 });
 
 // methods that can mutate the global state
@@ -66,9 +63,6 @@ const mutations = {
         state.currentBalance = result.data.free.toBn();
       }
     );
-  },
-  setCounter: (val: number) => {
-    state.testCounter = val;
   },
 };
 

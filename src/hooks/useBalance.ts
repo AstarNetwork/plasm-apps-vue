@@ -1,13 +1,12 @@
-import { ref, onUnmounted, watch, Ref } from 'vue';
-import { useIsMountedRef } from './useIsMountedRef';
+import { ref, onUnmounted, watch, Ref, computed } from 'vue';
 import { VoidFn } from '@polkadot/api/types';
-import { useApi } from '@/hooks';
+// import { useApi } from '@/hooks';
 import BN from 'bn.js';
+import { store } from '@/store';
 
 function useCall(addressRef: Ref<string>) {
-  const mountedRef = useIsMountedRef();
-
-  const { api: apiRef } = useApi();
+  // const { api: apiRef } = useApi();
+  const apiRef = computed(() => store.getters.api);
   const balanceRef = ref(new BN(0));
 
   const unsub: Ref<VoidFn | undefined> = ref();
@@ -18,20 +17,18 @@ function useCall(addressRef: Ref<string>) {
       console.log('addr', address);
 
       const api = apiRef?.value;
-      if (mountedRef) {
-        if (unsub.value) {
-          unsub.value();
-          unsub.value = undefined;
-        }
-        if (address && api) {
-          api.isReady.then(async () => {
-            const {
-              data: { free },
-            } = await api.query.system.account(address);
-            balanceRef.value = free.toBn();
-            console.log(`The balances is ${free}`);
-          });
-        }
+      if (unsub.value) {
+        unsub.value();
+        unsub.value = undefined;
+      }
+      if (address && api) {
+        api.isReady.then(async () => {
+          const {
+            data: { free },
+          } = await api.query.system.account(address);
+          balanceRef.value = free.toBn();
+          console.log(`The balances is ${free}`);
+        });
       }
     },
     { immediate: true }

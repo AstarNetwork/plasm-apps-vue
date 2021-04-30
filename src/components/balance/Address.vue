@@ -62,6 +62,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed, toRefs } from 'vue';
+import { useStore } from 'vuex';
+import { ActionTypes } from '@/store/action-types';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconChevronDown from '@/components/icons/IconChevronDown.vue';
@@ -92,14 +94,26 @@ export default defineComponent({
     const { address } = toRefs(props);
 
     const shortenAddress = computed(() => {
-      return `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
-        -6
-      )}`;
+      return address.value
+        ? `${address.value.slice(0, 6)}${'.'.repeat(6)}${address.value.slice(
+            -6
+          )}`
+        : '';
     });
+
+    const store = useStore();
+
+    const showAlert = () => {
+      store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+        msg: 'Copy address success!!',
+        alertType: 'success',
+      });
+    };
 
     return {
       openModal,
       shortenAddress,
+      showAlert,
     };
   },
   methods: {
@@ -110,6 +124,8 @@ export default defineComponent({
       document.execCommand('copy');
       copyAddr.setAttribute('type', 'hidden');
       window.getSelection()?.removeAllRanges();
+
+      this.showAlert();
     },
   },
 });
