@@ -15,7 +15,7 @@
   <modal-loading v-if="isLoading" />
 
   <transition name="fade">
-    <alert-box v-show="showAlertMsg" :msg="alertMsg" />
+    <alert-box v-show="showAlertMsg" :msg="alertMsg" :alert-type="alertType" />
   </transition>
 </template>
 
@@ -49,8 +49,9 @@ export default defineComponent({
     const store = useStore();
 
     const isLoading = computed(() => store.getters.isLoading);
-    const showAlertMsg = computed(() => store.getters.showAlertMsg);
-    const alertMsg = computed(() => store.getters.alertMsg);
+    const showAlertMsg = computed(() => store.getters.showAlert.showAlertMsg);
+    const alertMsg = computed(() => store.getters.showAlert.alertMsg);
+    const alertType = computed(() => store.getters.showAlert.alertType);
 
     const networkIdx = localStorage.getItem('networkIdx');
     const customEndpoint = localStorage.getItem('customEndpoint');
@@ -66,6 +67,7 @@ export default defineComponent({
       isLoading,
       showAlertMsg,
       alertMsg,
+      alertType,
     };
   },
 });

@@ -1,11 +1,16 @@
 import { ApiPromise } from '@polkadot/api';
 
+export type AlertBox = {
+  showAlertMsg: boolean;
+  alertMsg: string;
+  alertType: string;
+};
+
 export type State = {
   api?: ApiPromise;
   initialized: boolean;
   isLoading: boolean;
-  showAlertMsg: boolean;
-  alertMsg: string;
+  alertBox: AlertBox;
   currentNetworkIdx: Number;
   currentAccountIdx: Number;
   currentCustomEndpoint: string;
@@ -15,8 +20,11 @@ export const state: State = {
   api: undefined,
   initialized: false,
   isLoading: false,
-  showAlertMsg: false,
-  alertMsg: '',
+  alertBox: {
+    showAlertMsg: false,
+    alertMsg: '',
+    alertType: 'success',
+  },
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
   currentCustomEndpoint: '',

@@ -8,6 +8,7 @@ export type Mutations<S = State> = {
   [MutationTypes.SET_LOADING](state: S, isLoading: boolean): void;
   [MutationTypes.SET_SHOW_ALERT_MSG](state: S, showAlert: boolean): void;
   [MutationTypes.SET_ALERT_MSG](state: S, msg: string): void;
+  [MutationTypes.SET_ALERT_TYPE](state: S, type: string): void;
   [MutationTypes.SET_CURRENT_NETWORK_IDX](state: S, networkIdx: Number): void;
   [MutationTypes.SET_CURRENT_ACCOUNT_IDX](state: S, accountIdx: Number): void;
   [MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT](state: S, endpoint: string): void;
@@ -24,10 +25,13 @@ export const mutations: MutationTree<State> & Mutations = {
     state.isLoading = isLoading;
   },
   [MutationTypes.SET_SHOW_ALERT_MSG](state, showAlert) {
-    state.showAlertMsg = showAlert;
+    state.alertBox.showAlertMsg = showAlert;
   },
   [MutationTypes.SET_ALERT_MSG](state, msg) {
-    state.alertMsg = msg;
+    state.alertBox.alertMsg = msg;
+  },
+  [MutationTypes.SET_ALERT_TYPE](state, type) {
+    state.alertBox.alertType = type;
   },
   [MutationTypes.SET_CURRENT_NETWORK_IDX](state, networkIdx) {
     state.currentNetworkIdx = networkIdx;

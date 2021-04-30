@@ -27,9 +27,10 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationTypes.SET_INITIALIZED, undefined);
     return api;
   },
-  [ActionTypes.SHOW_ALERT_MSG]({ commit }, msg: string) {
+  [ActionTypes.SHOW_ALERT_MSG]({ commit }, { msg, alertType }) {
     commit(MutationTypes.SET_SHOW_ALERT_MSG, true);
     commit(MutationTypes.SET_ALERT_MSG, msg);
+    commit(MutationTypes.SET_ALERT_TYPE, alertType);
     setTimeout(() => {
       commit(MutationTypes.SET_SHOW_ALERT_MSG, false);
     }, 3000);

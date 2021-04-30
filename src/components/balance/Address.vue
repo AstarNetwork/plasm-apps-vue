@@ -104,7 +104,10 @@ export default defineComponent({
     const store = useStore();
 
     const showAlert = () => {
-      store.dispatch(ActionTypes.SHOW_ALERT_MSG, 'Copy address success!!');
+      store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+        msg: 'Copy address success!!',
+        alertType: 'success',
+      });
     };
 
     return {
