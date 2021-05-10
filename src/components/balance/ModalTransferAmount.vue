@@ -61,14 +61,6 @@
                           type="text"
                           v-model="toAddress"
                         />
-                        <!-- <div class="text-sm font-medium">
-                            {{ toAccountName }}
-                          </div>
-                          <div
-                            class="text-xs text-gray-500 dark:text-darkGray-400"
-                          >
-                            {{ shortenToAddress }}
-                          </div> -->
                       </div>
                     </div>
 
@@ -239,10 +231,6 @@ export default defineComponent({
     },
     address: {
       type: String,
-      required: true,
-    },
-    accountIdx: {
-      type: Number,
       required: true,
     },
     balance: {

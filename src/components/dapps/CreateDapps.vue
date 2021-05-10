@@ -48,13 +48,20 @@
     <contract-item />
   </div>
 
-  <ModalCreateDapps v-if="modalCreateDapps" v-model:isOpen="modalCreateDapps" />
+  <ModalCreateDapps
+    v-if="modalCreateDapps"
+    v-model:isOpen="modalCreateDapps"
+    :all-accounts="allAccounts"
+    :all-account-names="allAccountNames"
+    :address="defaultAccount"
+  />
   <ModalCodeHash v-if="modalCodeHash" v-model:isOpen="modalCodeHash" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
-import { useApi } from '@/hooks/useApi';
+import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import { useAccount, useApi } from '@/hooks';
+import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import ContractItem from '@/components/dapps/ContractItem.vue';
@@ -81,8 +88,33 @@ export default defineComponent({
       modalCodeHash: false,
     });
 
+    const {
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+    } = useAccount();
+
+    const store = useStore();
+
+    const currentAccountIdx = computed(() => store.getters.accountIdx);
+
+    watch(
+      currentAccountIdx,
+      () => {
+        defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+        defaultAccountName.value =
+          allAccountNames.value[currentAccountIdx.value];
+      },
+      { immediate: true }
+    );
+
     return {
       api,
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      currentAccountIdx,
       ...toRefs(stateModal),
     };
   },
