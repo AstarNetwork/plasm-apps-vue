@@ -1,8 +1,7 @@
-import { ApiPromise } from '@polkadot/api';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { isTestChain } from '@polkadot/util';
-import { WsProvider } from '@polkadot/rpc-provider';
 import * as plasmDefinitions from '@plasm/types/interfaces/definitions';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
@@ -80,7 +79,7 @@ export const connectApi = async (endpoint: string) => {
 
   // load the web3 extension
   injectedPromise
-    .then((): void => {})
+    .then((): void => { })
     .catch((error: Error) => console.error(error));
 
   return api;

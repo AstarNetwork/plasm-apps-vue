@@ -58,12 +58,13 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
     | ChainProperties
     | undefined;
 
-  const abi = ref(new Abi(source?.abi, chainProperties));
+  const abi = source ? ref(new Abi(source?.abi, chainProperties)) : ref(null);
   const isAbiSupplied = ref(!!source?.abi);
   const isAbiValid = ref(!isRequired || !!source?.abi);
 
   const isAbiError = ref(false);
   const errorText = ref('');
+
 
   // watchEffect(
   //   (): void => {
@@ -89,6 +90,8 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
 
   const onChangeAbi = ({ data }: FileState): void => {
     const json = u8aToString(data);
+
+    console.log('afs', json)
 
     try {
       const abiOutdated = JSON.parse(json) as AbiSpecOutdated;

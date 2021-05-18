@@ -222,8 +222,6 @@
                             name="file-upload"
                             type="file"
                             class="sr-only"
-                            @change="setFile"
-                            :value="wasmFromFile"
                           />
                         </label>
                         <p class="pl-1">or drag and drop</p>
@@ -241,33 +239,37 @@
                   >
                     Json file
                   </label>
-                  <div
+                  <!-- <div
                     class="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-darkGray-500 border-dashed rounded-md bg-blue-50 dark:bg-darkGray-800"
-                  >
-                    <div class="space-y-1 text-center">
+                  > -->
+                  <!-- <div class="space-y-1 text-center">
                       <icon-document />
                       <div
                         class="flex text-sm text-gray-500 dark:text-darkGray-400"
-                      >
-                        <label
-                          for="file-upload"
+                      > -->
+                  <!-- <label
+                          for="file-upload2"
                           class="relative cursor-pointer rounded-md font-medium text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 focus-within:ring-offset-none"
                         >
                           <span>Upload a file</span>
                           <input
-                            id="file-upload"
-                            name="file-upload"
+                            id="file-upload2"
+                            name="wasmFile"
                             type="file"
                             class="sr-only"
-                          />
+                            @change="setFile"
+                            :value="wasmFromFile"
+                          />                          
                         </label>
-                        <p class="pl-1">or drag and drop</p>
-                      </div>
+                        <p class="pl-1">or drag and drop</p> -->
+
+                  <input-file v-on:dropFile="onDropFile" :file="wasmFromFile" />
+                  <!-- </div>
                       <p class="text-xs text-gray-500 dark:text-darkGray-400">
                         PNG, JPG, GIF up to 00MB
-                      </p>
-                    </div>
-                  </div>
+                      </p> -->
+                  <!-- </div> -->
+                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -303,12 +305,15 @@ import IconTopPicture from '@/components/icons/IconTopPicture.vue';
 // import DeploymentAccountSelectOption from '@/components/dapps/DeploymentAccountSelectOption.vue';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
+import InputFile from '@/components/dapps/InputFile.vue';
 import { compactAddLength, isNull, isWasm } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import useFile from '@/hooks/useFile';
+import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
+import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useApi } from '@/hooks';
+import { AnyJson } from '@polkadot/types/types';
 
 interface FormData {
   projectName: string;
@@ -326,6 +331,7 @@ export default defineComponent({
     // DeploymentAccountSelectOption,
     ModalSelectAccountOption,
     CategoryMultiSelect,
+    InputFile,
   },
   props: {
     allAccounts: {
@@ -388,9 +394,10 @@ export default defineComponent({
       onChangeAbi,
       onRemoveAbi,
     } = useAbi();
+
     const {
       fileRef: wasmFromFile,
-      setFile,
+      setFile: setWasmFile,
       validate: isWasmFromFileValid,
     } = useFile({
       onChange: onChangeAbi,
@@ -402,7 +409,14 @@ export default defineComponent({
     const wasm = ref();
     const isWasmValid = ref(false);
 
+    const onDropFile = (fileState: FileState) => {
+      setWasmFile(fileState);
+    };
+
     watch(abi, () => {
+      console.log('abc', abi.value);
+      console.log('wasm', abi.value?.project.source.wasm);
+      console.log('constructor', abi.value?.constructors);
       if (abi.value && isWasm(abi.value.project.source.wasm)) {
         wasm.value = abi.value.project.source.wasm;
         isWasmValid.value = true;
@@ -445,19 +459,151 @@ export default defineComponent({
       }
     };
 
+    // const upload = async () => {
+    //   const injector = await web3FromSource('polkadot-js');
+    //   console.log('sf', api?.value?.tx.contracts.putCode);
+    //   const sendContract = await api?.value?.tx.contracts.putCode([wasm.value]);
+
+    //   sendContract?.signAndSend(
+    //     props.address,
+    //     {
+    //       signer: injector.signer,
+    //     },
+    //     (result) => {
+    //       console.log('r', result);
+    //     }
+    //   );
+    // };
+
     const upload = async () => {
       const injector = await web3FromSource('polkadot-js');
-      const sendContract = await api?.value?.tx.contracts.putCode(wasm.value);
 
-      sendContract?.signAndSend(
-        props.address,
-        {
-          signer: injector.signer,
-        },
-        (result) => {
-          console.log('r', result);
-        }
-      );
+      // const sendContract = await api?.value?.tx.contracts.putCode([wasm.value]);
+      if (api?.value) {
+        const abiData = abi.value as Abi | AnyJson;
+
+        console.log('s', abiData);
+        console.log('w', wasm.value);
+
+        const code = new CodePromise(api?.value?.clone(), abiData, wasm.value);
+
+        // Deploy the WASM, retrieve a Blueprint
+        let blueprint;
+
+        // createBlueprint is a normal submittable, so use signAndSend
+        // with an known Alice keypair (as per the API samples)
+
+        //@ts-ignore
+        const unsub = await code.createBlueprint().signAndSend(
+          props.address,
+          {
+            signer: injector.signer,
+          },
+          (result: any) => {
+            if (result.status.isInBlock || result.status.isFinalized) {
+              console.log('r', result);
+              // here we have an additional field in the result, containing the blueprint
+              blueprint = result.blueprint;
+              unsub();
+            }
+          }
+        );
+      }
+
+      /*
+        // Subscribe to system events via storage
+        api?.value?.query.system.events((events) => {
+          console.log(`\nReceived ${events.length} events:`);
+
+          // Loop through the Vec<EventRecord>
+          events.forEach((record) => {
+            // Extract the phase, event and the event types
+            const { event, phase } = record;
+            const types = event.typeDef;
+
+            // Show what we are busy with
+            console.log(
+              `\t${event.section}:${event.method}:: (phase=${phase.toString()})`
+            );
+            console.log(`\t\t${event.meta.documentation.toString()}`);
+
+            // Loop through each of the parameters, displaying the type and data
+            event.data.forEach((data, index) => {
+              console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+            });
+          });
+        });
+
+        let constructorExecutionGas = 13500000000;
+        let value = 100000000000000;
+
+        code.tx
+          .new(
+            { gasLimit: constructorExecutionGas, salt: null, value: value },
+            OWNER_ADDR
+          )
+          .signAndSend(
+            props.address,
+            {
+              signer: injector.signer,
+            },
+            ({ status, events }) => {
+              // console.log('r', result);
+              if (status.isInBlock || status.isFinalized) {
+                events
+                  // find/filter for failed events
+                  .filter(({ event }) =>
+                    api.value?.events.system.ExtrinsicFailed.is(event)
+                  )
+                  // we know that data for system.ExtrinsicFailed is
+                  // (DispatchError, DispatchInfo)
+                  .forEach(
+                    ({
+                      event: {
+                        data: [error, info],
+                      },
+                    }) => {
+                      // if (error.isModule) {
+                      //     // for module errors, we have the section indexed, lookup
+                      //     const decoded = api.value?.registry.findMetaError(error.asModule);
+                      //     const { documentation, method, section } = decoded;
+                      //     console.log(`${section}.${method}: ${documentation.join(' ')}`);
+                      // } else {
+                      //     // Other, CannotLookup, BadOrigin, no extra info
+                      //     console.log(error.toString());
+                      // }
+                    }
+                  );
+                events
+                  .filter(({ event }) =>
+                    api.value?.events.contracts.CodeStored.is(event)
+                  )
+                  .forEach(
+                    ({
+                      event: {
+                        data: [code_hash],
+                      },
+                    }) => {
+                      console.log(`code hash: ${code_hash}`);
+                    }
+                  );
+                events
+                  .filter(({ event }) =>
+                    api.value?.events.contracts.Instantiated.is(event)
+                  )
+                  .forEach(
+                    ({
+                      event: {
+                        data: [deployer, contract],
+                      },
+                    }) => {
+                      console.log(`contract address: ${contract}`);
+                    }
+                  );
+              }
+            }
+          );
+          */
     };
 
     return {
@@ -470,7 +616,7 @@ export default defineComponent({
       shortenToAddress,
       upload,
       wasmFromFile,
-      setFile,
+      onDropFile,
     };
   },
 });

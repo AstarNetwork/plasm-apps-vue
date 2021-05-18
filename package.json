@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@plasm/types": "^1.4.0",
+    "@polkadot/api": "^4.9.2",
     "@polkadot/api-contract": "^4.6.2",
     "@polkadot/extension-dapp": "^0.36.1",
     "@polkadot/keyring": "^6.2.1",
@@ -23,6 +24,7 @@
     "vue": "^3.0.2",
     "vue-chartjs": "^3.5.1",
     "vue-router": "^4.0.0-beta.13",
+    "vue3-dropzone": "^0.0.7",
     "vuex": "^4.0.0-rc.1"
   },
   "devDependencies": {

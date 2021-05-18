@@ -25,6 +25,7 @@ export default function useFile({
   const setFile = (file: FileState | null) => {
     if (file) {
       fileRef.value = file;
+      console.log('fileState', file);
       onChange && onChange(file);
     } else {
       fileRef.value = null;
