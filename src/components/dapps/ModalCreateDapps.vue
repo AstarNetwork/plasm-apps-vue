@@ -303,6 +303,15 @@ import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 import IconDocument from '@/components/icons/IconDocument.vue';
 import IconTopPicture from '@/components/icons/IconTopPicture.vue';
 // import DeploymentAccountSelectOption from '@/components/dapps/DeploymentAccountSelectOption.vue';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type {
+  PartialQueueTxExtrinsic,
+  QueueTxExtrinsic,
+  QueueTx,
+  QueueTxRpc,
+  QueueTxStatus,
+} from '@/types/Status';
+import BN from 'bn.js';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
@@ -311,9 +320,12 @@ import { SubmittableResult } from '@polkadot/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
+import useSendTx from '@/hooks/signer/useSendTx';
 import { CodePromise, Abi } from '@polkadot/api-contract';
-import { useApi } from '@/hooks';
 import { AnyJson } from '@polkadot/types/types';
+import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
+import { useStore } from 'vuex';
+import { AddressProxy } from '@/types/Signer';
 
 interface FormData {
   projectName: string;
@@ -383,7 +395,8 @@ export default defineComponent({
     });
 
     //abi
-    const { api } = useApi();
+    const store = useStore();
+    const api = computed(() => store.getters.api);
 
     const {
       abi,
@@ -459,151 +472,137 @@ export default defineComponent({
       }
     };
 
-    // const upload = async () => {
-    //   const injector = await web3FromSource('polkadot-js');
-    //   console.log('sf', api?.value?.tx.contracts.putCode);
-    //   const sendContract = await api?.value?.tx.contracts.putCode([wasm.value]);
-
-    //   sendContract?.signAndSend(
-    //     props.address,
-    //     {
-    //       signer: injector.signer,
-    //     },
-    //     (result) => {
-    //       console.log('r', result);
-    //     }
-    //   );
-    // };
-
     const upload = async () => {
-      const injector = await web3FromSource('polkadot-js');
+      // const injector = await web3FromSource('polkadot-js');
 
-      // const sendContract = await api?.value?.tx.contracts.putCode([wasm.value]);
-      if (api?.value) {
-        const abiData = abi.value as Abi | AnyJson;
+      const abiData = abi.value as Abi | AnyJson;
 
-        console.log('s', abiData);
-        console.log('w', wasm.value);
+      console.log('s', abiData);
+      console.log('w', wasm.value);
 
-        const code = new CodePromise(api?.value?.clone(), abiData, wasm.value);
+      const code = new CodePromise(api?.value, abiData, wasm.value);
 
-        // Deploy the WASM, retrieve a Blueprint
-        let blueprint;
+      // Deploy the WASM, retrieve a Blueprint
+      // let blueprint;
+      // const unsub = await code.createBlueprint().signAndSend(
+      //   props.address,
+      //   {
+      //     signer: injector.signer,
+      //   },
+      //   (result: any) => {
+      //     if (result.status.isInBlock || result.status.isFinalized) {
+      //       console.log('r', result);
+      //       // here we have an additional field in the result, containing the blueprint
+      //       blueprint = result.blueprint;
+      //       unsub();
+      //     }
+      //   }
+      // );
 
-        // createBlueprint is a normal submittable, so use signAndSend
-        // with an known Alice keypair (as per the API samples)
+      let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
+      let error: string | null = null;
 
-        //@ts-ignore
-        const unsub = await code.createBlueprint().signAndSend(
-          props.address,
-          {
-            signer: injector.signer,
-          },
-          (result: any) => {
-            if (result.status.isInBlock || result.status.isFinalized) {
-              console.log('r', result);
-              // here we have an additional field in the result, containing the blueprint
-              blueprint = result.blueprint;
-              unsub();
-            }
-          }
-        );
+      try {
+        const endowment = new BN(10);
+        const weight = new BN(200000);
+        const constructorIndex = 0;
+        uploadTx =
+          code && abi.value?.constructors[constructorIndex]?.method && endowment
+            ? code.tx[abi.value?.constructors[constructorIndex].method](
+                {
+                  gasLimit: weight,
+                  value: endowment,
+                },
+                {}
+              )
+            : null;
+      } catch (e) {
+        error = (e as Error).message;
       }
 
-      /*
-        // Subscribe to system events via storage
-        api?.value?.query.system.events((events) => {
-          console.log(`\nReceived ${events.length} events:`);
+      //send from txButton
+      const SUBMIT_RPC = jsonrpc.author.submitAndWatchExtrinsic;
+      const propsExtrinsic = uploadTx;
 
-          // Loop through the Vec<EventRecord>
-          events.forEach((record) => {
-            // Extract the phase, event and the event types
-            const { event, phase } = record;
-            const types = event.typeDef;
+      let extrinsics: SubmittableExtrinsic<'promise'>[] | undefined;
 
-            // Show what we are busy with
-            console.log(
-              `\t${event.section}:${event.method}:: (phase=${phase.toString()})`
-            );
-            console.log(`\t\t${event.meta.documentation.toString()}`);
+      if (propsExtrinsic) {
+        extrinsics = Array.isArray(propsExtrinsic)
+          ? propsExtrinsic
+          : [propsExtrinsic];
+      }
 
-            // Loop through each of the parameters, displaying the type and data
-            event.data.forEach((data, index) => {
-              console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-            });
-          });
+      const accountId = props.address;
+
+      const _onFailed = (result: SubmittableResult | null) => {
+        console.error('_onFailed', result);
+      };
+
+      const _onStart = () => {
+        console.log('_onStart');
+      };
+
+      const _onSuccess = (result: SubmittableResult) => {
+        console.log('_onSuccess', result);
+      };
+      const _onUpdate = () => {};
+
+      let txqueue: QueueTx[] = [];
+      let nextId = 0;
+
+      const addToTxQueue = (
+        value: QueueTxExtrinsic | QueueTxRpc | QueueTx
+      ): void => {
+        const id = ++nextId;
+        const removeItem = () => {
+          ////
+        };
+
+        txqueue = [
+          {
+            ...value,
+            id,
+            removeItem,
+            rpc: (value as QueueTxRpc).rpc || SUBMIT_RPC,
+            status: 'queued',
+          },
+        ];
+      };
+
+      const queueExtrinsic = (value: PartialQueueTxExtrinsic) =>
+        addToTxQueue({ ...value });
+
+      extrinsics?.forEach((extrinsic): void => {
+        queueExtrinsic({
+          accountId: accountId && accountId.toString(),
+          extrinsic,
+          isUnsigned: false,
+          txFailedCb: _onFailed,
+          txStartCb: _onStart,
+          txSuccessCb: _onSuccess,
+          txUpdateCb: _onUpdate,
         });
+      });
 
-        let constructorExecutionGas = 13500000000;
-        let value = 100000000000000;
+      const { onSend, sendRpc } = useSendTx();
+      console.log('abcdf', txqueue[0]);
 
-        code.tx
-          .new(
-            { gasLimit: constructorExecutionGas, salt: null, value: value },
-            OWNER_ADDR
-          )
-          .signAndSend(
-            props.address,
-            {
-              signer: injector.signer,
-            },
-            ({ status, events }) => {
-              // console.log('r', result);
-              if (status.isInBlock || status.isFinalized) {
-                events
-                  // find/filter for failed events
-                  .filter(({ event }) =>
-                    api.value?.events.system.ExtrinsicFailed.is(event)
-                  )
-                  // we know that data for system.ExtrinsicFailed is
-                  // (DispatchError, DispatchInfo)
-                  .forEach(
-                    ({
-                      event: {
-                        data: [error, info],
-                      },
-                    }) => {
-                      // if (error.isModule) {
-                      //     // for module errors, we have the section indexed, lookup
-                      //     const decoded = api.value?.registry.findMetaError(error.asModule);
-                      //     const { documentation, method, section } = decoded;
-                      //     console.log(`${section}.${method}: ${documentation.join(' ')}`);
-                      // } else {
-                      //     // Other, CannotLookup, BadOrigin, no extra info
-                      //     console.log(error.toString());
-                      // }
-                    }
-                  );
-                events
-                  .filter(({ event }) =>
-                    api.value?.events.contracts.CodeStored.is(event)
-                  )
-                  .forEach(
-                    ({
-                      event: {
-                        data: [code_hash],
-                      },
-                    }) => {
-                      console.log(`code hash: ${code_hash}`);
-                    }
-                  );
-                events
-                  .filter(({ event }) =>
-                    api.value?.events.contracts.Instantiated.is(event)
-                  )
-                  .forEach(
-                    ({
-                      event: {
-                        data: [deployer, contract],
-                      },
-                    }) => {
-                      console.log(`contract address: ${contract}`);
-                    }
-                  );
-              }
-            }
-          );
-          */
+      const currentItem: QueueTx = txqueue[0];
+
+      ///sendRpc
+      if (currentItem) {
+        await sendRpc(api.value, currentItem).catch(console.error);
+      }
+
+      const senderInfo: AddressProxy = {
+        isMultiCall: false,
+        isUnlockCached: false,
+        multiRoot: null,
+        proxyRoot: null,
+        signAddress: props.address,
+        signPassword: '',
+      };
+      onSend(api.value, currentItem, senderInfo);
     };
 
     return {

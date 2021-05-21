@@ -55,7 +55,11 @@
     :all-account-names="allAccountNames"
     :address="defaultAccount"
   />
-  <ModalCodeHash v-if="modalCodeHash" v-model:isOpen="modalCodeHash" />
+  <ModalCodeHash
+    v-if="modalCodeHash"
+    v-model:isOpen="modalCodeHash"
+    :address="defaultAccount"
+  />
 </template>
 
 <script lang="ts">
