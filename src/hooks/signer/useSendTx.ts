@@ -65,6 +65,11 @@ export default function useSendTx() {
         console.log('sent tx')
         unsubscribe();
       }));
+
+      // const unsubscribe = await tx.signAndSend(pairOrAddress, options, handleTxResults('signAndSend', currentItem, (): void => {
+      //   console.log('sent tx')
+      //   unsubscribe();
+      // }));
     } catch (error) {
       console.error('signAndSend: error:', error);
 

@@ -296,7 +296,15 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, computed, reactive, toRefs } from 'vue';
+import {
+  defineComponent,
+  ref,
+  watch,
+  computed,
+  reactive,
+  toRefs,
+  inject,
+} from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
@@ -304,6 +312,7 @@ import IconDocument from '@/components/icons/IconDocument.vue';
 import IconTopPicture from '@/components/icons/IconTopPicture.vue';
 // import DeploymentAccountSelectOption from '@/components/dapps/DeploymentAccountSelectOption.vue';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
 import type {
   PartialQueueTxExtrinsic,
   QueueTxExtrinsic,
@@ -312,12 +321,13 @@ import type {
   QueueTxStatus,
 } from '@/types/Status';
 import BN from 'bn.js';
+import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
-import { compactAddLength, isNull, isWasm } from '@polkadot/util';
+import { compactAddLength, isNull, isWasm, stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
-import { web3FromSource } from '@polkadot/extension-dapp';
+import { keyring } from '@polkadot/ui-keyring';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
@@ -326,6 +336,7 @@ import { AnyJson } from '@polkadot/types/types';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { useStore } from 'vuex';
 import { AddressProxy } from '@/types/Signer';
+import { BN_ZERO, bnToBn } from '@polkadot/util';
 
 interface FormData {
   projectName: string;
@@ -398,15 +409,7 @@ export default defineComponent({
     const store = useStore();
     const api = computed(() => store.getters.api);
 
-    const {
-      abi,
-      errorText,
-      isAbiError,
-      isAbiSupplied,
-      isAbiValid,
-      onChangeAbi,
-      onRemoveAbi,
-    } = useAbi();
+    const { abi, onChangeAbi, onRemoveAbi } = useAbi();
 
     const {
       fileRef: wasmFromFile,
@@ -453,28 +456,7 @@ export default defineComponent({
 
     const isSubmittable = ref(false);
 
-    const onSuccess = (result: SubmittableResult): void => {
-      const section = api?.value?.tx.contracts ? 'contracts' : 'contract';
-      const record = result.findRecord(section, 'CodeStored');
-
-      if (record) {
-        const codeHash = record.event.data[0];
-
-        if (!codeHash) {
-          return;
-        }
-
-        // store.saveCode({ abi: abi?.json || undefined, codeHash: codeHash.toHex(), name, tags: [] })
-        //   .then((id): void => navigateTo.uploadSuccess(id)())
-        //   .catch((error: any): void => {
-        //     console.error('Unable to save code', error);
-        //   });
-      }
-    };
-
     const upload = async () => {
-      // const injector = await web3FromSource('polkadot-js');
-
       const abiData = abi.value as Abi | AnyJson;
 
       console.log('s', abiData);
@@ -482,29 +464,19 @@ export default defineComponent({
 
       const code = new CodePromise(api?.value, abiData, wasm.value);
 
-      // Deploy the WASM, retrieve a Blueprint
-      // let blueprint;
-      // const unsub = await code.createBlueprint().signAndSend(
-      //   props.address,
-      //   {
-      //     signer: injector.signer,
-      //   },
-      //   (result: any) => {
-      //     if (result.status.isInBlock || result.status.isFinalized) {
-      //       console.log('r', result);
-      //       // here we have an additional field in the result, containing the blueprint
-      //       blueprint = result.blueprint;
-      //       unsub();
-      //     }
-      //   }
-      // );
-
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
       let error: string | null = null;
 
       try {
-        const endowment = new BN(10);
-        const weight = new BN(200000);
+        //should be changable
+        const unit_d = 3;
+        const decimal = 12;
+        const endowment = bnToBn(
+          plasmUtils.reduceDenomToBalance(27, unit_d, decimal)
+        );
+        const weight = new BN(200000000000);
+        ///
+
         const constructorIndex = 0;
         uploadTx =
           code && abi.value?.constructors[constructorIndex]?.method && endowment
@@ -542,8 +514,26 @@ export default defineComponent({
         console.log('_onStart');
       };
 
-      const _onSuccess = (result: SubmittableResult) => {
+      const _onSuccess = (result: CodeSubmittableResult) => {
         console.log('_onSuccess', result);
+
+        if (result.blueprint) {
+          const codeHash = result.blueprint?.codeHash;
+          const codeJson = {
+            abi: stringify(result.blueprint?.abi.json),
+            name: formData.projectName || '<>',
+            tags: [],
+          };
+        }
+        result.contract &&
+          keyring.saveContract(result.contract.address.toString(), {
+            contract: {
+              abi: stringify(result.contract.abi.json),
+              genesisHash: api.value.genesisHash.toHex(),
+            },
+            name: formData.projectName || '<>',
+            tags: [],
+          });
       };
       const _onUpdate = () => {};
 
@@ -585,7 +575,7 @@ export default defineComponent({
       });
 
       const { onSend, sendRpc } = useSendTx();
-      console.log('abcdf', txqueue[0]);
+      console.log('txQueue', txqueue[0]);
 
       const currentItem: QueueTx = txqueue[0];
 

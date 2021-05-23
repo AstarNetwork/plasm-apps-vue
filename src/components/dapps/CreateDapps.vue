@@ -63,7 +63,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+  watch,
+  provide,
+} from 'vue';
 import { useAccount, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
@@ -100,7 +107,6 @@ export default defineComponent({
     } = useAccount();
 
     const store = useStore();
-
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
     watch(
