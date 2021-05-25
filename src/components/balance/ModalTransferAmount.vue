@@ -318,10 +318,10 @@ export default defineComponent({
                   `Completed at block hash #${status.asInBlock.toString()}`
                 );
 
-                store.dispatch(
-                  ActionTypes.SHOW_ALERT_MSG,
-                  `Completed at block hash #${status.asInBlock.toString()}`
-                );
+                store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+                  msg: `Completed at block hash #${status.asInBlock.toString()}`,
+                  alertType: 'success',
+                });
 
                 store.commit(MutationTypes.SET_LOADING, false);
                 emit('complete-transfer', true);

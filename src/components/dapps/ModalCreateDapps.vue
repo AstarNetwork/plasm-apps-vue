@@ -101,7 +101,7 @@
                   </div> -->
                 </div>
 
-                <div>
+                <!-- <div>
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
@@ -122,7 +122,7 @@
                       v-model="webpage"
                     />
                   </div>
-                </div>
+                </div> -->
 
                 <div>
                   <label
@@ -138,6 +138,45 @@
                 </div>
 
                 <div>
+                  <label
+                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
+                  >
+                    Endowment (UNIT)
+                  </label>
+                  <input
+                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
+                    placeholder=""
+                    v-model="endowment"
+                  />
+                  <!-- <select
+                      name="units"
+                      class="dark:bg-darkGray-900"
+                      v-model="selectUnit"
+                    >
+                      <option
+                        v-for="item in arrUnitNames"
+                        :key="item"
+                        :value="item"
+                      >
+                        {{ item }}
+                      </option>
+                    </select> -->
+                </div>
+
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
+                  >
+                    Max Gas Allowed (M)
+                  </label>
+                  <input
+                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
+                    placeholder=""
+                    v-model="weight"
+                  />
+                </div>
+
+                <!-- <div>
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
@@ -157,7 +196,7 @@
                     Category
                   </label>
 
-                  <!-- <div class="relative">
+                  <div class="relative">
                     <div
                       class="block absolute mt-1 w-full rounded-md bg-white dark:bg-darkGray-800 shadow-lg z-10 bottom-1 border border-gray-200 dark:border-darkGray-600"
                     >
@@ -178,7 +217,7 @@
                         </li>
                       </ul>
                     </div>
-                  </div> -->
+                  </div>
 
                   <input
                     class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
@@ -192,13 +231,13 @@
                     <category-multi-select />
                     <category-multi-select />
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
 
             <div class="sm:w-1/2">
               <div class="grid grid-cols-1 gap-6">
-                <div>
+                <!-- <div>
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
@@ -231,7 +270,7 @@
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> -->
 
                 <div>
                   <label
@@ -239,37 +278,8 @@
                   >
                     Json file
                   </label>
-                  <!-- <div
-                    class="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-darkGray-500 border-dashed rounded-md bg-blue-50 dark:bg-darkGray-800"
-                  > -->
-                  <!-- <div class="space-y-1 text-center">
-                      <icon-document />
-                      <div
-                        class="flex text-sm text-gray-500 dark:text-darkGray-400"
-                      > -->
-                  <!-- <label
-                          for="file-upload2"
-                          class="relative cursor-pointer rounded-md font-medium text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 focus-within:ring-offset-none"
-                        >
-                          <span>Upload a file</span>
-                          <input
-                            id="file-upload2"
-                            name="wasmFile"
-                            type="file"
-                            class="sr-only"
-                            @change="setFile"
-                            :value="wasmFromFile"
-                          />                          
-                        </label>
-                        <p class="pl-1">or drag and drop</p> -->
 
                   <input-file v-on:dropFile="onDropFile" :file="wasmFromFile" />
-                  <!-- </div>
-                      <p class="text-xs text-gray-500 dark:text-darkGray-400">
-                        PNG, JPG, GIF up to 00MB
-                      </p> -->
-                  <!-- </div> -->
-                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -327,6 +337,8 @@ import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
 import { compactAddLength, isNull, isWasm, stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
+import { ActionTypes } from '@/store/action-types';
+import { MutationTypes } from '@/store/mutation-types';
 import { keyring } from '@polkadot/ui-keyring';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
@@ -339,6 +351,8 @@ import { AddressProxy } from '@/types/Signer';
 import { BN_ZERO, bnToBn } from '@polkadot/util';
 
 interface FormData {
+  endowment: BN;
+  weight: BN;
   projectName: string;
   projectDesc: string;
   webpage: string;
@@ -377,7 +391,12 @@ export default defineComponent({
 
     const openOption = ref(false);
 
+    const unit_d = 3;
+    const decimal = 12;
+
     const formData = reactive<FormData>({
+      endowment: bnToBn(plasmUtils.reduceDenomToBalance(27, unit_d, decimal)),
+      weight: new BN(200000000000),
       projectName: '',
       projectDesc: '',
       webpage: '',
@@ -454,9 +473,19 @@ export default defineComponent({
       isWasmValid.value = false;
     });
 
-    const isSubmittable = ref(false);
-
     const upload = async () => {
+      if (
+        formData.projectName === '' ||
+        toAddress.value === '' ||
+        wasm.value === null
+      ) {
+        store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+          msg: `Please check fields again`,
+          alertType: 'error',
+        });
+        return;
+      }
+
       const abiData = abi.value as Abi | AnyJson;
 
       console.log('s', abiData);
@@ -469,27 +498,30 @@ export default defineComponent({
 
       try {
         //should be changable
-        const unit_d = 3;
-        const decimal = 12;
-        const endowment = bnToBn(
-          plasmUtils.reduceDenomToBalance(27, unit_d, decimal)
-        );
-        const weight = new BN(200000000000);
+        // const unit_d = 3;
+        // const decimal = 12;
+        // const endowment = bnToBn(
+        //   plasmUtils.reduceDenomToBalance(27, unit_d, decimal)
+        // );
+        // const weight = new BN(200000000000);
         ///
 
         const constructorIndex = 0;
         uploadTx =
-          code && abi.value?.constructors[constructorIndex]?.method && endowment
+          code &&
+          abi.value?.constructors[constructorIndex]?.method &&
+          formData.endowment
             ? code.tx[abi.value?.constructors[constructorIndex].method](
                 {
-                  gasLimit: weight,
-                  value: endowment,
+                  gasLimit: formData.weight,
+                  value: formData.endowment,
                 },
                 {}
               )
             : null;
       } catch (e) {
         error = (e as Error).message;
+        return;
       }
 
       //send from txButton
@@ -508,23 +540,30 @@ export default defineComponent({
 
       const _onFailed = (result: SubmittableResult | null) => {
         console.error('_onFailed', result);
+        store.commit(MutationTypes.SET_LOADING, false);
+        store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+          msg: result,
+          alertType: 'error',
+        });
       };
 
       const _onStart = () => {
         console.log('_onStart');
+        store.commit(MutationTypes.SET_LOADING, true);
       };
 
       const _onSuccess = (result: CodeSubmittableResult) => {
         console.log('_onSuccess', result);
 
-        if (result.blueprint) {
-          const codeHash = result.blueprint?.codeHash;
-          const codeJson = {
-            abi: stringify(result.blueprint?.abi.json),
-            name: formData.projectName || '<>',
-            tags: [],
-          };
-        }
+        const codeHash = result.blueprint?.codeHash.toHex();
+        const codeJson = {
+          abi: stringify(result.blueprint?.abi.json),
+          name: formData.projectName || '<>',
+          tags: [],
+        };
+        console.log('codeHash', codeHash);
+        console.log('codeJson', codeJson);
+
         result.contract &&
           keyring.saveContract(result.contract.address.toString(), {
             contract: {
@@ -534,6 +573,12 @@ export default defineComponent({
             name: formData.projectName || '<>',
             tags: [],
           });
+
+        store.commit(MutationTypes.SET_LOADING, false);
+        store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+          msg: `Success to deploying contract- codeHash: ${codeHash} `,
+          alertType: 'success',
+        });
       };
       const _onUpdate = () => {};
 
