@@ -1,4 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
+import { State as StateContract } from './modules/contracts/state';
 
 export type AlertBox = {
   showAlertMsg: boolean;
@@ -6,7 +7,7 @@ export type AlertBox = {
   alertType: string;
 };
 
-export type State = {
+export interface GeneralState extends StateContract {
   api?: ApiPromise;
   initialized: boolean;
   isLoading: boolean;
@@ -14,9 +15,9 @@ export type State = {
   currentNetworkIdx: Number;
   currentAccountIdx: Number;
   currentCustomEndpoint: string;
-};
+}
 
-export const state: State = {
+export const state: GeneralState = {
   api: undefined,
   initialized: false,
   isLoading: false,
@@ -28,4 +29,5 @@ export const state: State = {
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
   currentCustomEndpoint: '',
+  allCode: {},
 };

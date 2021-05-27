@@ -4,10 +4,10 @@ import {
   CommitOptions,
   DispatchOptions,
 } from 'vuex';
-import { State, state } from './state';
-import { Getters, getters } from './getters';
-import { Mutations, mutations } from './mutations';
-import { Actions, actions } from './actions';
+import { GeneralState as State, state } from './state';
+import { GeneralGetters as Getters, getters } from './getters';
+import { GeneralMutations as Mutations, mutations } from './mutations';
+import { GeneralActions as Actions, actions } from './actions';
 
 export const store = createStore({
   state,

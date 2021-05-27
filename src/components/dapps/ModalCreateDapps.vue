@@ -505,6 +505,8 @@ export default defineComponent({
         // );
         // const weight = new BN(200000000000);
         ///
+        console.log('endowment', formData.endowment);
+        console.log('weight', formData.weight);
 
         const constructorIndex = 0;
         uploadTx =
@@ -523,6 +525,8 @@ export default defineComponent({
         error = (e as Error).message;
         return;
       }
+
+      console.log('uploadTx', uploadTx);
 
       //send from txButton
       const SUBMIT_RPC = jsonrpc.author.submitAndWatchExtrinsic;
@@ -555,14 +559,21 @@ export default defineComponent({
       const _onSuccess = (result: CodeSubmittableResult) => {
         console.log('_onSuccess', result);
 
-        const codeHash = result.blueprint?.codeHash.toHex();
+        const codeHash = result.blueprint?.codeHash;
         const codeJson = {
           abi: stringify(result.blueprint?.abi.json),
           name: formData.projectName || '<>',
           tags: [],
         };
-        console.log('codeHash', codeHash);
+        console.log('codeHash', codeHash?.toHex());
         console.log('codeJson', codeJson);
+
+        result.blueprint &&
+          store.dispatch(ActionTypes.SAVE_CODE, {
+            api: api?.value,
+            _codeHash: codeHash,
+            partial: codeJson,
+          });
 
         result.contract &&
           keyring.saveContract(result.contract.address.toString(), {
@@ -576,7 +587,7 @@ export default defineComponent({
 
         store.commit(MutationTypes.SET_LOADING, false);
         store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
-          msg: `Success to deploying contract- codeHash: ${codeHash} `,
+          msg: `Success to deploying contract- codeHash: ${codeHash?.toHex()} `,
           alertType: 'success',
         });
       };
