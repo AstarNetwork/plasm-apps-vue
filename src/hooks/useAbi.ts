@@ -106,10 +106,9 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
 
       //@ts-ignore
       abi.value = new Abi(newAbi, chainProperties);
+      isAbiError.value = false;
       isAbiSupplied.value = true;
       isAbiValid.value = true;
-
-      isAbiError.value = false;
 
       // source?.id && store.saveCode(
       //   { abi: newAbi },

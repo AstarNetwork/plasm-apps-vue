@@ -17,7 +17,7 @@
     <button
       type="button"
       @click="modalCodeHash = true"
-      class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
+      class="inline-flex items-center ml-2 px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
     >
       <icon-base
         class="w-5 h-5 text-blue-500 dark:text-blue-400 -ml-1 dark:group-hover:text-blue-300"
@@ -42,14 +42,9 @@
       {{ code.json.codeHash }}
     </div> -->
 
-    <contract-item />
-    <!-- <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item /> -->
+    <template v-for="(code, index) in allCode" :key="index">
+      <contract-item :code="code" />
+    </template>
   </div>
 
   <ModalCreateDapps
@@ -118,19 +113,18 @@ export default defineComponent({
     );
 
     // Get all contracts
-    // const allCode = computed(() => store.getters.getAllCode);
+    const allCode = computed(() => store.getters.getAllCode);
 
-    // store.dispatch(ActionTypes.LOAD_ALL_CONTRACTS, {
-    //   api: api?.value,
-    // });
+    store.dispatch(ActionTypes.LOAD_ALL_CONTRACTS, {
+      api: api?.value,
+    });
 
     return {
-      api,
       allAccounts,
       allAccountNames,
       defaultAccount,
       currentAccountIdx,
-      // allCode,
+      allCode,
       ...toRefs(stateModal),
     };
   },

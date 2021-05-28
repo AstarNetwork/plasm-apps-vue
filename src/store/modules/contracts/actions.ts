@@ -43,7 +43,7 @@ export const actions: ActionTree<State, State> & Actions = {
     try {
       const genesisHash = api.genesisHash?.toHex();
 
-      console.log('sf', genesisHash)
+      console.log('genesisHash', genesisHash)
 
       store.each((json: CodeJson, key: string): void => {
         if (json && json.genesisHash === genesisHash && key.startsWith(KEY_CODE)) {
@@ -56,7 +56,8 @@ export const actions: ActionTree<State, State> & Actions = {
     }
   },
   async [ActionTypes.SAVE_CODE]({ commit, state }, { api, _codeHash, partial }) {
-    const codeHash = (isString(_codeHash) ? api.registry.createType('Hash', _codeHash) : _codeHash).toHex();
+    const hash: Hash = isString(_codeHash) ? api.registry.createType('Hash', _codeHash) : _codeHash;
+    const codeHash = hash.toHex();
     const existing = state.allCode[codeHash];
     const json = {
       ...(existing ? existing.json : {}),
@@ -66,6 +67,9 @@ export const actions: ActionTree<State, State> & Actions = {
       whenCreated: existing?.json.whenCreated || Date.now()
     };
     const key = `${KEY_CODE}${json.codeHash}`;
+
+    console.log('key', key)
+    console.log('json', json)
 
     store.set(key, json);
     const newJson = getCodeJson(api, json as CodeJson);

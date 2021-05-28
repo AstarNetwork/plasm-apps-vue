@@ -64,10 +64,10 @@
         <div class="mt-6 flex justify-center flex-row-reverse">
           <button
             type="button"
-            @click="upload"
+            @click="save"
             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
           >
-            Upload
+            Save
           </button>
           <button
             type="button"
@@ -83,16 +83,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, watch, computed, reactive, toRefs } from 'vue';
-import { BlueprintPromise } from '@polkadot/api-contract';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { useStore } from 'vuex';
-import type {
-  ChainProperties,
-  ContractProject,
-} from '@polkadot/types/interfaces';
-import { CodePromise, Abi } from '@polkadot/api-contract';
-import { AnyJson } from '@polkadot/types/types';
-const { createTestKeyring } = require('@polkadot/keyring/testing');
+import { ActionTypes } from '@/store/action-types';
+import { stringify } from '@polkadot/util';
 
 export default defineComponent({
   props: {
@@ -108,58 +101,43 @@ export default defineComponent({
 
     const store = useStore();
     const api = computed(() => store.getters.api);
-    const abiData = ref();
-    const bundleName = ref('');
-    const codeHash = ref('');
 
-    const upload = async () => {
-      const injector = await web3FromSource('polkadot-js');
+    // const codeHash = ref('');
+    // const bundleName = ref('');
+    // const abiData = ref('');
+    const codeHash = ref(
+      '0x52f960bf3032155ed75db1490c7ac4f6c660105e7847558df5d4edb615e3eb1e'
+    );
+    const bundleName = ref('flipper');
+    const abiData = ref(
+      '{ "metadataVersion": "0.1.0", "source": { "hash": "0x52f960bf3032155ed75db1490c7ac4f6c660105e7847558df5d4edb615e3eb1e", "language": "ink! 3.0.0-rc3", "compiler": "rustc 1.54.0-nightly" }, "contract": { "name": "flipper", "version": "0.1.0", "authors": [ "[your_name] <[your_email]>" ] }, "spec": { "constructors": [ { "args": [ { "name": "init_value", "type": { "displayName": [ "bool" ], "type": 1 } } ], "docs": [ "Constructor that initializes the `bool` value to the given `init_value`." ], "name": [ "new" ], "selector": "0x9bae9d5e" }, { "args": [], "docs": [ "Constructor that initializes the `bool` value to `false`.", "", "Constructors can delegate to other constructors." ], "name": [ "default" ], "selector": "0xed4b9d1b" } ], "docs": [], "events": [], "messages": [ { "args": [], "docs": [ " A message that can be called on instantiated contracts.", " This one flips the value of the stored `bool` from `true`", " to `false` and vice versa." ], "mutates": true, "name": [ "flip" ], "payable": false, "returnType": null, "selector": "0x633aa551" }, { "args": [], "docs": [ " Simply returns the current value of our `bool`." ], "mutates": false, "name": [ "get" ], "payable": false, "returnType": { "displayName": [ "bool" ], "type": 1 }, "selector": "0x2f865bd9" } ] }, "storage": { "struct": { "fields": [ { "layout": { "cell": { "key": "0x0000000000000000000000000000000000000000000000000000000000000000", "ty": 1 } }, "name": "value" } ] } }, "types": [ { "def": { "primitive": "bool" } } ] }'
+    );
 
-      console.log('f', abiData.value + '/' + codeHash.value);
-      const registry = api?.value?.registry;
-      const chainProperties = registry?.getChainProperties() as
-        | ChainProperties
-        | undefined;
+    const save = async () => {
+      if (!codeHash.value || !bundleName.value || !abiData.value) {
+        return;
+      }
 
-      // const abi = new Abi(abiData?.value, chainProperties);
+      const codeJson = {
+        abi: abiData.value,
+        name: bundleName.value || '<>',
+        tags: [],
+      };
 
-      const abi = require('@/test/metadata.json');
+      console.log('codEJson', codeJson);
 
-      console.log('sss', abi);
+      store.dispatch(ActionTypes.SAVE_CODE, {
+        api: api?.value,
+        _codeHash: codeHash.value,
+        partial: codeJson,
+      });
 
-      const blueprint = new BlueprintPromise(api?.value, abi, codeHash.value);
-      // Deploy a contract using the Blueprint
-      const endowment = 1230000000000n;
-
-      // NOTE The apps UI specifies these in Mgas
-      const gasLimit = 100000n * 1000000n;
-      const initValue = 123;
-
-      let contract;
-
-      // We pass the constructor (named `new` in the actual Abi),
-      // the endowment, gasLimit (weight) as well as any constructor params
-      // (in this case `new (initValue: i32)` is the constructor)
-      const unsub = await blueprint.tx
-        .new(endowment, gasLimit, initValue)
-        .signAndSend(
-          props.address,
-          {
-            signer: injector.signer,
-          },
-          (result: any) => {
-            if (result.status.isInBlock || result.status.isFinalized) {
-              console.log('r', result);
-              contract = result.contract;
-              unsub();
-            }
-          }
-        );
+      closeModal();
     };
 
     return {
       closeModal,
-      upload,
+      save,
       abiData,
       bundleName,
       codeHash,

@@ -330,6 +330,7 @@ import type {
   QueueTxRpc,
   QueueTxStatus,
 } from '@/types/Status';
+import type { RawParams } from '@/types/Params';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
@@ -348,7 +349,8 @@ import { AnyJson } from '@polkadot/types/types';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { useStore } from 'vuex';
 import { AddressProxy } from '@/types/Signer';
-import { BN_ZERO, bnToBn } from '@polkadot/util';
+import { bnToBn } from '@polkadot/util';
+import { createValue } from '@/hooks/params/values';
 
 interface FormData {
   endowment: BN;
@@ -492,9 +494,7 @@ export default defineComponent({
       console.log('w', wasm.value);
 
       const code = new CodePromise(api?.value, abiData, wasm.value);
-
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
-      let error: string | null = null;
 
       try {
         //should be changable
@@ -508,21 +508,45 @@ export default defineComponent({
         console.log('endowment', formData.endowment);
         console.log('weight', formData.weight);
 
+        console.log('code', code);
+        console.log('method', code.tx);
+
         const constructorIndex = 0;
-        uploadTx =
-          code &&
-          abi.value?.constructors[constructorIndex]?.method &&
-          formData.endowment
-            ? code.tx[abi.value?.constructors[constructorIndex].method](
-                {
-                  gasLimit: formData.weight,
-                  value: formData.endowment,
-                },
-                {}
-              )
-            : null;
+        const params = abi?.value?.constructors[constructorIndex].args;
+        console.log('params', params);
+        const pvalues = params?.reduce(
+          (result: RawParams, param, index): RawParams => [
+            ...result,
+            createValue(abi?.value?.registry, param),
+          ],
+          []
+        );
+        const arrValues: any = pvalues?.map(({ value }) => value);
+        console.log('v', arrValues);
+
+        // uploadTx =
+        //   code &&
+        //   abi.value?.constructors[constructorIndex].method &&
+        //   formData.endowment
+        //     ? code.tx[abi.value?.constructors[constructorIndex].method](
+        //         {
+        //           gasLimit: formData.weight,
+        //           value: formData.endowment,
+        //         },
+        //         {}
+        //       )
+        //     : null;
+
+        uploadTx = code.tx['new'](
+          {
+            gasLimit: formData.weight,
+            value: formData.endowment,
+          },
+          ...arrValues
+        );
       } catch (e) {
-        error = (e as Error).message;
+        const error = (e as Error).message;
+        console.error(error);
         return;
       }
 
