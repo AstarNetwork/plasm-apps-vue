@@ -306,20 +306,12 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  watch,
-  computed,
-  reactive,
-  toRefs,
-  inject,
-} from 'vue';
+import { defineComponent, ref, watch, computed, reactive, toRefs } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
-import IconDocument from '@/components/icons/IconDocument.vue';
-import IconTopPicture from '@/components/icons/IconTopPicture.vue';
+// import IconDocument from '@/components/icons/IconDocument.vue';
+// import IconTopPicture from '@/components/icons/IconTopPicture.vue';
 // import DeploymentAccountSelectOption from '@/components/dapps/DeploymentAccountSelectOption.vue';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
@@ -328,15 +320,14 @@ import type {
   QueueTxExtrinsic,
   QueueTx,
   QueueTxRpc,
-  QueueTxStatus,
 } from '@/types/Status';
 import type { RawParams } from '@/types/Params';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
-import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
+// import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
-import { compactAddLength, isNull, isWasm, stringify } from '@polkadot/util';
+import { compactAddLength, isWasm, stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -365,11 +356,11 @@ export default defineComponent({
     IconBase,
     IconAccountSample,
     IconSolidSelector,
-    IconDocument,
-    IconTopPicture,
+    // IconDocument,
+    // IconTopPicture,
     // DeploymentAccountSelectOption,
     ModalSelectAccountOption,
-    CategoryMultiSelect,
+    // CategoryMultiSelect,
     InputFile,
   },
   props: {
@@ -515,7 +506,7 @@ export default defineComponent({
         const params = abi?.value?.constructors[constructorIndex].args;
         console.log('params', params);
         const pvalues = params?.reduce(
-          (result: RawParams, param, index): RawParams => [
+          (result: RawParams, param): RawParams => [
             ...result,
             createValue(abi?.value?.registry, param),
           ],
@@ -524,26 +515,28 @@ export default defineComponent({
         const arrValues: any = pvalues?.map(({ value }) => value);
         console.log('v', arrValues);
 
-        // uploadTx =
-        //   code &&
-        //   abi.value?.constructors[constructorIndex].method &&
-        //   formData.endowment
-        //     ? code.tx[abi.value?.constructors[constructorIndex].method](
-        //         {
-        //           gasLimit: formData.weight,
-        //           value: formData.endowment,
-        //         },
-        //         {}
-        //       )
-        //     : null;
+        uploadTx =
+          code &&
+          abi.value?.constructors[constructorIndex].method &&
+          formData.endowment
+            ? code.tx[abi.value?.constructors[constructorIndex].method](
+                {
+                  gasLimit: formData.weight,
+                  value: formData.endowment,
+                },
+                {}
+              )
+            : null;
 
-        uploadTx = code.tx['new'](
-          {
-            gasLimit: formData.weight,
-            value: formData.endowment,
-          },
-          ...arrValues
-        );
+        console.log('ff', code.tx['new']);
+
+        // uploadTx = code.tx['new'](
+        //   {
+        //     gasLimit: formData.weight,
+        //     value: formData.endowment,
+        //   },
+        //   ...arrValues
+        // );
       } catch (e) {
         const error = (e as Error).message;
         console.error(error);

@@ -2,14 +2,28 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { KeyringPair } from '@polkadot/keyring/types';
-import type { QueueTx, QueueTxMessageSetStatus, QueueTxStatus } from '@/types/Status';
+import type {
+  QueueTx,
+  QueueTxMessageSetStatus,
+  QueueTxStatus,
+} from '@/types/Status';
 import type { AddressFlags } from '@/types/Signer';
 
 import { SubmittableResult } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
 
 const NOOP = () => undefined;
-const NO_FLAGS = { accountOffset: 0, addressOffset: 0, isHardware: false, isMultisig: false, isProxied: false, isQr: false, isUnlockable: false, threshold: 0, who: [] };
+const NO_FLAGS = {
+  accountOffset: 0,
+  addressOffset: 0,
+  isHardware: false,
+  isMultisig: false,
+  isProxied: false,
+  isQr: false,
+  isUnlockable: false,
+  threshold: 0,
+  who: [],
+};
 
 export const UNLOCK_MINS = 15;
 
@@ -22,7 +36,7 @@ export function cacheUnlock(pair: KeyringPair): void {
 }
 
 export function lockAccount(pair: KeyringPair): void {
-  if ((Date.now() > (lockCountdown[pair.address] || 0)) && !pair.isLocked) {
+  if (Date.now() > (lockCountdown[pair.address] || 0) && !pair.isLocked) {
     pair.lock();
   }
 }
@@ -43,29 +57,36 @@ export function extractExternal(accountId: string | null): AddressFlags {
   }
 
   const pair = keyring.getPair(publicKey);
-  const { isExternal, isHardware, isInjected, isMultisig, isProxied } = pair.meta;
+  const {
+    isExternal,
+    isHardware,
+    isInjected,
+    isMultisig,
+    isProxied,
+  } = pair.meta;
   const isUnlockable = !isExternal && !isHardware && !isInjected;
 
   if (isUnlockable) {
     const entry = lockCountdown[pair.address];
 
-    if (entry && (Date.now() > entry) && !pair.isLocked) {
+    if (entry && Date.now() > entry && !pair.isLocked) {
       pair.lock();
       lockCountdown[pair.address] = 0;
     }
   }
 
   return {
-    accountOffset: pair.meta.accountOffset as number || 0,
-    addressOffset: pair.meta.addressOffset as number || 0,
+    accountOffset: (pair.meta.accountOffset as number) || 0,
+    addressOffset: (pair.meta.addressOffset as number) || 0,
     hardwareType: pair.meta.hardwareType as string,
     isHardware: !!isHardware,
     isMultisig: !!isMultisig,
     isProxied: !!isProxied,
-    isQr: !!isExternal && !isMultisig && !isProxied && !isHardware && !isInjected,
+    isQr:
+      !!isExternal && !isMultisig && !isProxied && !isHardware && !isInjected,
     isUnlockable: isUnlockable && pair.isLocked,
     threshold: (pair.meta.threshold as number) || 0,
-    who: ((pair.meta.who as string[]) || []).map(recodeAddress)
+    who: ((pair.meta.who as string[]) || []).map(recodeAddress),
   };
 }
 
@@ -73,7 +94,11 @@ export function recodeAddress(address: string | Uint8Array): string {
   return keyring.encodeAddress(keyring.decodeAddress(address));
 }
 
-export function handleTxResults(handler: 'send' | 'signAndSend', { id, txFailedCb = NOOP, txSuccessCb = NOOP, txUpdateCb = NOOP }: QueueTx, unsubscribe: () => void): (result: SubmittableResult) => void {
+export function handleTxResults(
+  handler: 'send' | 'signAndSend',
+  { id, txFailedCb = NOOP, txSuccessCb = NOOP, txUpdateCb = NOOP }: QueueTx,
+  unsubscribe: () => void
+): (result: SubmittableResult) => void {
   return (result: SubmittableResult): void => {
     if (!result || !result.status) {
       return;

@@ -167,7 +167,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const { code } = toRefs(props);
 
     const shortenCodeHash = computed(() => {

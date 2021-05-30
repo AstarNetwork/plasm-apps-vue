@@ -13,5 +13,5 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.REMOVE_CODE](state, codeHash) {
     delete state.allCode[codeHash];
-  }
+  },
 };

@@ -11,9 +11,9 @@ import { isString } from '@polkadot/util';
 import store from 'store';
 
 interface SaveCode {
-  api: ApiPromise,
-  _codeHash: string | Hash,
-  partial: Partial<CodeJson>
+  api: ApiPromise;
+  _codeHash: string | Hash;
+  partial: Partial<CodeJson>;
 }
 
 export interface Actions {
@@ -34,19 +34,23 @@ const getCodeJson = (api: ApiPromise, json: CodeJson): any => {
     contractAbi: json.abi
       ? new Abi(json.abi, api.registry.getChainProperties())
       : undefined,
-    json
+    json,
   };
-}
+};
 
 export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.LOAD_ALL_CONTRACTS]({ commit }, api: ApiPromise) {
     try {
       const genesisHash = api.genesisHash?.toHex();
 
-      console.log('genesisHash', genesisHash)
+      console.log('genesisHash', genesisHash);
 
       store.each((json: CodeJson, key: string): void => {
-        if (json && json.genesisHash === genesisHash && key.startsWith(KEY_CODE)) {
+        if (
+          json &&
+          json.genesisHash === genesisHash &&
+          key.startsWith(KEY_CODE)
+        ) {
           const newJson = getCodeJson(api, json);
           commit(MutationTypes.ADD_CODE, newJson);
         }
@@ -55,8 +59,13 @@ export const actions: ActionTree<State, State> & Actions = {
       console.error('Unable to load code', e);
     }
   },
-  async [ActionTypes.SAVE_CODE]({ commit, state }, { api, _codeHash, partial }) {
-    const hash: Hash = isString(_codeHash) ? api.registry.createType('Hash', _codeHash) : _codeHash;
+  async [ActionTypes.SAVE_CODE](
+    { commit, state },
+    { api, _codeHash, partial }
+  ) {
+    const hash: Hash = isString(_codeHash)
+      ? api.registry.createType('Hash', _codeHash)
+      : _codeHash;
     const codeHash = hash.toHex();
     const existing = state.allCode[codeHash];
     const json = {
@@ -64,15 +73,15 @@ export const actions: ActionTree<State, State> & Actions = {
       ...partial,
       codeHash,
       genesisHash: api.genesisHash.toHex(),
-      whenCreated: existing?.json.whenCreated || Date.now()
+      whenCreated: existing?.json.whenCreated || Date.now(),
     };
     const key = `${KEY_CODE}${json.codeHash}`;
 
-    console.log('key', key)
-    console.log('json', json)
+    console.log('key', key);
+    console.log('json', json);
 
     store.set(key, json);
     const newJson = getCodeJson(api, json as CodeJson);
     commit(MutationTypes.ADD_CODE, newJson);
-  }
+  },
 };

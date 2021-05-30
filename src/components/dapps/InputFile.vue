@@ -25,7 +25,7 @@
 </template>
 <script lang="ts">
 //https://github.com/paritytech/canvas-ui/blob/master/packages/react-components/src/InputFile.tsx
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import { defineComponent } from 'vue';
 import IconDocument from '@/components/icons/IconDocument.vue';
 import { hexToU8a, isHex, u8aToString } from '@polkadot/util';
 import { useDropzone } from 'vue3-dropzone';

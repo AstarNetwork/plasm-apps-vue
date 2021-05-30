@@ -65,7 +65,6 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
   const isAbiError = ref(false);
   const errorText = ref('');
 
-
   // watchEffect(
   //   (): void => {
   //     if (!!source?.abi && abi?.json !== source.abi) {
@@ -91,7 +90,7 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
   const onChangeAbi = ({ data }: FileState): void => {
     const json = u8aToString(data);
 
-    console.log('afs', json)
+    console.log('afs', json);
 
     try {
       const abiOutdated = JSON.parse(json) as AbiSpecOutdated;

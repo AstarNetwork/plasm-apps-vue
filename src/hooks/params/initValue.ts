@@ -6,7 +6,10 @@ import { BN_ZERO, isBn } from '@polkadot/util';
 
 const warnList: string[] = [];
 
-export default function getInitValue(registry: Registry | undefined, def: TypeDef): unknown {
+export default function getInitValue(
+  registry: Registry | undefined,
+  def: TypeDef
+): unknown {
   if (def.info === TypeDefInfo.Vec) {
     return [getInitValue(registry, def.sub as TypeDef)];
   } else if (def.info === TypeDefInfo.Tuple) {
@@ -15,11 +18,14 @@ export default function getInitValue(registry: Registry | undefined, def: TypeDe
       : [];
   } else if (def.info === TypeDefInfo.Struct) {
     return Array.isArray(def.sub)
-      ? def.sub.reduce((result: Record<string, unknown>, def): Record<string, unknown> => {
-        result[def.name as string] = getInitValue(registry, def);
+      ? def.sub.reduce((result: Record<string, unknown>, def): Record<
+          string,
+          unknown
+        > => {
+          result[def.name as string] = getInitValue(registry, def);
 
-        return result;
-      }, {})
+          return result;
+        }, {})
       : {};
   } else if (def.info === TypeDefInfo.Enum) {
     return Array.isArray(def.sub)
@@ -140,7 +146,11 @@ export default function getInitValue(registry: Registry | undefined, def: TypeDe
       if (!warnList.includes(type)) {
         warnList.push(type);
         error && console.error(`params: initValue: ${error}`);
-        console.info(`params: initValue: No default value for type ${type} from ${JSON.stringify(def)}, using defaults`);
+        console.info(
+          `params: initValue: No default value for type ${type} from ${JSON.stringify(
+            def
+          )}, using defaults`
+        );
       }
 
       return '0x';

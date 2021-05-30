@@ -15,5 +15,5 @@ export interface CodeStored {
 }
 
 export type State = {
-  allCode: Record<string, CodeStored>
+  allCode: Record<string, CodeStored>;
 };

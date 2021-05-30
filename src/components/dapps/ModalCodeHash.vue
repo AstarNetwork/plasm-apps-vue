@@ -82,10 +82,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, computed, reactive, toRefs } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { ActionTypes } from '@/store/action-types';
-import { stringify } from '@polkadot/util';
 
 export default defineComponent({
   props: {

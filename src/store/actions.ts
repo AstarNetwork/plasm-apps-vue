@@ -5,7 +5,10 @@ import { GeneralState as State } from './state';
 import { GeneralMutations as Mutations } from './mutations';
 import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
-import { Actions as ActionsContract, actions as actionsContract } from './modules/contracts/actions';
+import {
+  Actions as ActionsContract,
+  actions as actionsContract,
+} from './modules/contracts/actions';
 
 export type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -36,5 +39,5 @@ export const actions: ActionTree<State, State> & GeneralActions = {
       commit(MutationTypes.SET_SHOW_ALERT_MSG, false);
     }, 3000);
   },
-  ...actionsContract
+  ...actionsContract,
 };

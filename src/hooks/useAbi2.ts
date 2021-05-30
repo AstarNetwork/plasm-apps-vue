@@ -26,7 +26,10 @@ interface UseAbi extends AbiState {
   onRemoveAbi: () => void;
 }
 
-function fromInitial(initialValue: [string | null | undefined, Abi | null | undefined], isRequired: boolean): AbiState {
+function fromInitial(
+  initialValue: [string | null | undefined, Abi | null | undefined],
+  isRequired: boolean
+): AbiState {
   return {
     abi: initialValue[0] || null,
     abiName: null,
@@ -34,7 +37,7 @@ function fromInitial(initialValue: [string | null | undefined, Abi | null | unde
     errorText: null,
     isAbiError: false,
     isAbiSupplied: !!initialValue[1],
-    isAbiValid: !isRequired || !!initialValue[1]
+    isAbiValid: !isRequired || !!initialValue[1],
   };
 }
 
@@ -45,60 +48,72 @@ const EMPTY: AbiState = {
   errorText: null,
   isAbiError: false,
   isAbiSupplied: false,
-  isAbiValid: false
+  isAbiValid: false,
 };
 
-export default function useAbi(initialValue: [string | null | undefined, Abi | null | undefined] = [null, null], codeHash: string | null = null, isRequired = false) {
+export default function useAbi(
+  initialValue: [string | null | undefined, Abi | null | undefined] = [
+    null,
+    null,
+  ],
+  codeHash: string | null = null,
+  isRequired = false
+) {
   const abi = ref(fromInitial(initialValue, isRequired));
 
   const { api } = useApi();
 
   const registry = api?.value?.registry;
-  const chainProperties = registry?.getChainProperties()
+  const chainProperties = registry?.getChainProperties();
 
   const store = useStore();
 
   const onChangeAbi = ({ data, name }: FileState): void => {
     const json = u8aToString(data);
 
-    console.log('afs', json)
+    console.log('afs', json);
 
     try {
       // @ts-ignore
       abi.value = {
         abi: json,
-        abiName: name.replace('.contract', '').replace('.json', '').replace('_', ' '),
+        abiName: name
+          .replace('.contract', '')
+          .replace('.json', '')
+          .replace('_', ' '),
         contractAbi: new Abi(json, chainProperties),
         errorText: null,
         isAbiError: false,
         isAbiSupplied: true,
-        isAbiValid: true
-      }
+        isAbiValid: true,
+      };
 
-      codeHash && store.dispatch(ActionTypes.SAVE_CODE, {
-        api: api?.value,
-        _codeHash: codeHash,
-        partial: { abi: json },
-      });
+      codeHash &&
+        store.dispatch(ActionTypes.SAVE_CODE, {
+          api: api?.value,
+          _codeHash: codeHash,
+          partial: { abi: json },
+        });
     } catch (error) {
       console.error(error);
 
       abi.value = {
-        ...EMPTY, errorText: (error as Error).message
-      }
+        ...EMPTY,
+        errorText: (error as Error).message,
+      };
     }
-  }
+  };
 
   const onRemoveAbi = (): void => {
     abi.value = EMPTY;
 
-    codeHash && store.dispatch(ActionTypes.SAVE_CODE, {
-      api: api?.value,
-      _codeHash: codeHash,
-      partial: { abi: null },
-    });
+    codeHash &&
+      store.dispatch(ActionTypes.SAVE_CODE, {
+        api: api?.value,
+        _codeHash: codeHash,
+        partial: { abi: null },
+      });
   };
-
 
   return {
     abi,

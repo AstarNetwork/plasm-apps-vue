@@ -1,4 +1,3 @@
-
 export interface AddressFlags {
   accountOffset: number;
   addressOffset: number;

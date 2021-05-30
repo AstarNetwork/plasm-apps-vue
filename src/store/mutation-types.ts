@@ -12,5 +12,5 @@ export enum MutationTypes {
   //contracts
   SAVE_CODE = 'SAVE_CODE',
   ADD_CODE = 'ADD_CODE',
-  REMOVE_CODE = 'REMOVE_CODE'
+  REMOVE_CODE = 'REMOVE_CODE',
 }

@@ -1,7 +1,10 @@
 import { MutationTree } from 'vuex';
 import { MutationTypes } from './mutation-types';
 import { GeneralState as State } from './state';
-import { Mutations as MutationsContract, mutations as mutationsContract } from './modules/contracts/mutations';
+import {
+  Mutations as MutationsContract,
+  mutations as mutationsContract,
+} from './modules/contracts/mutations';
 
 export interface GeneralMutations<S = State> extends MutationsContract {
   [MutationTypes.SET_NETWORK_API](state: S, payload: any): void;
@@ -43,5 +46,5 @@ export const mutations: MutationTree<State> & GeneralMutations = {
   [MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT](state, endpoint) {
     state.currentCustomEndpoint = endpoint;
   },
-  ...mutationsContract
+  ...mutationsContract,
 };
