@@ -276,7 +276,7 @@
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
-                    Json file
+                    Contract file
                   </label>
 
                   <input-file v-on:dropFile="onDropFile" :file="wasmFromFile" />

@@ -9,12 +9,11 @@
         <div v-else>
           <div v-bind="getRootProps()">
             <input v-bind="getInputProps()" />
-            <button
+            <div
               class="relative cursor-pointer rounded-md font-medium text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 focus-within:ring-offset-none"
-              @click="open"
             >
               Upload a file
-            </button>
+            </div>
             <p v-if="isDragActive">Drop the files here ...</p>
             <p class="pl-1" v-else>or drag and drop</p>
           </div>
@@ -24,7 +23,6 @@
   </div>
 </template>
 <script lang="ts">
-//https://github.com/paritytech/canvas-ui/blob/master/packages/react-components/src/InputFile.tsx
 import { defineComponent } from 'vue';
 import IconDocument from '@/components/icons/IconDocument.vue';
 import { hexToU8a, isHex, u8aToString } from '@polkadot/util';
@@ -88,7 +86,6 @@ export default defineComponent({
               size: data.length,
             };
 
-            // onChange && onChange(fileState);
             emit('drop-file', fileState);
           }
         };
