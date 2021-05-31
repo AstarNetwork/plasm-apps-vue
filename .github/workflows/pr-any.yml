@@ -1,43 +1,39 @@
-name: PR
+name: PR Checks
 on: [pull_request]
 
 jobs:
     lint:
-        name: Linting
+        name: Style Checking
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [12.x]
+                node-version: [16.x]
         steps:
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v2
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v2
               with:
                   node-version: ${{ matrix.node-version }}
-            - name: Install Yarn
-              run: npm install -g yarn
-            - name: lint checks
+            - name: linting code
               run: |
-                  yarn install --frozen-lockfile
+                  yarn install
                   yarn lint:check
 
     test:
-        name: Testing
+        name: Running Tests
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [12.x]
+                node-version: [16.x]
         steps:
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v2
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v2
               with:
                   node-version: ${{ matrix.node-version }}
-            - name: Install Yarn
-              run: npm install -g yarn
             - name: test
               run: |
-                  yarn install --frozen-lockfile
+                  yarn install
                   yarn test
 
     build_code:
@@ -45,23 +41,16 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [12.x]
+                node-version: [16.x]
         steps:
-            - uses: actions/checkout@v1
-              with:
-                  token: ${{ secrets.GH_PAT }}
+            - name: Checkout
+              uses: actions/checkout@v2
+
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v2
               with:
                   node-version: ${{ matrix.node-version }}
-            - name: Install Yarn
-              run: npm install -g yarn
             - name: build
-              env:
-                  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-                  GH_PAGES_SRC: build
-                  GH_PAT: ${{ secrets.GH_PAT }}
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: |
-                  yarn install --frozen-lockfile
+                  yarn install
                   yarn build
