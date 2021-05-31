@@ -524,7 +524,7 @@ export default defineComponent({
                   gasLimit: formData.weight,
                   value: formData.endowment,
                 },
-                {}
+                ...arrValues
               )
             : null;
 
