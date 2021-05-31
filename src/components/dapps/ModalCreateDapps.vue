@@ -527,16 +527,6 @@ export default defineComponent({
                 ...arrValues
               )
             : null;
-
-        console.log('ff', code.tx['new']);
-
-        // uploadTx = code.tx['new'](
-        //   {
-        //     gasLimit: formData.weight,
-        //     value: formData.endowment,
-        //   },
-        //   ...arrValues
-        // );
       } catch (e) {
         const error = (e as Error).message;
         console.error(error);
@@ -607,6 +597,8 @@ export default defineComponent({
           msg: `Success to deploying contract- codeHash: ${codeHash?.toHex()} `,
           alertType: 'success',
         });
+
+        closeModal();
       };
       const _onUpdate = () => {};
 
@@ -647,15 +639,15 @@ export default defineComponent({
         });
       });
 
-      const { onSend, sendRpc } = useSendTx();
+      const { onSend } = useSendTx();
       console.log('txQueue', txqueue[0]);
 
       const currentItem: QueueTx = txqueue[0];
 
       ///sendRpc
-      if (currentItem) {
-        await sendRpc(api.value, currentItem).catch(console.error);
-      }
+      // if (currentItem) {
+      //   await sendRpc(api.value, currentItem).catch(console.error);
+      // }
 
       const senderInfo: AddressProxy = {
         isMultiCall: false,
