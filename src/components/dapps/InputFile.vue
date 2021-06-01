@@ -36,6 +36,10 @@ export default defineComponent({
     file: {
       type: Object,
     },
+    extension: {
+      type: Array as () => string | string[],
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const BYTE_STR_0 = '0'.charCodeAt(0);
@@ -97,7 +101,7 @@ export default defineComponent({
     const { getRootProps, getInputProps, ...rest } = useDropzone({
       onDrop,
       multiple: false,
-      accept: '.contract',
+      accept: props.extension,
     });
 
     return {

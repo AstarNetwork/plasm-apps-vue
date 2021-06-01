@@ -279,7 +279,11 @@
                     Contract file
                   </label>
 
-                  <input-file v-on:dropFile="onDropFile" :file="wasmFromFile" />
+                  <input-file
+                    v-on:dropFile="onDropFile"
+                    :file="wasmFromFile"
+                    :extension="extensionFile"
+                  />
                 </div>
               </div>
             </div>
@@ -436,6 +440,7 @@ export default defineComponent({
 
     const wasm = ref();
     const isWasmValid = ref(false);
+    const extensionFile = ['.contract', '.json'];
 
     const onDropFile = (fileState: FileState) => {
       setWasmFile(fileState);
@@ -670,6 +675,7 @@ export default defineComponent({
       shortenToAddress,
       upload,
       wasmFromFile,
+      extensionFile,
       onDropFile,
     };
   },
