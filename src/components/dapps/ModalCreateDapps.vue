@@ -454,9 +454,6 @@ export default defineComponent({
         wasm.value = abi.value.project.source.wasm;
         isWasmValid.value = true;
 
-        // if (currentName.current === '') {
-        //   setName(`${abi.value.project.contract.name.toString()}.contract`);
-        // }
         return;
       }
 
@@ -489,10 +486,11 @@ export default defineComponent({
       console.log('s', abiData);
       console.log('w', wasm.value);
 
-      const code = new CodePromise(api?.value, abiData, wasm.value);
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
 
       try {
+        const code = new CodePromise(api?.value, abiData, wasm.value);
+
         //should be changable
         // const unit_d = 3;
         // const decimal = 12;
@@ -535,6 +533,10 @@ export default defineComponent({
       } catch (e) {
         const error = (e as Error).message;
         console.error(error);
+        store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+          msg: error,
+          alertType: 'error',
+        });
         return;
       }
 

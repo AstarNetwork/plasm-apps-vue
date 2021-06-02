@@ -13,7 +13,7 @@
     <p
       class="text-blue-900 dark:text-darkGray-100 text-lg font-bold leading-tight mb-1"
     >
-      ProjectName
+      {{ code.json.name }}
     </p>
 
     <div class="text-xs mb-0.5">
