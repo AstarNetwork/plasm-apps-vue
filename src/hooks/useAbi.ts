@@ -1,7 +1,6 @@
 // https://github.com/paritytech/canvas-ui/blob/master/packages/react-hooks/src/useAbi.ts
 
-import { ref, onUnmounted, watch, Ref, computed } from 'vue';
-// import store from '@canvas-ui/react-store/store';
+import { ref } from 'vue';
 import type {
   ChainProperties,
   ContractProject,
@@ -39,8 +38,6 @@ interface UseAbi {
   onChangeAbi: (_: FileState) => void;
   onRemoveAbi: () => void;
 }
-
-type State = [Abi | null, boolean, boolean];
 
 interface AbiSpecOutdated {
   deploy?: any;

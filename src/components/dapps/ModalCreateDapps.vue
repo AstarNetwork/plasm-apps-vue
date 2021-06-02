@@ -472,6 +472,8 @@ export default defineComponent({
       isWasmValid.value = false;
     });
 
+    const { onSend } = useSendTx();
+
     const upload = async () => {
       if (
         formData.projectName === '' ||
@@ -650,14 +652,13 @@ export default defineComponent({
         });
       });
 
-      const { onSend } = useSendTx();
       console.log('txQueue', txqueue[0]);
 
       const currentItem: QueueTx = txqueue[0];
 
       ///sendRpc
       // if (currentItem) {
-      //   await sendRpc(api.value, currentItem).catch(console.error);
+      //   await sendRpc(currentItem).catch(console.error);
       // }
 
       const senderInfo: AddressProxy = {
@@ -668,7 +669,7 @@ export default defineComponent({
         signAddress: props.address,
         signPassword: '',
       };
-      onSend(apiPromise, currentItem, senderInfo);
+      onSend(currentItem, senderInfo);
     };
 
     return {

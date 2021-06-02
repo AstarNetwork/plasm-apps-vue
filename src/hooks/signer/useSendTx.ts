@@ -1,14 +1,8 @@
 import { ApiPromise, SubmittableResult } from '@polkadot/api';
 import { SignerOptions } from '@polkadot/api/submittable/types';
 import { SignerResult, SubmittableExtrinsic } from '@polkadot/api/types';
-import type { DefinitionRpcExt } from '@polkadot/types/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import {
-  QueueTx,
-  QueueTxMessageSetStatus,
-  QueueTxStatus,
-  QueueTxResult,
-} from '@/types/Status';
+import { QueueTx, QueueTxResult } from '@/types/Status';
 import type { Option } from '@polkadot/types';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces';
 import type { AddressProxy } from '@/types/Signer';
@@ -20,13 +14,16 @@ import BN from 'bn.js';
 import { cacheUnlock, extractExternal, handleTxResults } from './util';
 
 export default function useSendTx() {
+  const { api: apiRef } = useApi();
+
+  /* submitRpc - seems deprecated */
+  /*
   async function submitRpc(
-    api: ApiPromise,
     { method, section }: DefinitionRpcExt,
     values: any[]
   ): Promise<QueueTxResult> {
     try {
-      const rpc = api.rpc as Record<
+      const rpc = api?.value?.rpc as Record<
         string,
         Record<string, (...params: unknown[]) => Promise<unknown>>
       >;
@@ -52,17 +49,16 @@ export default function useSendTx() {
   }
 
   const sendRpc = async (
-    api: ApiPromise,
     { id, rpc, values = [] }: QueueTx
   ): Promise<void> => {
     console.log('r', rpc);
+
     if (rpc) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { error, result, status } = await submitRpc(api, rpc, values);
+      const { error, result, status } = await submitRpc(rpc, values);
     }
   };
-
-  ////
+  */
 
   async function signAndSend(
     currentItem: QueueTx,
@@ -194,21 +190,22 @@ export default function useSendTx() {
   }
 
   const onSend = async (
-    api: ApiPromise,
     currentItem: QueueTx,
     senderInfo: AddressProxy
   ): Promise<void> => {
+    const apiPromise: ApiPromise = apiRef?.value as ApiPromise;
+
     const tip = new BN(0); // should be updated
 
-    if (senderInfo.signAddress) {
+    if (senderInfo.signAddress && apiPromise) {
       const [tx, [status, pairOrAddress, options]] = await Promise.all([
-        wrapTx(api, currentItem, senderInfo),
-        extractParams(api, senderInfo.signAddress, { nonce: -1, tip }),
+        wrapTx(apiPromise, currentItem, senderInfo),
+        extractParams(apiPromise, senderInfo.signAddress, { nonce: -1, tip }),
       ]);
 
       await signAndSend(currentItem, tx, pairOrAddress, options);
     }
   };
 
-  return { sendRpc, onSend };
+  return { onSend };
 }
