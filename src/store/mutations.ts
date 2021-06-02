@@ -7,7 +7,6 @@ import {
 } from './modules/contracts/mutations';
 
 export interface GeneralMutations<S = State> extends MutationsContract {
-  [MutationTypes.SET_NETWORK_API](state: S, payload: any): void;
   [MutationTypes.SET_INITIALIZED](state: S): void;
   [MutationTypes.SET_LOADING](state: S, isLoading: boolean): void;
   [MutationTypes.SET_SHOW_ALERT_MSG](state: S, showAlert: boolean): void;
@@ -19,9 +18,6 @@ export interface GeneralMutations<S = State> extends MutationsContract {
 }
 
 export const mutations: MutationTree<State> & GeneralMutations = {
-  [MutationTypes.SET_NETWORK_API](state, payload) {
-    state.api = payload;
-  },
   [MutationTypes.SET_INITIALIZED](state) {
     state.initialized = true;
   },

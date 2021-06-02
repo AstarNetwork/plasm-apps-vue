@@ -19,19 +19,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useApi } from '@/hooks/useApi';
 import Tab from '@/components/common/Tab.vue';
 
 export default defineComponent({
   components: {
     Tab,
-  },
-  setup() {
-    const { api } = useApi();
-
-    return {
-      api,
-    };
   },
 });
 </script>

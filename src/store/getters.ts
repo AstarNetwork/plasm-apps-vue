@@ -1,4 +1,3 @@
-import { ApiPromise } from '@polkadot/api';
 import { GetterTree } from 'vuex';
 import { AlertBox, GeneralState as State } from './state';
 import {
@@ -7,7 +6,6 @@ import {
 } from './modules/contracts/getters';
 
 export interface GeneralGetters extends GettersContract {
-  api(state: State): ApiPromise | undefined;
   initialized(state: State): boolean;
   isLoading(state: State): boolean;
   showAlert(state: State): AlertBox;
@@ -17,7 +15,6 @@ export interface GeneralGetters extends GettersContract {
 }
 
 export const getters: GetterTree<State, State> & GeneralGetters = {
-  api: (state) => state.api,
   initialized: (state) => state.initialized,
   isLoading: (state) => state.isLoading,
   showAlert: (state) => state.alertBox,

@@ -336,6 +336,7 @@ import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { keyring } from '@polkadot/ui-keyring';
+import { useApi } from '@/hooks';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
@@ -346,6 +347,7 @@ import { useStore } from 'vuex';
 import { AddressProxy } from '@/types/Signer';
 import { bnToBn } from '@polkadot/util';
 import { createValue } from '@/hooks/params/values';
+import type { ApiPromise } from '@polkadot/api';
 
 interface FormData {
   endowment: BN;
@@ -423,7 +425,9 @@ export default defineComponent({
 
     //abi
     const store = useStore();
-    const api = computed(() => store.getters.api);
+
+    const { api } = useApi();
+    const apiPromise: ApiPromise = api?.value as ApiPromise;
 
     const { abi, onChangeAbi, onRemoveAbi } = useAbi();
 
@@ -489,7 +493,7 @@ export default defineComponent({
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
 
       try {
-        const code = new CodePromise(api?.value, abiData, wasm.value);
+        const code = new CodePromise(apiPromise, abiData, wasm.value);
 
         //should be changable
         // const unit_d = 3;
@@ -584,7 +588,7 @@ export default defineComponent({
 
         result.blueprint &&
           store.dispatch(ActionTypes.SAVE_CODE, {
-            api: api?.value,
+            api: apiPromise,
             _codeHash: codeHash,
             partial: codeJson,
           });
@@ -593,7 +597,7 @@ export default defineComponent({
           keyring.saveContract(result.contract.address.toString(), {
             contract: {
               abi: stringify(result.contract.abi.json),
-              genesisHash: api.value.genesisHash.toHex(),
+              genesisHash: apiPromise.genesisHash.toHex(),
             },
             name: formData.projectName || '<>',
             tags: [],
@@ -664,7 +668,7 @@ export default defineComponent({
         signAddress: props.address,
         signPassword: '',
       };
-      onSend(api.value, currentItem, senderInfo);
+      onSend(apiPromise, currentItem, senderInfo);
     };
 
     return {

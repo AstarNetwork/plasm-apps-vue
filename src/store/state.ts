@@ -1,4 +1,3 @@
-import { ApiPromise } from '@polkadot/api';
 import { State as StateContract } from './modules/contracts/state';
 
 export type AlertBox = {
@@ -8,7 +7,6 @@ export type AlertBox = {
 };
 
 export interface GeneralState extends StateContract {
-  api?: ApiPromise;
   initialized: boolean;
   isLoading: boolean;
   alertBox: AlertBox;
@@ -18,7 +16,6 @@ export interface GeneralState extends StateContract {
 }
 
 export const state: GeneralState = {
-  api: undefined,
   initialized: false,
   isLoading: false,
   alertBox: {
