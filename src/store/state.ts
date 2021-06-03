@@ -6,6 +6,8 @@ export type AlertBox = {
   alertType: string;
 };
 
+export type Theme = 'LIGHT' | 'DARK';
+
 export interface GeneralState extends StateContract {
   initialized: boolean;
   isLoading: boolean;
@@ -13,6 +15,7 @@ export interface GeneralState extends StateContract {
   currentNetworkIdx: Number;
   currentAccountIdx: Number;
   currentCustomEndpoint: string;
+  currentTheme: Theme;
 }
 
 export const state: GeneralState = {
@@ -26,5 +29,6 @@ export const state: GeneralState = {
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
   currentCustomEndpoint: '',
+  currentTheme: 'DARK',
   allCode: {},
 };

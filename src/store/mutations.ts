@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex';
 import { MutationTypes } from './mutation-types';
-import { GeneralState as State } from './state';
+import { GeneralState as State, Theme } from './state';
 import {
   Mutations as MutationsContract,
   mutations as mutationsContract,
@@ -42,5 +42,16 @@ export const mutations: MutationTree<State> & GeneralMutations = {
   [MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT](state, endpoint) {
     state.currentCustomEndpoint = endpoint;
   },
+  [MutationTypes.SET_THEME](state: State, theme: Theme) {
+    //add 'dark' class to the html tag to enable dark mode
+    const htmlClasses = document.documentElement.classList;
+    if (theme == 'DARK') {
+      htmlClasses.add('dark');
+    } else {
+      htmlClasses.remove('dark');
+    }
+    state.currentTheme = theme;
+  },
+
   ...mutationsContract,
 };
