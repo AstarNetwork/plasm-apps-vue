@@ -15,7 +15,7 @@
     "test": "jest ./src --passWithNoTests"
   },
   "dependencies": {
-    "@plasm/types": "^1.4.0",
+    "@plasm/types": "^1.5.4-2",
     "@polkadot/api": "^4.10.2-1",
     "@polkadot/api-contract": "^4.10.2-1",
     "@polkadot/extension-dapp": "^0.36.1",
