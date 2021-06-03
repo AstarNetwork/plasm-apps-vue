@@ -325,7 +325,6 @@ import type {
   QueueTx,
   QueueTxRpc,
 } from '@/types/Status';
-import type { RawParams } from '@/types/Params';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
@@ -346,8 +345,8 @@ import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { useStore } from 'vuex';
 import { AddressProxy } from '@/types/Signer';
 import { bnToBn } from '@polkadot/util';
-import { createValue } from '@/hooks/params/values';
 import type { ApiPromise } from '@polkadot/api';
+import { getParamValues } from '@/helper/params';
 
 interface FormData {
   endowment: BN;
@@ -514,15 +513,9 @@ export default defineComponent({
         const constructorIndex = 0;
         const params = abi?.value?.constructors[constructorIndex].args;
         console.log('params', params);
-        const pvalues = params?.reduce(
-          (result: RawParams, param): RawParams => [
-            ...result,
-            createValue(abi?.value?.registry, param),
-          ],
-          []
-        );
-        const arrValues: any = pvalues?.map(({ value }) => value);
-        console.log('v', arrValues);
+
+        const arrValues = getParamValues(abi.value?.registry, params);
+        console.log('values', arrValues);
 
         uploadTx =
           code &&

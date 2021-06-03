@@ -1,12 +1,21 @@
-import type { Registry, TypeDef } from '@polkadot/types/types';
+import type { RawParams } from '@/types/Params';
 
+import type { Registry, TypeDef } from '@polkadot/types/types';
+import type { RawParam } from '@/types/Params';
+
+import { isUndefined } from '@polkadot/util';
 import { getTypeDef } from '@polkadot/types';
 import { TypeDefInfo } from '@polkadot/types/types';
 import { BN_ZERO, isBn } from '@polkadot/util';
 
+export interface AbiParam {
+  name: string;
+  type: TypeDef;
+}
+
 const warnList: string[] = [];
 
-export default function getInitValue(
+function getInitValue(
   registry: Registry | undefined,
   def: TypeDef
 ): unknown {
@@ -19,13 +28,13 @@ export default function getInitValue(
   } else if (def.info === TypeDefInfo.Struct) {
     return Array.isArray(def.sub)
       ? def.sub.reduce((result: Record<string, unknown>, def): Record<
-          string,
-          unknown
-        > => {
-          result[def.name as string] = getInitValue(registry, def);
+        string,
+        unknown
+      > => {
+        result[def.name as string] = getInitValue(registry, def);
 
-          return result;
-        }, {})
+        return result;
+      }, {})
       : {};
   } else if (def.info === TypeDefInfo.Enum) {
     return Array.isArray(def.sub)
@@ -156,4 +165,35 @@ export default function getInitValue(
       return '0x';
     }
   }
+}
+
+function createValue(
+  registry: Registry | undefined,
+  param: { type: TypeDef }
+): RawParam {
+  const value = getInitValue(registry, param.type);
+
+  return {
+    isValid: !isUndefined(value),
+    value,
+  };
+}
+
+function createValues(
+  registry: Registry,
+  params: { type: TypeDef }[]
+): RawParam[] {
+  return params.map((param) => createValue(registry, param));
+}
+
+export function getParamValues(registry: any, params: AbiParam[] | undefined) {
+  const pvalues = params?.reduce(
+    (result: RawParams, param): RawParams => [
+      ...result,
+      createValue(registry, param),
+    ],
+    []
+  );
+  const arrValues: any = pvalues?.map(({ value }) => value);
+  return arrValues;
 }
