@@ -1,10 +1,9 @@
-import { ApiPromise } from '@polkadot/api';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { isTestChain } from '@polkadot/util';
-import { WsProvider } from '@polkadot/rpc-provider';
-import * as plasmDefinitions from '@plasm/types/interfaces/definitions';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
+import chainTypeDefs from '@plasm/types';
 
 interface InjectedAccountExt {
   address: string;
@@ -52,16 +51,10 @@ const loadAccounts = async (api: ApiPromise) => {
 export const connectApi = async (endpoint: string) => {
   const provider = new WsProvider(endpoint);
 
-  const types = Object.values(plasmDefinitions).reduce(
-    (res, { types }): object => ({ ...res, ...types }),
-    {}
-  );
-
   const api = new ApiPromise({
     provider,
     types: {
-      ...types,
-      Address: 'MultiAddress',
+      ...chainTypeDefs.dustyDefinitions,
       LookupSource: 'MultiAddress',
     },
   });
@@ -80,7 +73,7 @@ export const connectApi = async (endpoint: string) => {
 
   // load the web3 extension
   injectedPromise
-    .then((): void => {})
+    .then((): void => { })
     .catch((error: Error) => console.error(error));
 
   return api;

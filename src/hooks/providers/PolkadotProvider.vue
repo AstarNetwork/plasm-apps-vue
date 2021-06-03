@@ -6,8 +6,6 @@
 import { defineComponent, PropType } from 'vue';
 import { providePolkadotContainer } from '@/api/polkadot';
 import { ApiPromise } from '@polkadot/api';
-import { useStore } from 'vuex';
-import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
   name: 'polkadot-provider',
@@ -16,8 +14,6 @@ export default defineComponent({
   },
   setup(props) {
     if (props.polkadotApi) {
-      const store = useStore();
-      store.commit(MutationTypes.SET_NETWORK_API, props.polkadotApi);
       providePolkadotContainer(props.polkadotApi);
     }
   },

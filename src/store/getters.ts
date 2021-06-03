@@ -1,23 +1,25 @@
-import { ApiPromise } from '@polkadot/api';
 import { GetterTree } from 'vuex';
-import { AlertBox, State } from './state';
+import { AlertBox, GeneralState as State } from './state';
+import {
+  Getters as GettersContract,
+  getters as gettersContract,
+} from './modules/contracts/getters';
 
-export type Getters = {
-  api(state: State): ApiPromise | undefined;
+export interface GeneralGetters extends GettersContract {
   initialized(state: State): boolean;
   isLoading(state: State): boolean;
   showAlert(state: State): AlertBox;
   networkIdx(state: State): Number;
   accountIdx(state: State): Number;
   customEndpoint(state: State): string;
-};
+}
 
-export const getters: GetterTree<State, State> & Getters = {
-  api: (state) => state.api,
+export const getters: GetterTree<State, State> & GeneralGetters = {
   initialized: (state) => state.initialized,
   isLoading: (state) => state.isLoading,
   showAlert: (state) => state.alertBox,
   networkIdx: (state) => state.currentNetworkIdx,
   accountIdx: (state) => state.currentAccountIdx,
   customEndpoint: (state) => state.currentCustomEndpoint,
+  ...gettersContract,
 };

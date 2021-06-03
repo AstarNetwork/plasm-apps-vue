@@ -9,6 +9,7 @@ import DappsStaking from '@/components/dapps/DappsStaking.vue';
 import CreateDapps from '@/components/dapps/CreateDapps.vue';
 import BalancePlasm from '@/components/balance/BalancePlasm.vue';
 import CrossChain from '@/components/balance/CrossChain.vue';
+import AccountAction from '@/components/staking/AccountAction.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -57,6 +58,16 @@ const routes: RouteRecordRaw[] = [
     path: '/staking',
     name: 'Staking',
     component: Staking,
+    children: [
+      {
+        path: '',
+        redirect: '/staking/account-action',
+      },
+      {
+        path: 'account-action',
+        component: AccountAction,
+      },
+    ],
   },
   {
     path: '/history',
