@@ -19,7 +19,7 @@ interface ProviderState {
 const state = reactive<ProviderState>({
   // start with an empty api object
   api: undefined,
-  // start with an empty object
+  // start with an empty object => should refactor
   currentAccount: undefined,
   currentBalance: undefined,
   unsubscribeAccountInfo: undefined,

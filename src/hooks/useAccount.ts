@@ -16,8 +16,6 @@ interface UseAccounts {
  * The hooks should only be called from the `setup()` block of the vue component
  */
 export const useAccount = () => {
-  // const mountedRef = useIsMountedRef();
-
   // set the initial value
   const state = reactive<UseAccounts>({
     allAccounts: [],
