@@ -1,15 +1,11 @@
-// https://github.com/paritytech/canvas-ui/blob/master/packages/react-hooks/src/useAbi.ts
-
 import { ref } from 'vue';
-import type {
-  ChainProperties,
-  ContractProject,
-} from '@polkadot/types/interfaces';
+import type { ChainProperties } from '@polkadot/types/interfaces';
 
 import { Abi } from '@polkadot/api-contract';
 import { AnyJson } from '@polkadot/types/types';
 import { u8aToString } from '@polkadot/util';
-
+import { ActionTypes } from '@/store/action-types';
+import { useStore } from 'vuex';
 import { useApi } from '.';
 
 interface CodeBase {
@@ -62,27 +58,7 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
   const isAbiError = ref(false);
   const errorText = ref('');
 
-  // watchEffect(
-  //   (): void => {
-  //     if (!!source?.abi && abi?.json !== source.abi) {
-  //       setAbi([new Abi(source.abi, registry?.getChainProperties()), !!source.abi, !isRequired || !!source.abi]);
-  //     }
-  //   },
-  //   [abi, registry, source, isRequired]
-  // );
-
-  // watch(
-  //   () => abi?.value,
-  //   (newAbi) => {
-  //     if (newAbi.json !== source?.abi) {
-  //       // @ts-ignore
-  //       abi.value = new Abi(newAbi, chainProperties);
-  //       isAbiSupplied.value = !!newAbi;
-  //       isAbiValid.value = !isRequired || !!newAbi;
-  //     }
-  //   },
-  //   { immediate: true }
-  // )
+  const store = useStore();
 
   const onChangeAbi = ({ data }: FileState): void => {
     const json = u8aToString(data);
@@ -106,10 +82,12 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
       isAbiSupplied.value = true;
       isAbiValid.value = true;
 
-      // source?.id && store.saveCode(
-      //   { abi: newAbi },
-      //   source.id
-      // );
+      source?.codeHash &&
+        store.dispatch(ActionTypes.SAVE_CODE, {
+          api: api?.value,
+          _codeHash: source?.codeHash,
+          partial: { abi: json },
+        });
     } catch (error) {
       console.error(error);
 
@@ -119,7 +97,6 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
       isAbiError.value = true;
       errorText.value = error;
     }
-    // return  [api.registry, source, t]
   };
 
   const onRemoveAbi = (): void => {
@@ -128,12 +105,12 @@ export default function useAbi(source: Code | null = null, isRequired = false) {
 
     isAbiError.value = false;
 
-    // source?.id && store.saveCode(
-    //   { abi: null },
-    //   source?.id
-    // );
-
-    // return [source]
+    source?.codeHash &&
+      store.dispatch(ActionTypes.SAVE_CODE, {
+        api: api?.value,
+        _codeHash: source?.codeHash,
+        partial: { abi: null },
+      });
   };
 
   return {

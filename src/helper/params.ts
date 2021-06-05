@@ -15,10 +15,7 @@ export interface AbiParam {
 
 const warnList: string[] = [];
 
-function getInitValue(
-  registry: Registry | undefined,
-  def: TypeDef
-): unknown {
+function getInitValue(registry: Registry | undefined, def: TypeDef): unknown {
   if (def.info === TypeDefInfo.Vec) {
     return [getInitValue(registry, def.sub as TypeDef)];
   } else if (def.info === TypeDefInfo.Tuple) {
@@ -28,13 +25,13 @@ function getInitValue(
   } else if (def.info === TypeDefInfo.Struct) {
     return Array.isArray(def.sub)
       ? def.sub.reduce((result: Record<string, unknown>, def): Record<
-        string,
-        unknown
-      > => {
-        result[def.name as string] = getInitValue(registry, def);
+          string,
+          unknown
+        > => {
+          result[def.name as string] = getInitValue(registry, def);
 
-        return result;
-      }, {})
+          return result;
+        }, {})
       : {};
   } else if (def.info === TypeDefInfo.Enum) {
     return Array.isArray(def.sub)
