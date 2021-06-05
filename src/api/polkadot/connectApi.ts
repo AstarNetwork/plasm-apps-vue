@@ -73,7 +73,7 @@ export const connectApi = async (endpoint: string) => {
 
   // load the web3 extension
   injectedPromise
-    .then((): void => { })
+    .then((): void => {})
     .catch((error: Error) => console.error(error));
 
   return api;

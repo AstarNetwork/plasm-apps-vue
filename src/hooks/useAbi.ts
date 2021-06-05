@@ -1,7 +1,5 @@
 import { ref } from 'vue';
-import type {
-  ChainProperties,
-} from '@polkadot/types/interfaces';
+import type { ChainProperties } from '@polkadot/types/interfaces';
 
 import { Abi } from '@polkadot/api-contract';
 import { AnyJson } from '@polkadot/types/types';

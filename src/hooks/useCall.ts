@@ -12,7 +12,6 @@ export function useCall(
   method: string,
   callParams: Array<any>
 ) {
-
   const { api: apiRef } = useApi();
 
   const callParamsRef = ref(callParams);
