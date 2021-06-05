@@ -29,6 +29,12 @@ export const state: GeneralState = {
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
   currentCustomEndpoint: '',
-  currentTheme: 'DARK',
+
+  currentTheme:
+    //this queries the media setting
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'DARK'
+      : 'LIGHT',
   allCode: {},
 };
