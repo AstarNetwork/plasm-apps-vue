@@ -39,8 +39,9 @@ const getCodeJson = (api: ApiPromise, json: CodeJson): any => {
 };
 
 export const actions: ActionTree<State, State> & Actions = {
-  async [ActionTypes.LOAD_ALL_CONTRACTS]({ commit }, api: ApiPromise) {
+  async [ActionTypes.LOAD_ALL_CONTRACTS]({ commit }, param: any) {
     try {
+      const api: ApiPromise = param.api;
       const genesisHash = api.genesisHash?.toHex();
 
       console.log('genesisHash', genesisHash);

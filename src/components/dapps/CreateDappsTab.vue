@@ -83,6 +83,7 @@ export default defineComponent({
   },
   setup() {
     const { api } = useApi();
+
     const stateModal = reactive<Modal>({
       modalCreateDapps: false,
       modalCodeHash: false,
