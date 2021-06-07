@@ -61,14 +61,6 @@
                           type="text"
                           v-model="toAddress"
                         />
-                        <!-- <div class="text-sm font-medium">
-                            {{ toAccountName }}
-                          </div>
-                          <div
-                            class="text-xs text-gray-500 dark:text-darkGray-400"
-                          >
-                            {{ shortenToAddress }}
-                          </div> -->
                       </div>
                     </div>
 
@@ -241,10 +233,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    accountIdx: {
-      type: Number,
-      required: true,
-    },
     balance: {
       type: BN,
       required: true,
@@ -330,10 +318,10 @@ export default defineComponent({
                   `Completed at block hash #${status.asInBlock.toString()}`
                 );
 
-                store.dispatch(
-                  ActionTypes.SHOW_ALERT_MSG,
-                  `Completed at block hash #${status.asInBlock.toString()}`
-                );
+                store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+                  msg: `Completed at block hash #${status.asInBlock.toString()}`,
+                  alertType: 'success',
+                });
 
                 store.commit(MutationTypes.SET_LOADING, false);
                 emit('complete-transfer', true);

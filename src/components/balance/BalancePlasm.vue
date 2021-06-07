@@ -38,9 +38,7 @@
       v-on:completeTransfer="completeTransfer"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
-      :account-idx="currentAccountIdx"
       :address="defaultAccount"
-      :address-name="defaultAccountName"
       :balance="balance"
     />
     <ModalTransferToken

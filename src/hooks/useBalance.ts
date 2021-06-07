@@ -1,12 +1,11 @@
-import { ref, onUnmounted, watch, Ref, computed } from 'vue';
+import { ref, onUnmounted, watch, Ref } from 'vue';
 import { VoidFn } from '@polkadot/api/types';
-// import { useApi } from '@/hooks';
+import { useApi } from '@/hooks';
 import BN from 'bn.js';
-import { store } from '@/store';
 
 function useCall(addressRef: Ref<string>) {
-  // const { api: apiRef } = useApi();
-  const apiRef = computed(() => store.getters.api);
+  const { api: apiRef } = useApi();
+  // const apiRef = computed(() => store.getters.api);
   const balanceRef = ref(new BN(0));
 
   const unsub: Ref<VoidFn | undefined> = ref();
@@ -55,7 +54,7 @@ export function useBalance(addressRef: Ref<string>) {
     (bal) => {
       if (bal) {
         balance.value = bal;
-        console.log('b', balance.value.toString(10));
+        console.log('balance', balance.value.toString(10));
       }
     },
     { immediate: true }

@@ -1,13 +1,14 @@
 <template>
-  <!-- TODO: Switch Light & Dark mode -->
   <div class="flex items-center">
     <button
       type="button"
-      class="tooltip p-3 rounded-full relative focus:outline-none cursor-default"
+      class="tooltip p-3 rounded-full relative focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 focus:bg-blue-50 dark:hover:bg-darkGray-600 dark:focus:ring-darkGray-600 dark:focus:bg-darkGray-900"
+      :class="{ 'cursor-default': !isDarkTheme }"
+      @click="switchThemeTo('LIGHT')"
     >
       <!-- Heroicon name: outline/sun -->
       <icon-base
-        class="text-blue-900 dark:text-darkGray-100 h-5 w-5"
+        class="h-5 w-5 text-blue-900 dark:text-gray-300 dark:text-darkGray-500"
         viewBox="0 0 24 24"
         stroke="currentColor"
         iconColor="none"
@@ -26,11 +27,13 @@
 
     <button
       type="button"
-      class="tooltip p-3 rounded-full hover:bg-gray-100 dark:hover:bg-darkGray-600 focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 focus:bg-blue-50 dark:focus:bg-darkGray-900 relative group"
+      class="tooltip p-3 rounded-full focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 focus:bg-blue-50 relative group dark:ring-darkGray-600 dark:focus:bg-darkGray-900"
+      :class="[isDarkTheme ? 'cursor-default' : 'hover:bg-gray-100']"
+      @click="switchThemeTo('DARK')"
     >
       <!-- Heroicon name: outline/moon -->
       <icon-base
-        class="text-gray-300 dark:text-darkGray-500 h-5 w-5 group-hover:text-blue-900 dark:group-hover:text-darkGray-300"
+        class="h-5 w-5 group-hover:text-blue-900 text-gray-300 dark:group-hover:text-darkGray-300 dark:text-darkGray-100"
         viewBox="0 0 24 24"
         stroke="currentColor"
         iconColor="none"
@@ -48,13 +51,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { Theme } from '@/store/state';
 import IconBase from '../icons/IconBase.vue';
 import IconOutlineSun from '../icons/IconOutlineSun.vue';
 import IconOutlineMoon from '../icons/IconOutlineMoon.vue';
+import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
   components: { IconBase, IconOutlineSun, IconOutlineMoon },
-  setup() {},
+  setup() {
+    const store = useStore();
+    const currentTheme = ref(store.getters.theme);
+
+    watchEffect(() => {
+      store.commit(MutationTypes.SET_THEME, currentTheme.value);
+    });
+
+    return {
+      isDarkTheme: currentTheme.value == 'DARK',
+      switchThemeTo(theme: Theme) {
+        currentTheme.value = theme;
+      },
+    };
+  },
 });
 </script>

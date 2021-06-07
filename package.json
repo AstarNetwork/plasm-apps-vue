@@ -2,6 +2,10 @@
   "name": "plasm-apps",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": ">=14.0.0",
+    "yarn": ">=1.22.0"
+  },
   "scripts": {
     "start": "yarn run serve",
     "serve": "vue-cli-service serve",
@@ -10,23 +14,34 @@
     "lint:check": "vue-cli-service lint --no-fix",
     "test": "jest ./src --passWithNoTests"
   },
+  "resolutions": {
+    "@polkadot/api": ">=4.10.1",
+    "typescript": "^4.2.4"
+  },
   "dependencies": {
-    "@plasm/types": "^1.4.0",
-    "@polkadot/api": "^3.9.3",
-    "@polkadot/extension-dapp": "^0.36.1",
-    "@polkadot/types": "^3.7.2",
-    "@polkadot/ui-keyring": "^0.68.1",
-    "chart.js": "^2.9.4",
+    "@plasm/types": "1.5.4-2",
+    "@polkadot/api": "^4.12.1",
+    "@polkadot/api-contract": "^4.12.1",
+    "@polkadot/extension-dapp": "^0.38.3",
+    "@polkadot/keyring": "^6.6.1",
+    "@polkadot/networks": "^6.6.1",
+    "@polkadot/types": "^4.12.1",
+    "@polkadot/ui-keyring": "^0.78.1",
+    "@polkadot/util": "^6.6.1",
+    "@polkadot/util-crypto": "^6.6.1",
+    "@polkadot/wasm-crypto": "^4.0.2",
     "core-js": "^3.6.5",
     "register-service-worker": "^1.7.1",
+    "store": "^2.0.12",
     "vue": "^3.0.2",
-    "vue-chartjs": "^3.5.1",
     "vue-router": "^4.0.0-beta.13",
+    "vue3-dropzone": "^0.0.7",
     "vuex": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@types/store": "^2.0.2",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "@vue/cli-plugin-babel": "~4.5.0",

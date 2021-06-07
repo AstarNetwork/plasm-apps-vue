@@ -1,9 +1,12 @@
 import { MutationTree } from 'vuex';
 import { MutationTypes } from './mutation-types';
-import { State } from './state';
+import { GeneralState as State, Theme } from './state';
+import {
+  Mutations as MutationsContract,
+  mutations as mutationsContract,
+} from './modules/contracts/mutations';
 
-export type Mutations<S = State> = {
-  [MutationTypes.SET_NETWORK_API](state: S, payload: any): void;
+export interface GeneralMutations<S = State> extends MutationsContract {
   [MutationTypes.SET_INITIALIZED](state: S): void;
   [MutationTypes.SET_LOADING](state: S, isLoading: boolean): void;
   [MutationTypes.SET_SHOW_ALERT_MSG](state: S, showAlert: boolean): void;
@@ -12,12 +15,9 @@ export type Mutations<S = State> = {
   [MutationTypes.SET_CURRENT_NETWORK_IDX](state: S, networkIdx: Number): void;
   [MutationTypes.SET_CURRENT_ACCOUNT_IDX](state: S, accountIdx: Number): void;
   [MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT](state: S, endpoint: string): void;
-};
+}
 
-export const mutations: MutationTree<State> & Mutations = {
-  [MutationTypes.SET_NETWORK_API](state, payload) {
-    state.api = payload;
-  },
+export const mutations: MutationTree<State> & GeneralMutations = {
   [MutationTypes.SET_INITIALIZED](state) {
     state.initialized = true;
   },
@@ -42,4 +42,16 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT](state, endpoint) {
     state.currentCustomEndpoint = endpoint;
   },
+  [MutationTypes.SET_THEME](state: State, theme: Theme) {
+    //add 'dark' class to the html tag to enable dark mode
+    const htmlClasses = document.documentElement.classList;
+    if (theme == 'DARK') {
+      htmlClasses.add('dark');
+    } else {
+      htmlClasses.remove('dark');
+    }
+    state.currentTheme = theme;
+  },
+
+  ...mutationsContract,
 };

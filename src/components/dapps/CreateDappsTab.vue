@@ -17,7 +17,7 @@
     <button
       type="button"
       @click="modalCodeHash = true"
-      class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
+      class="inline-flex items-center ml-3 px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
     >
       <icon-base
         class="w-5 h-5 text-blue-500 dark:text-blue-400 -ml-1 dark:group-hover:text-blue-300"
@@ -38,28 +38,35 @@
   </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
-    <contract-item />
+    <template v-for="(code, index) in allCode" :key="index">
+      <contract-item :code="code" />
+    </template>
   </div>
 
-  <ModalCreateDapps v-if="modalCreateDapps" v-model:isOpen="modalCreateDapps" />
-  <ModalCodeHash v-if="modalCodeHash" v-model:isOpen="modalCodeHash" />
+  <ModalCreateDapps
+    v-if="modalCreateDapps"
+    v-model:isOpen="modalCreateDapps"
+    :all-accounts="allAccounts"
+    :all-account-names="allAccountNames"
+    :address="defaultAccount"
+  />
+  <ModalCodeHash
+    v-if="modalCodeHash"
+    v-model:isOpen="modalCodeHash"
+    :address="defaultAccount"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
-import { useApi } from '@/hooks/useApi';
+import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import { useAccount, useApi } from '@/hooks';
+import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import ContractItem from '@/components/dapps/ContractItem.vue';
 import ModalCreateDapps from '@/components/dapps/ModalCreateDapps.vue';
 import ModalCodeHash from '@/components/dapps/ModalCodeHash.vue';
+import { ActionTypes } from '@/store/action-types';
 
 interface Modal {
   modalCreateDapps: boolean;
@@ -81,8 +88,39 @@ export default defineComponent({
       modalCodeHash: false,
     });
 
+    const {
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+    } = useAccount();
+
+    const store = useStore();
+    const currentAccountIdx = computed(() => store.getters.accountIdx);
+
+    watch(
+      currentAccountIdx,
+      () => {
+        defaultAccount.value = allAccounts.value[currentAccountIdx.value];
+        defaultAccountName.value =
+          allAccountNames.value[currentAccountIdx.value];
+      },
+      { immediate: true }
+    );
+
+    // Get all contracts
+    const allCode = computed(() => store.getters.getAllCode);
+
+    store.dispatch(ActionTypes.LOAD_ALL_CONTRACTS, {
+      api: api?.value,
+    });
+
     return {
-      api,
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      currentAccountIdx,
+      allCode,
       ...toRefs(stateModal),
     };
   },

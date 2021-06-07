@@ -1,4 +1,4 @@
-import { ApiPromise } from '@polkadot/api';
+import { State as StateContract } from './modules/contracts/state';
 
 export type AlertBox = {
   showAlertMsg: boolean;
@@ -6,18 +6,19 @@ export type AlertBox = {
   alertType: string;
 };
 
-export type State = {
-  api?: ApiPromise;
+export type Theme = 'LIGHT' | 'DARK';
+
+export interface GeneralState extends StateContract {
   initialized: boolean;
   isLoading: boolean;
   alertBox: AlertBox;
   currentNetworkIdx: Number;
   currentAccountIdx: Number;
   currentCustomEndpoint: string;
-};
+  currentTheme: Theme;
+}
 
-export const state: State = {
-  api: undefined,
+export const state: GeneralState = {
   initialized: false,
   isLoading: false,
   alertBox: {
@@ -28,4 +29,12 @@ export const state: State = {
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
   currentCustomEndpoint: '',
+
+  currentTheme:
+    //this queries the media setting
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'DARK'
+      : 'LIGHT',
+  allCode: {},
 };
