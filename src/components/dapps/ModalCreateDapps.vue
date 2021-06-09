@@ -285,6 +285,10 @@
                     :extension="extensionFile"
                   />
                 </div>
+                <div>
+                  <contract-info />
+                  <!-- TODO:move all the UI into Contract.vue -->
+                </div>
               </div>
             </div>
           </div>
@@ -347,6 +351,8 @@ import { AddressProxy } from '@/types/Signer';
 import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
+import ContractInfo from './ContractInfo.vue';
+import type { AbiMessage } from '@polkadot/api-contract/types';
 
 interface FormData {
   endowment: BN;
@@ -367,6 +373,7 @@ export default defineComponent({
     ModalSelectAccountOption,
     // CategoryMultiSelect,
     InputFile,
+    ContractInfo,
   },
   props: {
     allAccounts: {
@@ -449,10 +456,29 @@ export default defineComponent({
       setWasmFile(fileState);
     };
 
+    // const handleConstructors = (constructors: AbiConstructor[]) => {};
+
     watch(abi, () => {
-      console.log('abc', abi.value);
-      console.log('wasm', abi.value?.project.source.wasm);
-      console.log('constructor', abi.value?.constructors);
+      console.log(abi, 'FROM MODAL');
+      // abi?.value?.constructors.forEach((e: AbiMessage) => {
+      // const { docs, identifier, args } = e;
+      // console.log(docs, 'docs');
+      // console.log(identifier, 'id');
+      // args.forEach((arg) => {
+      // const { name, type } = arg;
+      // console.log(name, 'NAME');
+      // console.log(type, 'TYPE');
+      // });
+      // });
+      // abi?.value?.messages.forEach((e: AbiMessage) => {
+      //   const { docs, index, identifier, args, returnType } = e;
+      //   console.log(docs, 'docs');
+      //   console.log(index, 'index');
+      //   console.log(identifier, 'identifier');
+      //   console.log(args, 'args');
+      //   console.log(returnType, 'return type');
+      // });
+
       if (abi.value && isWasm(abi.value.project.source.wasm)) {
         wasm.value = abi.value.project.source.wasm;
         isWasmValid.value = true;
@@ -488,14 +514,13 @@ export default defineComponent({
 
       const abiData = abi.value as Abi | AnyJson;
 
-      console.log('s', abiData);
-      console.log('w', wasm.value);
+      // console.log('s', abiData);
+      // console.log('w', wasm.value);
 
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
 
       try {
         const code = new CodePromise(apiPromise, abiData, wasm.value);
-
         //should be changable
         // const unit_d = 3;
         // const decimal = 12;
@@ -504,18 +529,17 @@ export default defineComponent({
         // );
         // const weight = new BN(200000000000);
         ///
-        console.log('endowment', formData.endowment);
-        console.log('weight', formData.weight);
+        // console.log('endowment', formData.endowment);
+        // console.log('weight', formData.weight);
 
-        console.log('code', code);
-        console.log('method', code.tx);
+        // console.log('code', code);
+        // console.log('method', code.tx);
 
         const constructorIndex = 0;
         const params = abi?.value?.constructors[constructorIndex].args;
-        console.log('params', params);
 
         const arrValues = getParamValues(abi.value?.registry, params);
-        console.log('values', arrValues);
+        // console.log('values', arrValues);
 
         uploadTx =
           code &&
@@ -531,7 +555,7 @@ export default defineComponent({
             : null;
       } catch (e) {
         const error = (e as Error).message;
-        console.error(error);
+        // console.error(error);
         store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
           msg: error,
           alertType: 'error',
@@ -539,7 +563,7 @@ export default defineComponent({
         return;
       }
 
-      console.log('uploadTx', uploadTx);
+      // console.log('uploadTx', uploadTx);
 
       //send from txButton
       const SUBMIT_RPC = jsonrpc.author.submitAndWatchExtrinsic;
@@ -556,7 +580,7 @@ export default defineComponent({
       const accountId = props.address;
 
       const _onFailed = (result: SubmittableResult | null) => {
-        console.error('_onFailed', result);
+        // console.error('_onFailed', result);
         store.commit(MutationTypes.SET_LOADING, false);
         store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
           msg: result,
@@ -565,12 +589,12 @@ export default defineComponent({
       };
 
       const _onStart = () => {
-        console.log('_onStart');
+        // console.log('_onStart');
         store.commit(MutationTypes.SET_LOADING, true);
       };
 
       const _onSuccess = (result: CodeSubmittableResult) => {
-        console.log('_onSuccess', result);
+        // console.log('_onSuccess', result);
 
         const codeHash = result.blueprint?.codeHash;
         const codeJson = {
@@ -578,8 +602,8 @@ export default defineComponent({
           name: formData.projectName || '<>',
           tags: [],
         };
-        console.log('codeHash', codeHash?.toHex());
-        console.log('codeJson', codeJson);
+        // console.log('codeHash', codeHash?.toHex());
+        // console.log('codeJson', codeJson);
 
         result.blueprint &&
           store.dispatch(ActionTypes.SAVE_CODE, {
@@ -645,7 +669,7 @@ export default defineComponent({
         });
       });
 
-      console.log('txQueue', txqueue[0]);
+      // console.log('txQueue', txqueue[0]);
 
       const currentItem: QueueTx = txqueue[0];
 
