@@ -31,15 +31,27 @@
     </button>
   </div>
 
+  <!-- <h2
+    class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
+  >
+    Contracts
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+    <template v-for="(contract, index) in contracts" :key="index">
+      <contract-item :contract="contract" />
+    </template>
+  </div> -->
+
   <h2
     class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
   >
-    Contract
+    Code hashes
   </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
     <template v-for="(code, index) in allCode" :key="index">
-      <contract-item :code="code" />
+      <code-item :code="code" />
     </template>
   </div>
 
@@ -59,14 +71,18 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
-import { useAccount, useApi } from '@/hooks';
+import { useAccount, useApi, useContracts } from '@/hooks';
 import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import ContractItem from '@/components/dapps/ContractItem.vue';
+import CodeItem from '@/components/dapps/CodeItem.vue';
 import ModalCreateDapps from '@/components/dapps/ModalCreateDapps.vue';
 import ModalCodeHash from '@/components/dapps/ModalCodeHash.vue';
+import { ApiPromise } from '@polkadot/api';
+import { ContractPromise } from '@polkadot/api-contract';
 import { ActionTypes } from '@/store/action-types';
+import { getContractForAddress } from '@/helper/contractUtils';
 
 interface Modal {
   modalCreateDapps: boolean;
@@ -78,6 +94,7 @@ export default defineComponent({
     IconPlus,
     IconBase,
     ContractItem,
+    CodeItem,
     ModalCreateDapps,
     ModalCodeHash,
   },
@@ -110,6 +127,25 @@ export default defineComponent({
     );
 
     // Get all contracts
+    const { allContracts } = useContracts();
+
+    function filterContracts(
+      api: ApiPromise,
+      keyringContracts: string[] = []
+    ): ContractPromise[] {
+      return keyringContracts
+        .map((address) => getContractForAddress(api, address.toString()))
+        .filter((contract): contract is ContractPromise => !!contract);
+    }
+
+    const contracts = filterContracts(
+      api?.value as ApiPromise,
+      allContracts.value
+    );
+
+    console.log('cc', contracts);
+
+    // Get all codes
     const allCode = computed(() => store.getters.getAllCode);
 
     store.dispatch(ActionTypes.LOAD_ALL_CONTRACTS, {
@@ -121,6 +157,7 @@ export default defineComponent({
       allAccountNames,
       defaultAccount,
       currentAccountIdx,
+      contracts,
       allCode,
       ...toRefs(stateModal),
     };
