@@ -287,7 +287,12 @@
                 </div>
                 <div>
                   <contract-info />
-                  <!-- TODO:move all the UI into Contract.vue -->
+                  <message
+                    v-for="msg in messages"
+                    :message="msg"
+                    :key="msg.identifier"
+                  />
+                  <!-- TODO:move all the UI into ContractInfo.vue -->
                 </div>
               </div>
             </div>
@@ -352,8 +357,9 @@ import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
-import type { AbiMessage } from '@polkadot/api-contract/types';
-
+import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
+import Message from './Message.vue';
+import type { TypeDef } from '@polkadot/types/create/types';
 interface FormData {
   endowment: BN;
   weight: BN;
@@ -374,6 +380,7 @@ export default defineComponent({
     // CategoryMultiSelect,
     InputFile,
     ContractInfo,
+    Message,
   },
   props: {
     allAccounts: {
@@ -456,28 +463,39 @@ export default defineComponent({
       setWasmFile(fileState);
     };
 
-    // const handleConstructors = (constructors: AbiConstructor[]) => {};
-
+    //TODO: move the code below to contract-info once useAbi is fixed
+    const messages = ref<
+      | {
+          identifier: string;
+          doc?: string;
+          args: AbiParam[];
+          returnType?: TypeDef | null;
+          isConstructor?: boolean;
+        }[]
+      | null
+    >(null);
     watch(abi, () => {
-      console.log(abi, 'FROM MODAL');
-      // abi?.value?.constructors.forEach((e: AbiMessage) => {
-      // const { docs, identifier, args } = e;
-      // console.log(docs, 'docs');
-      // console.log(identifier, 'id');
-      // args.forEach((arg) => {
-      // const { name, type } = arg;
-      // console.log(name, 'NAME');
-      // console.log(type, 'TYPE');
-      // });
-      // });
-      // abi?.value?.messages.forEach((e: AbiMessage) => {
-      //   const { docs, index, identifier, args, returnType } = e;
-      //   console.log(docs, 'docs');
-      //   console.log(index, 'index');
-      //   console.log(identifier, 'identifier');
-      //   console.log(args, 'args');
-      //   console.log(returnType, 'return type');
-      // });
+      if (abi?.value?.constructors && abi?.value?.messages) {
+        const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
+          return {
+            identifier: e.identifier,
+            doc: e.docs.length > 0 ? e.docs[0] : undefined,
+            args: e.args,
+            returnType: e.returnType,
+            isConstructor: e.isConstructor,
+          };
+        });
+        const msgs = abi?.value?.messages.map((e: AbiMessage) => {
+          return {
+            identifier: e.identifier,
+            doc: e.docs.length > 0 ? e.docs[0] : undefined,
+            args: e.args,
+            returnType: e.returnType,
+            isConstructor: e.isConstructor,
+          };
+        });
+        messages.value = [...constructors, ...msgs];
+      }
 
       if (abi.value && isWasm(abi.value.project.source.wasm)) {
         wasm.value = abi.value.project.source.wasm;
@@ -701,6 +719,7 @@ export default defineComponent({
       wasmFromFile,
       extensionFile,
       onDropFile,
+      messages,
     };
   },
 });

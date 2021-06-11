@@ -1,26 +1,49 @@
 <template>
-  <div class="dark:text-white">{{ identifier '(' ')' )}}</div>
+  <div class="my-2 py-1 px-2 dark:text-white dark:bg-darkGray-800 rounded-sm">
+    <div class="flex">
+      <div
+        class="font-semibold"
+        :class="[message.isConstructor ? 'text-blue-400' : 'text-yellow-400']"
+      >
+        {{ message.identifier }}
+      </div>
+      <div>{{ `(${argsString})${returnTypeString}` }}</div>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 // import useAbi from '@/hooks/useAbi';
 import { PropType, defineComponent } from 'vue';
-export type Message = {
+import type { AbiParam } from '@polkadot/api-contract/types';
+import type { TypeDef } from '@polkadot/types/create/types';
+interface MessageType {
   identifier: string;
   doc?: string;
-  args: { name: string; type: string }[];
-};
+  args: AbiParam[];
+  returnType?: TypeDef | null;
+  isConstructor?: boolean;
+}
 export default defineComponent({
   props: {
     message: {
       required: true,
-      type: Object as PropType<Message>,
+      type: Object as PropType<MessageType>,
     },
   },
-  //   setup(props) {
-  //     let argsString = '';
-  //     props.message.args.forEach(( { name, type },i) => {
-  //         if (i !== props.message.args.length )
-  //     });
-  //   },
+  setup(props) {
+    const msg = props.message;
+    let argsString = '';
+    msg.args.forEach(({ name, type }, i) => {
+      argsString += `${name}: ${type.type}`;
+      if (i !== msg.args.length - 1) {
+        argsString += ', ';
+      }
+    });
+    if (!argsString.length) {
+      argsString = ' ';
+    }
+    const returnTypeString = msg.returnType ? `: ${msg.returnType!.type}` : '';
+    return { argsString, returnTypeString: returnTypeString };
+  },
 });
 </script>
