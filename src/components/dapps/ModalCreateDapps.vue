@@ -479,7 +479,7 @@ export default defineComponent({
         const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
           return {
             identifier: e.identifier,
-            doc: e.docs.length > 0 ? e.docs[0] : undefined,
+            docs: e.docs,
             args: e.args,
             returnType: e.returnType,
             isConstructor: e.isConstructor,
@@ -488,7 +488,7 @@ export default defineComponent({
         const msgs = abi?.value?.messages.map((e: AbiMessage) => {
           return {
             identifier: e.identifier,
-            doc: e.docs.length > 0 ? e.docs[0] : undefined,
+            docs: e.docs,
             args: e.args,
             returnType: e.returnType,
             isConstructor: e.isConstructor,

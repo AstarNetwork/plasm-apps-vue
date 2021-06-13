@@ -9,6 +9,7 @@
       </div>
       <div>{{ `(${argsString})${returnTypeString}` }}</div>
     </div>
+    docs:{{ docsString }}
   </div>
 </template>
 <script lang="ts">
@@ -18,7 +19,7 @@ import type { AbiParam } from '@polkadot/api-contract/types';
 import type { TypeDef } from '@polkadot/types/create/types';
 interface MessageType {
   identifier: string;
-  doc?: string;
+  docs: string[];
   args: AbiParam[];
   returnType?: TypeDef | null;
   isConstructor?: boolean;
@@ -32,18 +33,18 @@ export default defineComponent({
   },
   setup(props) {
     const msg = props.message;
-    let argsString = '';
-    msg.args.forEach(({ name, type }, i) => {
-      argsString += `${name}: ${type.type}`;
-      if (i !== msg.args.length - 1) {
-        argsString += ', ';
-      }
-    });
+
+    let argsString = msg.args
+      .map(({ name, type }) => `${name}: ${type.type}`)
+      .join(', ');
     if (!argsString.length) {
       argsString = ' ';
     }
+
+    const docsString = msg.docs.join('\n');
     const returnTypeString = msg.returnType ? `: ${msg.returnType!.type}` : '';
-    return { argsString, returnTypeString: returnTypeString };
+
+    return { argsString, docsString, returnTypeString };
   },
 });
 </script>
