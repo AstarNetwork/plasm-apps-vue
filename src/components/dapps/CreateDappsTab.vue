@@ -3,7 +3,25 @@
     <button
       type="button"
       @click="modalCreateDapps = true"
-      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
+      class="
+        inline-flex
+        items-center
+        px-4
+        py-2
+        border border-transparent
+        text-sm
+        font-medium
+        rounded-full
+        shadow-sm
+        text-white
+        bg-blue-500
+        hover:bg-blue-400
+        focus:outline-none
+        focus:ring focus:ring-blue-100
+        dark:focus:ring-blue-400
+        mb-1
+        group
+      "
     >
       <icon-base
         class="w-5 h-5 text-white -ml-1"
@@ -17,10 +35,40 @@
     <button
       type="button"
       @click="modalCodeHash = true"
-      class="inline-flex items-center ml-3 px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mb-1 group"
+      class="
+        inline-flex
+        items-center
+        ml-3
+        px-4
+        py-2
+        text-sm
+        font-medium
+        rounded-full
+        shadow-sm
+        text-blue-500
+        dark:text-blue-400
+        border border-blue-500
+        dark:border-blue-400
+        hover:bg-blue-100
+        dark:hover:bg-darkGray-800
+        dark:hover:border-blue-300
+        dark:hover:text-blue-300
+        focus:outline-none
+        focus:ring focus:ring-blue-100
+        dark:focus:ring-blue-400
+        mb-1
+        group
+      "
     >
       <icon-base
-        class="w-5 h-5 text-blue-500 dark:text-blue-400 -ml-1 dark:group-hover:text-blue-300"
+        class="
+          w-5
+          h-5
+          text-blue-500
+          dark:text-blue-400
+          -ml-1
+          dark:group-hover:text-blue-300
+        "
         icon-name="plus"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -30,18 +78,6 @@
       Add an existing code hash
     </button>
   </div>
-
-  <!-- <h2
-    class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
-  >
-    Contracts
-  </h2>
-
-  <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-    <template v-for="(contract, index) in contracts" :key="index">
-      <contract-item :contract="contract" />
-    </template>
-  </div> -->
 
   <h2
     class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
@@ -54,6 +90,22 @@
       <code-item :code="code" />
     </template>
   </div>
+
+  <h2
+    class="
+      text-blue-900
+      dark:text-white
+      text-lg
+      font-bold
+      mt-4
+      mb-4
+      leading-tight
+    "
+  >
+    Contracts
+  </h2>
+
+  <ContractsTable />
 
   <ModalCreateDapps
     v-if="modalCreateDapps"
@@ -71,18 +123,15 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
-import { useAccount, useApi, useContracts } from '@/hooks';
+import { useAccount, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
 import IconBase from '@/components/icons/IconBase.vue';
-import ContractItem from '@/components/dapps/ContractItem.vue';
 import CodeItem from '@/components/dapps/CodeItem.vue';
 import ModalCreateDapps from '@/components/dapps/ModalCreateDapps.vue';
 import ModalCodeHash from '@/components/dapps/ModalCodeHash.vue';
-import { ApiPromise } from '@polkadot/api';
-import { ContractPromise } from '@polkadot/api-contract';
+import ContractsTable from '@/components/dapps/ContractsTable.vue';
 import { ActionTypes } from '@/store/action-types';
-import { getContractForAddress } from '@/helper/contractUtils';
 
 interface Modal {
   modalCreateDapps: boolean;
@@ -93,10 +142,10 @@ export default defineComponent({
   components: {
     IconPlus,
     IconBase,
-    ContractItem,
     CodeItem,
     ModalCreateDapps,
     ModalCodeHash,
+    ContractsTable,
   },
   setup() {
     const { api } = useApi();
@@ -106,12 +155,8 @@ export default defineComponent({
       modalCodeHash: false,
     });
 
-    const {
-      allAccounts,
-      allAccountNames,
-      defaultAccount,
-      defaultAccountName,
-    } = useAccount();
+    const { allAccounts, allAccountNames, defaultAccount, defaultAccountName } =
+      useAccount();
 
     const store = useStore();
     const currentAccountIdx = computed(() => store.getters.accountIdx);
@@ -126,25 +171,6 @@ export default defineComponent({
       { immediate: true }
     );
 
-    // Get all contracts
-    const { allContracts } = useContracts();
-
-    function filterContracts(
-      api: ApiPromise,
-      keyringContracts: string[] = []
-    ): ContractPromise[] {
-      return keyringContracts
-        .map((address) => getContractForAddress(api, address.toString()))
-        .filter((contract): contract is ContractPromise => !!contract);
-    }
-
-    const contracts = filterContracts(
-      api?.value as ApiPromise,
-      allContracts.value
-    );
-
-    console.log('cc', contracts);
-
     // Get all codes
     const allCode = computed(() => store.getters.getAllCode);
 
@@ -157,7 +183,6 @@ export default defineComponent({
       allAccountNames,
       defaultAccount,
       currentAccountIdx,
-      contracts,
       allCode,
       ...toRefs(stateModal),
     };

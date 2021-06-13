@@ -1,6 +1,16 @@
 <template>
   <div
-    class="sm:flex items-end border-b border-gray-300 dark:border-darkGray-600 mb-8 -mx-4 sm:-mx-8 px-4 sm:px-8"
+    class="
+      sm:flex
+      items-end
+      border-b border-gray-300
+      dark:border-darkGray-600
+      mb-8
+      -mx-4
+      sm:-mx-8
+      px-4
+      sm:px-8
+    "
   >
     <h1
       class="text-3xl font-extrabold text-blue-900 dark:text-white mb-6 sm:mb-8"
@@ -9,7 +19,7 @@
     </h1>
     <Tab
       :labels="[
-        { label: 'dApps Staking', path: 'dapps-staking' },
+        { label: 'dApp Store', path: 'dapp-store' },
         { label: 'Create dApps', path: 'create-dapps' },
       ]"
     />

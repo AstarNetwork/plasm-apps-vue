@@ -2,73 +2,7 @@
   <div
     class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
   >
-    <div class="w-44 h-16 flex items-center mx-auto my-3">
-      <img
-        src="@/assets/img/image-placeholder.png"
-        class="w-full h-full object-scale-down"
-        alt="ProjectName"
-      />
-    </div>
-
-    <p
-      class="
-        text-blue-900
-        dark:text-darkGray-100
-        text-lg
-        font-bold
-        leading-tight
-        mb-1
-      "
-    >
-      <!-- {{ code.json.name }} -->
-    </p>
-
-    <div class="text-xs mb-0.5">
-      <a
-        href="#"
-        class="
-          text-blue-500
-          dark:text-blue-400
-          hover:text-gray-700
-          dark:hover:text-gray-300
-          mr-2
-        "
-      >
-        #DeFi
-      </a>
-      <a
-        href="#"
-        class="
-          text-blue-500
-          dark:text-blue-400
-          hover:text-gray-700
-          dark:hover:text-gray-300
-          mr-2
-        "
-      >
-        #Games
-      </a>
-    </div>
-
-    <p class="mb-3 text-xs">
-      <a
-        class="text-gray-500 dark:text-darkGray-400 underline"
-        href="https://example.com"
-        >https://example.com</a
-      >
-    </p>
-
-    <div
-      class="
-        flex
-        items-center
-        border-t border-gray-200
-        dark:border-darkGray-600
-        -mx-5
-        pt-4
-        px-4
-      "
-    >
+    <div class="flex items-center -mx-5 px-4">
       <div
         class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-2"
       >
@@ -86,7 +20,7 @@
             text-sm
           "
         >
-          AddressName
+          {{ contract.abi.json.contract.name }}
         </p>
         <p
           class="
@@ -168,8 +102,58 @@
         </div>
         <div class="flex justify-between items-center">
           <div class="text-xs text-blue-900 dark:text-darkGray-100">
-            <!-- {{ shortenCodeHash }} -->
+            {{ shortenCodeHash }}
           </div>
+          <button
+            type="button"
+            class="
+              tooltip
+              p-3
+              rounded-full
+              hover:bg-gray-100
+              dark:hover:bg-darkGray-600
+              focus:z-10
+              focus:outline-none
+              focus:ring focus:ring-gray-100
+              dark:focus:ring-darkGray-600
+              focus:bg-blue-50
+              dark:focus:bg-darkGray-900
+              relative
+              group
+              -mr-2
+              -my-3
+            "
+            @click="copyCodeHash"
+          >
+            <icon-document-duplicate />
+            <span
+              class="
+                pointer-events-none
+                hidden
+                absolute
+                top-0
+                left-1/2
+                z-10
+                transform
+                -translate-y-full -translate-x-1/2
+                p-2
+                text-xs
+                leading-tight
+                text-white
+                bg-gray-800
+                dark:bg-darkGray-500
+                rounded-md
+                shadow-lg
+              "
+            >
+              Copy
+            </span>
+          </button>
+          <input
+            type="hidden"
+            id="hiddenCodeHash"
+            :value="contract.abi.json.source.hash"
+          />
         </div>
       </div>
       <div>
@@ -177,7 +161,7 @@
           Code bundle name
         </div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          <!-- {{ code.json.name }} -->
+          {{ contract.abi.json.contract.name }}
         </div>
       </div>
       <div>
@@ -185,9 +169,35 @@
           Contract ABI
         </div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          <!-- {{ shortenAbi }} -->
+          {{ shortenAbi }}
         </div>
       </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-2 my-2">
+      <button
+        type="button"
+        class="
+          items-center
+          px-4
+          py-2
+          border border-transparent
+          text-sm
+          font-medium
+          rounded-full
+          shadow-sm
+          text-white
+          bg-blue-500
+          hover:bg-blue-400
+          focus:outline-none
+          focus:ring focus:ring-blue-100
+          dark:focus:ring-blue-400
+          group
+        "
+        @click="onForget"
+      >
+        Forget
+      </button>
     </div>
   </div>
 </template>
@@ -197,14 +207,15 @@ import { useStore } from 'vuex';
 import { ActionTypes } from '@/store/action-types';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
-// import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
+import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
 import { ContractPromise } from '@polkadot/api-contract';
+import { keyring } from '@polkadot/ui-keyring';
 
 export default defineComponent({
   components: {
     IconBase,
     IconAccountSample,
-    // IconDocumentDuplicate,
+    IconDocumentDuplicate,
   },
   props: {
     contract: {
@@ -218,7 +229,6 @@ export default defineComponent({
     console.log('dfd', contract.value);
 
     const address = contract.value.address.toHex();
-    console.log('addrN', address);
 
     const shortenAddress = computed(() => {
       return address
@@ -226,23 +236,42 @@ export default defineComponent({
         : '';
     });
 
-    // const shortenCodeHash = computed(() => {
-    //   const codeHash = code.value.json.codeHash;
-    //   return codeHash
-    //     ? `${codeHash.slice(0, 6)}${'.'.repeat(6)}${codeHash.slice(-6)}`
-    //     : '';
-    // });
+    const shortenCodeHash = computed(() => {
+      // @ts-ignore
+      const codeHash = contract.value.abi.json.source.hash;
+      return codeHash
+        ? `${codeHash.slice(0, 6)}${'.'.repeat(6)}${codeHash.slice(-6)}`
+        : '';
+    });
 
-    // const shortenAbi = computed(() => {
-    //   const abi = code.value.json.abi;
-    //   return abi ? `${abi.slice(0, 24)}...` : '';
-    // });
+    const shortenAbi = computed(() => {
+      // @ts-ignore
+      const abi = JSON.stringify(contract.value.abi.json);
+      return abi ? `${abi.slice(0, 24)}...` : '';
+    });
 
     const store = useStore();
 
-    const showAlert = () => {
+    const onForget = () => {
+      const fConfirm = confirm(
+        'You are about to remove this contract from your list of available contracts. The forget operation only limits your access to the contract on this browser.'
+      );
+
+      if (fConfirm) {
+        try {
+          keyring.forgetContract(contract.value.address.toString());
+
+          // should be changed.
+          location.reload();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    const showAlert = (msg: string) => {
       store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
-        msg: 'Copy codeHash success!!',
+        msg,
         alertType: 'success',
       });
     };
@@ -250,21 +279,28 @@ export default defineComponent({
     return {
       address,
       shortenAddress,
-      // shortenCodeHash,
-      // shortenAbi,
+      shortenCodeHash,
+      shortenAbi,
+      onForget,
       showAlert,
     };
   },
   methods: {
-    copyAddress() {
-      var copyAddr = document.querySelector('#hiddenAddr') as HTMLInputElement;
+    copy(elementStr: string, alertMsg: string) {
+      var copyAddr = document.querySelector(elementStr) as HTMLInputElement;
       copyAddr.setAttribute('type', 'text');
       copyAddr.select();
       document.execCommand('copy');
       copyAddr.setAttribute('type', 'hidden');
       window.getSelection()?.removeAllRanges();
 
-      this.showAlert();
+      this.showAlert(alertMsg);
+    },
+    copyAddress() {
+      this.copy('#hiddenAddr', 'Copy address success!!');
+    },
+    copyCodeHash() {
+      this.copy('#hiddenCodeHash', 'Copy codehash success!!');
     },
   },
 });
