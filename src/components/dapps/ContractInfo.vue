@@ -1,10 +1,11 @@
 <template>
-  <div class="dark:text-darkGray-400">contract view</div>
+  <!-- TODO: bring in Message.vue once useAbi is fixed -->
+  <div class="dark:text-darkGray-400"></div>
 </template>
 <script lang="ts">
 import useAbi from '@/hooks/useAbi';
 import { defineComponent, watch } from 'vue';
-import type { AbiMessage, AbiConstructor } from '@polkadot/api-contract/types';
+import type { AbiMessage } from '@polkadot/api-contract/types';
 
 export default defineComponent({
   components: {},
