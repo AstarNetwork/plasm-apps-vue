@@ -85,4 +85,9 @@ export const actions: ActionTree<State, State> & Actions = {
     const newJson = getCodeJson(api, json as CodeJson);
     commit(MutationTypes.ADD_CODE, newJson);
   },
+  async [ActionTypes.FORGET_CODE]({ commit, state }, { codeHash }) {
+    const key = `${KEY_CODE}${codeHash}`;
+    delete state.allCode[codeHash];
+    store.remove(key);
+  },
 };

@@ -97,10 +97,10 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-2 my-2">
+    <div class="text-right">
       <button
         type="button"
-        class="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 group"
+        class="inline-flex items-center rounded-full border border-gray-300 dark:border-darkGray-500 px-3 py-2 bg-white dark:bg-darkGray-800 text-xs font-medium hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 text-gray-500 dark:text-darkGray-400"
         @click="onForget"
       >
         Forget
@@ -160,6 +160,7 @@ export default defineComponent({
     const store = useStore();
 
     const onForget = () => {
+      // should changed into custom modal.
       const fConfirm = confirm(
         'You are about to remove this contract from your list of available contracts. The forget operation only limits your access to the contract on this browser.'
       );
