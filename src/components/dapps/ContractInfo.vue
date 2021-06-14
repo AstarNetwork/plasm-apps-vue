@@ -1,39 +1,35 @@
 <template>
-  <!-- TODO: bring in Message.vue once useAbi is fixed -->
-  <div class="dark:text-darkGray-400"></div>
+  <div>
+    <message
+      v-for="message in messages"
+      :message="message"
+      :key="message.identifier"
+    />
+  </div>
 </template>
 <script lang="ts">
-import useAbi from '@/hooks/useAbi';
-import { defineComponent, watch } from 'vue';
-import type { AbiMessage } from '@polkadot/api-contract/types';
-
+// import useAbi from '@/hooks/useAbi';
+import { defineComponent, PropType } from 'vue';
+import type { TypeDef } from '@polkadot/types/create/types';
+import type { AbiParam } from '@polkadot/api-contract/types';
+import Message from './Message.vue';
+interface MessageType {
+  identifier: string;
+  docs: string[];
+  args: AbiParam[];
+  returnType?: TypeDef | null;
+  isConstructor?: boolean;
+}
 export default defineComponent({
-  components: {},
+  props: {
+    messages: {
+      required: true,
+      type: Array as PropType<MessageType[] | null>,
+    },
+  },
+  components: { Message },
   setup() {
-    const { abi } = useAbi();
-
-    watch(
-      abi,
-      () => {
-        console.log('abi from contract view', abi.value);
-        abi?.value?.constructors.forEach(({ args }) => {
-          args.forEach((arg) => {
-            const { name, type } = arg;
-            console.log(name, 'NAME');
-            console.log(type, 'TYPE');
-          });
-        });
-        abi?.value?.messages.forEach((e: AbiMessage) => {
-          const { docs, index, identifier, args, returnType } = e;
-          console.log(docs, 'docs');
-          console.log(index, 'index');
-          console.log(identifier, 'identifier');
-          console.log(args, 'args');
-          console.log(returnType, 'return type');
-        });
-      },
-      { immediate: true }
-    );
+    //TODO use useAbi once it's fixed
 
     return {};
   },

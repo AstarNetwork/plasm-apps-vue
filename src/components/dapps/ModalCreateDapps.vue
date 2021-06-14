@@ -309,15 +309,7 @@
                     :extension="extensionFile"
                   />
                 </div>
-                <div>
-                  <contract-info />
-                  <message
-                    v-for="msg in messages"
-                    :message="msg"
-                    :key="msg.identifier"
-                  />
-                  <!-- TODO:move all the UI into ContractInfo.vue -->
-                </div>
+                <contract-info :messages="messages" />
               </div>
             </div>
           </div>
@@ -374,7 +366,6 @@ import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
 import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
-import Message from './Message.vue';
 import type { TypeDef } from '@polkadot/types/create/types';
 import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
@@ -400,7 +391,6 @@ export default defineComponent({
     ModalSelectAccountOption,
     // CategoryMultiSelect,
     InputFile,
-    Message,
     ContractInfo,
   },
   props: {
