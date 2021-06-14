@@ -34,14 +34,22 @@
   <h2
     class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
   >
-    Contract
+    Code hashes
   </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
     <template v-for="(code, index) in allCode" :key="index">
-      <contract-item :code="code" />
+      <code-item :code="code" />
     </template>
   </div>
+
+  <h2
+    class="text-blue-900 dark:text-white text-lg font-bold mt-4 mb-4 leading-tight"
+  >
+    Contracts
+  </h2>
+
+  <ContractsTable />
 
   <ModalCreateDapps
     v-if="modalCreateDapps"
@@ -63,9 +71,10 @@ import { useAccount, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
 import IconBase from '@/components/icons/IconBase.vue';
-import ContractItem from '@/components/dapps/ContractItem.vue';
+import CodeItem from '@/components/dapps/CodeItem.vue';
 import ModalCreateDapps from '@/components/dapps/ModalCreateDapps.vue';
 import ModalCodeHash from '@/components/dapps/ModalCodeHash.vue';
+import ContractsTable from '@/components/dapps/ContractsTable.vue';
 import { ActionTypes } from '@/store/action-types';
 
 interface Modal {
@@ -77,9 +86,10 @@ export default defineComponent({
   components: {
     IconPlus,
     IconBase,
-    ContractItem,
+    CodeItem,
     ModalCreateDapps,
     ModalCodeHash,
+    ContractsTable,
   },
   setup() {
     const { api } = useApi();

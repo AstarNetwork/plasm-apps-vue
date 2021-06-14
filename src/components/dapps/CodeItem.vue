@@ -3,28 +3,13 @@
     class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
   >
     <p
-      class="
-        text-blue-900
-        dark:text-darkGray-100
-        text-lg
-        font-bold
-        leading-tight
-        mb-3
-      "
+      class="text-blue-900 dark:text-darkGray-100 text-lg font-bold leading-tight mb-3"
     >
       {{ code.json.name }}
     </p>
 
     <div
-      class="
-        flex
-        items-center
-        border-t border-gray-200
-        dark:border-darkGray-600
-        -mx-5
-        pt-4
-        px-4
-      "
+      class="flex items-center border-t border-gray-200 dark:border-darkGray-600 -mx-5 pt-4 px-4"
     >
       <div
         class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-2"
@@ -35,46 +20,19 @@
       </div>
       <div class="">
         <p
-          class="
-            text-blue-900
-            dark:text-darkGray-100
-            font-semibold
-            leading-tight
-            text-sm
-          "
+          class="text-blue-900 dark:text-darkGray-100 font-semibold leading-tight text-sm"
         >
           AddressName
         </p>
         <p
-          class="
-            text-xs text-gray-500
-            dark:text-darkGray-400
-            font-normal
-            leading-tight
-          "
+          class="text-xs text-gray-500 dark:text-darkGray-400 font-normal leading-tight"
         >
           5Hn8MM......2dZzwc
         </p>
       </div>
       <button
         type="button"
-        class="
-          ml-auto
-          tooltip
-          p-3
-          rounded-full
-          hover:bg-gray-100
-          dark:hover:bg-darkGray-600
-          focus:z-10
-          focus:outline-none
-          focus:ring focus:ring-gray-100
-          dark:focus:ring-darkGray-600
-          focus:bg-blue-50
-          dark:focus:bg-darkGray-900
-          relative
-          group
-          -mr-1
-        "
+        class="ml-auto tooltip p-3 rounded-full hover:bg-gray-100 dark:hover:bg-darkGray-600 focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 focus:bg-blue-50 dark:focus:bg-darkGray-900 relative group -mr-1"
       >
         <svg
           class="text-blue-900 dark:text-darkGray-300 h-4 w-4"
@@ -92,24 +50,7 @@
         </svg>
         <!-- Tooltip -->
         <span
-          class="
-            pointer-events-none
-            hidden
-            absolute
-            top-0
-            left-1/2
-            z-10
-            transform
-            -translate-y-full -translate-x-1/2
-            p-2
-            text-xs
-            leading-tight
-            text-white
-            bg-gray-800
-            dark:bg-darkGray-500
-            rounded-md
-            shadow-lg
-          "
+          class="pointer-events-none hidden absolute top-0 left-1/2 z-10 transform -translate-y-full -translate-x-1/2 p-2 text-xs leading-tight text-white bg-gray-800 dark:bg-darkGray-500 rounded-md shadow-lg"
         >
           Copy
         </span>
@@ -127,45 +68,12 @@
           </div>
           <button
             type="button"
-            class="
-              tooltip
-              p-3
-              rounded-full
-              hover:bg-gray-100
-              dark:hover:bg-darkGray-600
-              focus:z-10
-              focus:outline-none
-              focus:ring focus:ring-gray-100
-              dark:focus:ring-darkGray-600
-              focus:bg-blue-50
-              dark:focus:bg-darkGray-900
-              relative
-              group
-              -mr-2
-              -my-3
-            "
+            class="tooltip p-3 rounded-full hover:bg-gray-100 dark:hover:bg-darkGray-600 focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 focus:bg-blue-50 dark:focus:bg-darkGray-900 relative group -mr-2 -my-3"
             @click="copyAddress"
           >
             <icon-document-duplicate />
             <span
-              class="
-                pointer-events-none
-                hidden
-                absolute
-                top-0
-                left-1/2
-                z-10
-                transform
-                -translate-y-full -translate-x-1/2
-                p-2
-                text-xs
-                leading-tight
-                text-white
-                bg-gray-800
-                dark:bg-darkGray-500
-                rounded-md
-                shadow-lg
-              "
+              class="pointer-events-none hidden absolute top-0 left-1/2 z-10 transform -translate-y-full -translate-x-1/2 p-2 text-xs leading-tight text-white bg-gray-800 dark:bg-darkGray-500 rounded-md shadow-lg"
             >
               Copy
             </span>

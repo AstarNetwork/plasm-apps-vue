@@ -6,7 +6,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import { defineComponent } from 'vue';
 import ContractItem from '@/components/dapps/ContractItem.vue';
 import { useApi, useContracts } from '@/hooks';
 import { ApiPromise } from '@polkadot/api';
