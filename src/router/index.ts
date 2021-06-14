@@ -5,7 +5,7 @@ import DApps from '@/views/DApps.vue';
 import Staking from '@/views/Staking.vue';
 import History from '@/views/History.vue';
 import Lockdrop from '@/views/Lockdrop.vue';
-import DappsStakingTab from '@/components/dapps/DappsStakingTab.vue';
+import DappStoreTab from '@/components/dapps/DappStoreTab.vue';
 import CreateDappsTab from '@/components/dapps/CreateDappsTab.vue';
 import BalancePlasm from '@/components/balance/BalancePlasm.vue';
 import CrossChain from '@/components/balance/CrossChain.vue';
@@ -41,11 +41,11 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        redirect: '/dapps/dapps-staking',
+        redirect: '/dapps/dapp-store',
       },
       {
-        path: 'dapps-staking',
-        component: DappsStakingTab,
+        path: 'dapp-store',
+        component: DappStoreTab,
       },
       {
         path: 'create-dapps',

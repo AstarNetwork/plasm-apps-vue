@@ -2,7 +2,30 @@
   <div
     class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
   >
-    <div class="flex items-center -mx-5 px-4">
+    <p
+      class="
+        text-blue-900
+        dark:text-darkGray-100
+        text-lg
+        font-bold
+        leading-tight
+        mb-3
+      "
+    >
+      {{ code.json.name }}
+    </p>
+
+    <div
+      class="
+        flex
+        items-center
+        border-t border-gray-200
+        dark:border-darkGray-600
+        -mx-5
+        pt-4
+        px-4
+      "
+    >
       <div
         class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-2"
       >
@@ -20,7 +43,7 @@
             text-sm
           "
         >
-          {{ contract.abi.json.contract.name }}
+          AddressName
         </p>
         <p
           class="
@@ -30,7 +53,7 @@
             leading-tight
           "
         >
-          {{ shortenAddress }}
+          5Hn8MM......2dZzwc
         </p>
       </div>
       <button
@@ -52,7 +75,6 @@
           group
           -mr-1
         "
-        @click="copyAddress"
       >
         <svg
           class="text-blue-900 dark:text-darkGray-300 h-4 w-4"
@@ -92,7 +114,6 @@
           Copy
         </span>
       </button>
-      <input type="hidden" id="hiddenAddr" :value="address" />
     </div>
 
     <div class="grid grid-cols-1 gap-2 my-4">
@@ -123,7 +144,7 @@
               -mr-2
               -my-3
             "
-            @click="copyCodeHash"
+            @click="copyAddress"
           >
             <icon-document-duplicate />
             <span
@@ -148,17 +169,11 @@
             >
               Copy
             </span>
-
-            <input
-              type="hidden"
-              id="hiddenCodehash"
-              :value="code.json.codeHash"
-            />
           </button>
           <input
             type="hidden"
-            id="hiddenCodeHash"
-            :value="contract.abi.json.source.hash"
+            id="hiddenCodehash"
+            :value="code.json.codeHash"
           />
         </div>
       </div>
@@ -167,7 +182,7 @@
           Code bundle name
         </div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ contract.abi.json.contract.name }}
+          {{ code.json.name }}
         </div>
       </div>
       <div>
@@ -180,29 +195,13 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-2 my-2">
+    <!-- <div class="text-right">
       <button
         type="button"
-        class="
-          items-center
-          px-4
-          py-2
-          border border-transparent
-          text-sm
-          font-medium
-          rounded-full
-          shadow-sm
-          text-white
-          bg-blue-500
-          hover:bg-blue-400
-          focus:outline-none
-          focus:ring focus:ring-blue-100
-          dark:focus:ring-blue-400
-          group
-        "
-        @click="onForget"
+        class="inline-flex items-center rounded-full border border-gray-300 dark:border-darkGray-500 px-3 py-2 bg-white dark:bg-darkGray-800 text-xs font-medium hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 text-gray-500 dark:text-darkGray-400"
       >
-        Forget
+        <icon-document-duplicate />
+        Edit
       </button>
     </div> -->
   </div>
@@ -214,8 +213,7 @@ import { ActionTypes } from '@/store/action-types';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
-import { ContractPromise } from '@polkadot/api-contract';
-import { keyring } from '@polkadot/ui-keyring';
+import type { CodeStored } from '@/store/modules/contracts/state';
 
 export default defineComponent({
   components: {
@@ -224,89 +222,53 @@ export default defineComponent({
     IconDocumentDuplicate,
   },
   props: {
-    contract: {
-      type: Object as () => ContractPromise,
+    code: {
+      type: Object as () => CodeStored,
       required: true,
     },
   },
   setup(props) {
-    const { contract } = toRefs(props);
-
-    console.log('dfd', contract.value);
-
-    const address = contract.value.address.toHex();
-
-    const shortenAddress = computed(() => {
-      return address
-        ? `${address.slice(0, 6)}${'.'.repeat(6)}${address.slice(-6)}`
-        : '';
-    });
+    const { code } = toRefs(props);
 
     const shortenCodeHash = computed(() => {
-      // @ts-ignore
-      const codeHash = contract.value.abi.json.source.hash;
+      const codeHash = code.value.json.codeHash;
       return codeHash
         ? `${codeHash.slice(0, 6)}${'.'.repeat(6)}${codeHash.slice(-6)}`
         : '';
     });
 
     const shortenAbi = computed(() => {
-      // @ts-ignore
-      const abi = JSON.stringify(contract.value.abi.json);
+      const abi = code.value.json.abi;
       return abi ? `${abi.slice(0, 24)}...` : '';
     });
 
     const store = useStore();
 
-    const onForget = () => {
-      const fConfirm = confirm(
-        'You are about to remove this contract from your list of available contracts. The forget operation only limits your access to the contract on this browser.'
-      );
-
-      if (fConfirm) {
-        try {
-          keyring.forgetContract(contract.value.address.toString());
-
-          // should be changed.
-          location.reload();
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-
-    const showAlert = (msg: string) => {
+    const showAlert = () => {
       store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
-        msg,
+        msg: 'Copy codeHash success!!',
         alertType: 'success',
       });
     };
 
     return {
-      address,
-      shortenAddress,
       shortenCodeHash,
       shortenAbi,
-      onForget,
       showAlert,
     };
   },
   methods: {
-    copy(elementStr: string, alertMsg: string) {
-      var copyAddr = document.querySelector(elementStr) as HTMLInputElement;
+    copyAddress() {
+      var copyAddr = document.querySelector(
+        '#hiddenCodehash'
+      ) as HTMLInputElement;
       copyAddr.setAttribute('type', 'text');
       copyAddr.select();
       document.execCommand('copy');
       copyAddr.setAttribute('type', 'hidden');
       window.getSelection()?.removeAllRanges();
 
-      this.showAlert(alertMsg);
-    },
-    copyAddress() {
-      this.copy('#hiddenAddr', 'Copy address success!!');
-    },
-    copyCodeHash() {
-      this.copy('#hiddenCodeHash', 'Copy codehash success!!');
+      this.showAlert();
     },
   },
 });

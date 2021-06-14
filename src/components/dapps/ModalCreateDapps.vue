@@ -167,7 +167,31 @@
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
-                    Max Gas Allowed (M)
+                  </label>
+                  <input
+                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
+                    placeholder=""
+                    v-model="endowment"
+                  />
+                  <!-- <select
+                      name="units"
+                      class="dark:bg-darkGray-900"
+                      v-model="selectUnit"
+                    >
+                      <option
+                        v-for="item in arrUnitNames"
+                        :key="item"
+                        :value="item"
+                      >
+                        {{ item }}
+                      </option>
+                    </select> -->
+                </div>
+
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
+                  >
                   </label>
                   <input
                     class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
@@ -328,12 +352,7 @@ import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 // import DeploymentAccountSelectOption from '@/components/dapps/DeploymentAccountSelectOption.vue';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
-import type {
-  PartialQueueTxExtrinsic,
-  QueueTxExtrinsic,
-  QueueTx,
-  QueueTxRpc,
-} from '@/types/Status';
+import type { QueueTx } from '@/types/Status';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
@@ -348,10 +367,7 @@ import { useApi } from '@/hooks';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
-import { CodePromise, Abi } from '@polkadot/api-contract';
 import { AnyJson } from '@polkadot/types/types';
-import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
-import { useStore } from 'vuex';
 import { AddressProxy } from '@/types/Signer';
 import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
@@ -360,6 +376,11 @@ import ContractInfo from './ContractInfo.vue';
 import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
 import Message from './Message.vue';
 import type { TypeDef } from '@polkadot/types/create/types';
+import useWasm from '@/hooks/useWasm';
+import usePendingTx from '@/hooks/signer/usePendingTx';
+import { CodePromise, Abi } from '@polkadot/api-contract';
+import { useStore } from 'vuex';
+
 interface FormData {
   endowment: BN;
   weight: BN;
@@ -379,8 +400,8 @@ export default defineComponent({
     ModalSelectAccountOption,
     // CategoryMultiSelect,
     InputFile,
-    ContractInfo,
     Message,
+    ContractInfo,
   },
   props: {
     allAccounts: {
@@ -455,8 +476,6 @@ export default defineComponent({
         file?.data.subarray(0, 4).toString() === '0,97,115,109',
     });
 
-    const wasm = ref();
-    const isWasmValid = ref(false);
     const extensionFile = ['.contract', '.json'];
 
     const onDropFile = (fileState: FileState) => {
@@ -514,6 +533,10 @@ export default defineComponent({
       wasm.value = null;
       isWasmValid.value = false;
     });
+    const { wasm, isWasmValid } = useWasm(
+      wasmFromFile.value,
+      isWasmFromFileValid
+    );
 
     const { onSend } = useSendTx();
 
@@ -521,7 +544,8 @@ export default defineComponent({
       if (
         formData.projectName === '' ||
         toAddress.value === '' ||
-        wasm.value === null
+        wasm.value === null ||
+        !isWasmValid
       ) {
         store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
           msg: `Please check fields again`,
@@ -532,8 +556,8 @@ export default defineComponent({
 
       const abiData = abi.value as Abi | AnyJson;
 
-      // console.log('s', abiData);
-      // console.log('w', wasm.value);
+      console.log('s', abiData);
+      console.log('w', wasm.value);
 
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
 
@@ -547,17 +571,18 @@ export default defineComponent({
         // );
         // const weight = new BN(200000000000);
         ///
-        // console.log('endowment', formData.endowment);
-        // console.log('weight', formData.weight);
+        console.log('endowment', formData.endowment);
+        console.log('weight', formData.weight);
 
-        // console.log('code', code);
-        // console.log('method', code.tx);
+        console.log('code', code);
+        console.log('method', code.tx);
 
         const constructorIndex = 0;
         const params = abi?.value?.constructors[constructorIndex].args;
+        console.log('params', params);
 
         const arrValues = getParamValues(abi.value?.registry, params);
-        // console.log('values', arrValues);
+        console.log('values', arrValues);
 
         uploadTx =
           code &&
@@ -573,7 +598,7 @@ export default defineComponent({
             : null;
       } catch (e) {
         const error = (e as Error).message;
-        // console.error(error);
+        console.error(error);
         store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
           msg: error,
           alertType: 'error',
@@ -581,24 +606,11 @@ export default defineComponent({
         return;
       }
 
-      // console.log('uploadTx', uploadTx);
+      console.log('uploadTx', uploadTx);
 
       //send from txButton
-      const SUBMIT_RPC = jsonrpc.author.submitAndWatchExtrinsic;
-      const propsExtrinsic = uploadTx;
-
-      let extrinsics: SubmittableExtrinsic<'promise'>[] | undefined;
-
-      if (propsExtrinsic) {
-        extrinsics = Array.isArray(propsExtrinsic)
-          ? propsExtrinsic
-          : [propsExtrinsic];
-      }
-
-      const accountId = props.address;
-
       const _onFailed = (result: SubmittableResult | null) => {
-        // console.error('_onFailed', result);
+        console.error('_onFailed', result);
         store.commit(MutationTypes.SET_LOADING, false);
         store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
           msg: result,
@@ -607,12 +619,12 @@ export default defineComponent({
       };
 
       const _onStart = () => {
-        // console.log('_onStart');
+        console.log('_onStart');
         store.commit(MutationTypes.SET_LOADING, true);
       };
 
       const _onSuccess = (result: CodeSubmittableResult) => {
-        // console.log('_onSuccess', result);
+        console.log('_onSuccess', result);
 
         const codeHash = result.blueprint?.codeHash;
         const codeJson = {
@@ -620,8 +632,8 @@ export default defineComponent({
           name: formData.projectName || '<>',
           tags: [],
         };
-        // console.log('codeHash', codeHash?.toHex());
-        // console.log('codeJson', codeJson);
+        console.log('codeHash', codeHash?.toHex());
+        console.log('codeJson', codeJson);
 
         result.blueprint &&
           store.dispatch(ActionTypes.SAVE_CODE, {
@@ -650,44 +662,16 @@ export default defineComponent({
       };
       const _onUpdate = () => {};
 
-      let txqueue: QueueTx[] = [];
-      let nextId = 0;
+      const { txqueue } = usePendingTx(
+        uploadTx,
+        toAddress.value,
+        _onStart,
+        _onFailed,
+        _onSuccess,
+        _onUpdate
+      );
 
-      const addToTxQueue = (
-        value: QueueTxExtrinsic | QueueTxRpc | QueueTx
-      ): void => {
-        const id = ++nextId;
-        const removeItem = () => {
-          ////
-        };
-
-        txqueue = [
-          {
-            ...value,
-            id,
-            removeItem,
-            rpc: (value as QueueTxRpc).rpc || SUBMIT_RPC,
-            status: 'queued',
-          },
-        ];
-      };
-
-      const queueExtrinsic = (value: PartialQueueTxExtrinsic) =>
-        addToTxQueue({ ...value });
-
-      extrinsics?.forEach((extrinsic): void => {
-        queueExtrinsic({
-          accountId: accountId && accountId.toString(),
-          extrinsic,
-          isUnsigned: false,
-          txFailedCb: _onFailed,
-          txStartCb: _onStart,
-          txSuccessCb: _onSuccess,
-          txUpdateCb: _onUpdate,
-        });
-      });
-
-      // console.log('txQueue', txqueue[0]);
+      console.log('txQueue', txqueue);
 
       const currentItem: QueueTx = txqueue[0];
 
@@ -701,7 +685,7 @@ export default defineComponent({
         isUnlockCached: false,
         multiRoot: null,
         proxyRoot: null,
-        signAddress: props.address,
+        signAddress: toAddress.value,
         signPassword: '',
       };
       onSend(currentItem, senderInfo);

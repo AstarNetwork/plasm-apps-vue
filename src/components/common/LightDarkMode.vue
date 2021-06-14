@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: Switch Light & Dark mode -->
   <div class="flex items-center">
     <button
       type="button"
