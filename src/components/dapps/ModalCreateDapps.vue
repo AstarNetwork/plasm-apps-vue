@@ -467,7 +467,7 @@ export default defineComponent({
     const messages = ref<
       | {
           identifier: string;
-          doc?: string;
+          docs: string[];
           args: AbiParam[];
           returnType?: TypeDef | null;
           isConstructor?: boolean;
