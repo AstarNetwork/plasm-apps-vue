@@ -82,7 +82,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const { code } = toRefs(props);
 
     console.log('aff', code.value);
@@ -102,24 +102,7 @@ export default defineComponent({
     const store = useStore();
 
     const onForget = () => {
-      // should changed into custom modal.
-      const fConfirm = confirm(
-        'You are about to remove this code from your list of available code hashes. Once completed, should you need to access it again, you will have to manually add the code hash again. This operation does not remove the uploaded code WASM and ABI from the chain, nor any deployed contracts. The forget operation only limits your access to the code on this browser.'
-      );
-
-      if (fConfirm) {
-        try {
-          const _codeHash = code.value.json.codeHash;
-          store.dispatch(ActionTypes.FORGET_CODE, {
-            codeHash: _codeHash,
-          });
-
-          // should be changed.
-          location.reload();
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      emit('confirmRemoval', code.value.json.codeHash);
     };
 
     const showAlert = () => {

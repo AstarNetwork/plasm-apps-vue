@@ -167,31 +167,7 @@
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
-                  </label>
-                  <input
-                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                    placeholder=""
-                    v-model="endowment"
-                  />
-                  <!-- <select
-                      name="units"
-                      class="dark:bg-darkGray-900"
-                      v-model="selectUnit"
-                    >
-                      <option
-                        v-for="item in arrUnitNames"
-                        :key="item"
-                        :value="item"
-                      >
-                        {{ item }}
-                      </option>
-                    </select> -->
-                </div>
-
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
+                    Max gas allowed
                   </label>
                   <input
                     class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"

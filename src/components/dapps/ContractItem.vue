@@ -116,7 +116,6 @@ import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
 import { ContractPromise } from '@polkadot/api-contract';
-import { keyring } from '@polkadot/ui-keyring';
 
 export default defineComponent({
   components: {
@@ -130,12 +129,12 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const { contract } = toRefs(props);
 
-    console.log('dfd', contract.value);
+    // console.log('dfd', contract.value);
 
-    const address = contract.value.address.toHex();
+    const address = contract.value.address.toString();
 
     const shortenAddress = computed(() => {
       return address
@@ -160,21 +159,7 @@ export default defineComponent({
     const store = useStore();
 
     const onForget = () => {
-      // should changed into custom modal.
-      const fConfirm = confirm(
-        'You are about to remove this contract from your list of available contracts. The forget operation only limits your access to the contract on this browser.'
-      );
-
-      if (fConfirm) {
-        try {
-          keyring.forgetContract(contract.value.address.toString());
-
-          // should be changed.
-          location.reload();
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      emit('confirmRemoval', contract.value.address.toString());
     };
 
     const showAlert = (msg: string) => {

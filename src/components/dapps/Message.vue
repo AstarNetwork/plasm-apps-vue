@@ -43,15 +43,7 @@
 <script lang="ts">
 // import useAbi from '@/hooks/useAbi';
 import { PropType, defineComponent } from 'vue';
-import type { AbiParam } from '@polkadot/api-contract/types';
-import type { TypeDef } from '@polkadot/types/create/types';
-interface MessageType {
-  identifier: string;
-  docs: string[];
-  args: AbiParam[];
-  returnType?: TypeDef | null;
-  isConstructor?: boolean;
-}
+import { MessageType } from '@/types/Message';
 export default defineComponent({
   props: {
     message: {
