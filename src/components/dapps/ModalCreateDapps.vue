@@ -167,7 +167,7 @@
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
-                    Max Gas Allowed (M)
+                    Max gas allowed
                   </label>
                   <input
                     class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
@@ -285,6 +285,7 @@
                     :extension="extensionFile"
                   />
                 </div>
+                <contract-info :messages="messages" />
               </div>
             </div>
           </div>
@@ -320,13 +321,12 @@ import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
 import type { QueueTx } from '@/types/Status';
-import type { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 // import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
-import { stringify } from '@polkadot/util';
+import { compactAddLength, isWasm, stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -335,14 +335,18 @@ import { useApi } from '@/hooks';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
+import { AnyJson } from '@polkadot/types/types';
+import { AddressProxy } from '@/types/Signer';
+import { bnToBn } from '@polkadot/util';
+import type { ApiPromise } from '@polkadot/api';
+import { getParamValues } from '@/helper/params';
+import ContractInfo from './ContractInfo.vue';
+import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
+import type { TypeDef } from '@polkadot/types/create/types';
 import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
 import { CodePromise, Abi } from '@polkadot/api-contract';
-import { AnyJson } from '@polkadot/types/types';
 import { useStore } from 'vuex';
-import { AddressProxy } from '@/types/Signer';
-import { bnToBn } from '@polkadot/util';
-import { getParamValues } from '@/helper/params';
 
 interface FormData {
   endowment: BN;
@@ -363,6 +367,7 @@ export default defineComponent({
     ModalSelectAccountOption,
     // CategoryMultiSelect,
     InputFile,
+    ContractInfo,
   },
   props: {
     allAccounts: {
@@ -443,6 +448,57 @@ export default defineComponent({
       setWasmFile(fileState);
     };
 
+    //TODO: move the code below to contract-info once useAbi is fixed
+    const messages = ref<
+      | {
+          identifier: string;
+          docs: string[];
+          args: AbiParam[];
+          returnType?: TypeDef | null;
+          isConstructor?: boolean;
+        }[]
+      | null
+    >(null);
+    watch(abi, () => {
+      if (abi?.value?.constructors && abi?.value?.messages) {
+        const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
+          return {
+            identifier: e.identifier,
+            docs: e.docs,
+            args: e.args,
+            returnType: e.returnType,
+            isConstructor: e.isConstructor,
+          };
+        });
+        const msgs = abi?.value?.messages.map((e: AbiMessage) => {
+          return {
+            identifier: e.identifier,
+            docs: e.docs,
+            args: e.args,
+            returnType: e.returnType,
+            isConstructor: e.isConstructor,
+          };
+        });
+        messages.value = [...constructors, ...msgs];
+      }
+
+      if (abi.value && isWasm(abi.value.project.source.wasm)) {
+        wasm.value = abi.value.project.source.wasm;
+        isWasmValid.value = true;
+
+        return;
+      }
+
+      if (wasmFromFile.value && isWasmFromFileValid) {
+        wasm.value = compactAddLength(wasmFromFile.value.data);
+        isWasmValid.value = true;
+
+        return;
+      }
+
+      wasm.value = null;
+      isWasmValid.value = false;
+    });
     const { wasm, isWasmValid } = useWasm(
       wasmFromFile.value,
       isWasmFromFileValid
@@ -473,7 +529,6 @@ export default defineComponent({
 
       try {
         const code = new CodePromise(apiPromise, abiData, wasm.value);
-
         //should be changable
         // const unit_d = 3;
         // const decimal = 12;
@@ -614,6 +669,7 @@ export default defineComponent({
       wasmFromFile,
       extensionFile,
       onDropFile,
+      messages,
     };
   },
 });

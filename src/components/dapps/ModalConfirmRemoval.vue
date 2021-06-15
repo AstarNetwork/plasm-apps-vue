@@ -16,18 +16,33 @@
             <h3
               class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
             >
-              Confirm contract removal
+              Confirm
+              <span v-if="ctype == 'codehash'"> codeHash </span>
+              <span v-else> contract </span>
+              removal
             </h3>
 
             <div class="grid grid-cols-1 gap-6">
               <div>
-                You are about to remove this contract from your list of
-                available contracts. Once completed, should you need to access
-                it again, you will have to manually add the contract's address
-                in the Instantiate tab. This operation does not remove the
-                history of the contract from the chain, nor any associated funds
-                from its account. The forget operation only limits your access
-                to the contract on this browser.
+                <div v-if="ctype === 'codehash'">
+                  You are about to remove this code from your list of available
+                  code hashes. Once completed, should you need to access it
+                  again, you will have to manually add the code hash again.
+                  <br />
+                  This operation does not remove the uploaded code WASM and ABI
+                  from the chain, nor any deployed contracts. The forget
+                  operation only limits your access to the code on this browser.
+                </div>
+                <div v-else>
+                  You are about to remove this contract from your list of
+                  available contracts. Once completed, should you need to access
+                  it again, you will have to manually add the contract's address
+                  in the Instantiate tab. <br />
+                  This operation does not remove the history of the contract
+                  from the chain, nor any associated funds from its account. The
+                  forget operation only limits your access to the contract on
+                  this browser.
+                </div>
               </div>
             </div>
           </div>
@@ -56,7 +71,12 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  props: {},
+  props: {
+    ctype: {
+      type: String,
+      default: 'codehash',
+    },
+  },
   setup(props, { emit }) {
     const closeModal = () => {
       emit('update:is-open', false);
