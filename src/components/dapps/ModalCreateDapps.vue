@@ -15,10 +15,13 @@
           <h3
             class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
           >
-            Create Your dApps
+            Create Your dApps ({{ step }} / 2)
           </h3>
 
-          <div class="sm:flex grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div
+            v-if="step === 1"
+            class="sm:flex grid grid-cols-1 sm:grid-cols-2 gap-6"
+          >
             <div class="sm:w-1/2">
               <div class="grid grid-cols-1 gap-6">
                 <div class="relative">
@@ -289,8 +292,16 @@
               </div>
             </div>
           </div>
+          <div v-else class="text-whites">
+            <params-generator
+              :constructors="messages.filter((msg) => msg.isConstructor)"
+            />
+          </div>
         </div>
-        <div class="mt-6 flex justify-center flex-row-reverse">
+        <!-- <div
+          v-if="step === 2"
+          class="mt-6 flex justify-center flex-row-reverse"
+        >
           <button
             type="button"
             @click="upload"
@@ -305,6 +316,47 @@
           >
             Cancel
           </button>
+        </div> -->
+
+        <div class="mt-6 flex justify-end">
+          <button
+            type="button"
+            @click="closeModal"
+            class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="step = 2"
+            :disabled="!canMoveToStep2"
+            v-if="step === 1"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
+            :class="{
+              'placeholder-opacity-90': !canMoveToStep2,
+              'dark:hover:bg-blue-400': canMoveToStep2,
+              'hover:bg-blue-700': canMoveToStep2,
+              'cursor-not-allowed': !canMoveToStep2,
+            }"
+          >
+            next step
+          </button>
+          <div v-if="step === 2">
+            <button
+              type="button"
+              @click="step = 1"
+              class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
+            >
+              previoius page
+            </button>
+            <button
+              type="button"
+              @click="upload"
+              class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
+            >
+              Upload
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -341,12 +393,13 @@ import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
-import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
-import type { TypeDef } from '@polkadot/types/create/types';
+import type { AbiMessage } from '@polkadot/api-contract/types';
 import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
 import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useStore } from 'vuex';
+import { MessageType } from '@/types/Message';
+import ParamsGenerator from './ParamsGenerator.vue';
 
 interface FormData {
   endowment: BN;
@@ -368,6 +421,7 @@ export default defineComponent({
     // CategoryMultiSelect,
     InputFile,
     ContractInfo,
+    ParamsGenerator,
   },
   props: {
     allAccounts: {
@@ -449,20 +503,17 @@ export default defineComponent({
     };
 
     //TODO: move the code below to contract-info once useAbi is fixed
-    const messages = ref<
-      | {
-          identifier: string;
-          docs: string[];
-          args: AbiParam[];
-          returnType?: TypeDef | null;
-          isConstructor?: boolean;
-        }[]
-      | null
-    >(null);
+    const messages = ref<MessageType[] | null>(null);
     watch(abi, () => {
       if (abi?.value?.constructors && abi?.value?.messages) {
+        // for (let i = 0; i <= 2; i++) {
+        //   const params = abi?.value?.constructors[i].args;
+        //   const arrValues = getParamValues(abi.value?.registry, params);
+        //   console.log('values', arrValues);
+        // }
         const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
           return {
+            index: e.index,
             identifier: e.identifier,
             docs: e.docs,
             args: e.args,
@@ -472,6 +523,7 @@ export default defineComponent({
         });
         const msgs = abi?.value?.messages.map((e: AbiMessage) => {
           return {
+            index: e.index,
             identifier: e.identifier,
             docs: e.docs,
             args: e.args,
@@ -657,6 +709,17 @@ export default defineComponent({
       onSend(currentItem, senderInfo);
     };
 
+    const step = ref<number>(1);
+
+    const canMoveToStep2 = computed(() => {
+      return (
+        !!abi.value &&
+        formData.projectName &&
+        formData.endowment &&
+        formData.weight
+      );
+    });
+
     return {
       ...toRefs(formData),
       closeModal,
@@ -670,6 +733,8 @@ export default defineComponent({
       extensionFile,
       onDropFile,
       messages,
+      step,
+      canMoveToStep2,
     };
   },
 });
