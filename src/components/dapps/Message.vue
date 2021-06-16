@@ -41,7 +41,6 @@
   </div>
 </template>
 <script lang="ts">
-// import useAbi from '@/hooks/useAbi';
 import { PropType, defineComponent } from 'vue';
 import { MessageType } from '@/types/Message';
 export default defineComponent({

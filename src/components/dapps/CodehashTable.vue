@@ -1,5 +1,6 @@
 <template>
   <h2
+    v-show="allCode.length > 0"
     class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
   >
     Code hashes
