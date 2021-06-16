@@ -292,7 +292,7 @@
               </div>
             </div>
           </div>
-          <div v-else class="text-whites">
+          <div v-else class="text-white h-96">
             <params-generator
               :constructors="messages.filter((msg) => msg.isConstructor)"
             />
