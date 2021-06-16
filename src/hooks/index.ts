@@ -5,6 +5,7 @@ export * from './useApi';
 export * from './useBalance';
 export * from './useSidebar';
 export * from './useAddresses';
+export * from './useContracts';
 
 interface Runtime {
   app?: App;

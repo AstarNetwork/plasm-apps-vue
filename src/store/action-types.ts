@@ -4,4 +4,5 @@ export enum ActionTypes {
   //contracts
   LOAD_ALL_CONTRACTS = 'LOAD_ALL_CONTRACTS',
   SAVE_CODE = 'SAVE_CODE',
+  FORGET_CODE = 'FORGET_CODE',
 }

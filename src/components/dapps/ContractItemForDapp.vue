@@ -2,7 +2,46 @@
   <div
     class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
   >
-    <div class="flex items-center -mx-5 px-4">
+    <div class="w-44 h-16 flex items-center mx-auto my-3">
+      <img
+        src="@/assets/img/image-placeholder.png"
+        class="w-full h-full object-scale-down"
+        alt="ProjectName"
+      />
+    </div>
+
+    <p
+      class="text-blue-900 dark:text-darkGray-100 text-lg font-bold leading-tight mb-1"
+    >
+      <!-- {{ code.json.name }} -->
+    </p>
+
+    <div class="text-xs mb-0.5">
+      <a
+        href="#"
+        class="text-blue-500 dark:text-blue-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2"
+      >
+        #DeFi
+      </a>
+      <a
+        href="#"
+        class="text-blue-500 dark:text-blue-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2"
+      >
+        #Games
+      </a>
+    </div>
+
+    <p class="mb-3 text-xs">
+      <a
+        class="text-gray-500 dark:text-darkGray-400 underline"
+        href="https://example.com"
+        >https://example.com</a
+      >
+    </p>
+
+    <div
+      class="flex items-center border-t border-gray-200 dark:border-darkGray-600 -mx-5 pt-4 px-4"
+    >
       <div
         class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-2"
       >
@@ -14,7 +53,7 @@
         <p
           class="text-blue-900 dark:text-darkGray-100 font-semibold leading-tight text-sm"
         >
-          {{ contract.abi.json.contract.name }}
+          AddressName
         </p>
         <p
           class="text-xs text-gray-500 dark:text-darkGray-400 font-normal leading-tight"
@@ -58,25 +97,8 @@
         </div>
         <div class="flex justify-between items-center">
           <div class="text-xs text-blue-900 dark:text-darkGray-100">
-            {{ shortenCodeHash }}
+            <!-- {{ shortenCodeHash }} -->
           </div>
-          <button
-            type="button"
-            class="tooltip p-3 rounded-full hover:bg-gray-100 dark:hover:bg-darkGray-600 focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 focus:bg-blue-50 dark:focus:bg-darkGray-900 relative group -mr-2 -my-3"
-            @click="copyCodeHash"
-          >
-            <icon-document-duplicate />
-            <span
-              class="pointer-events-none hidden absolute top-0 left-1/2 z-10 transform -translate-y-full -translate-x-1/2 p-2 text-xs leading-tight text-white bg-gray-800 dark:bg-darkGray-500 rounded-md shadow-lg"
-            >
-              Copy
-            </span>
-          </button>
-          <input
-            type="hidden"
-            id="hiddenCodeHash"
-            :value="contract.abi.json.source.hash"
-          />
         </div>
       </div>
       <div>
@@ -84,7 +106,7 @@
           Code bundle name
         </div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ contract.abi.json.contract.name }}
+          <!-- {{ code.json.name }} -->
         </div>
       </div>
       <div>
@@ -92,19 +114,9 @@
           Contract ABI
         </div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ shortenAbi }}
+          <!-- {{ shortenAbi }} -->
         </div>
       </div>
-    </div>
-
-    <div class="text-right">
-      <button
-        type="button"
-        class="inline-flex items-center rounded-full border border-gray-300 dark:border-darkGray-500 px-3 py-2 bg-white dark:bg-darkGray-800 text-xs font-medium hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 text-gray-500 dark:text-darkGray-400"
-        @click="onForget"
-      >
-        Forget
-      </button>
     </div>
   </div>
 </template>
@@ -114,14 +126,14 @@ import { useStore } from 'vuex';
 import { ActionTypes } from '@/store/action-types';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
-import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
+// import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
 import { ContractPromise } from '@polkadot/api-contract';
 
 export default defineComponent({
   components: {
     IconBase,
     IconAccountSample,
-    IconDocumentDuplicate,
+    // IconDocumentDuplicate,
   },
   props: {
     contract: {
@@ -129,12 +141,13 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const { contract } = toRefs(props);
 
-    // console.log('dfd', contract.value);
+    console.log('dfd', contract.value);
 
-    const address = contract.value.address.toString();
+    const address = contract.value.address.toHex();
+    console.log('addrN', address);
 
     const shortenAddress = computed(() => {
       return address
@@ -142,29 +155,23 @@ export default defineComponent({
         : '';
     });
 
-    const shortenCodeHash = computed(() => {
-      // @ts-ignore
-      const codeHash = contract.value.abi.json.source.hash;
-      return codeHash
-        ? `${codeHash.slice(0, 6)}${'.'.repeat(6)}${codeHash.slice(-6)}`
-        : '';
-    });
+    // const shortenCodeHash = computed(() => {
+    //   const codeHash = code.value.json.codeHash;
+    //   return codeHash
+    //     ? `${codeHash.slice(0, 6)}${'.'.repeat(6)}${codeHash.slice(-6)}`
+    //     : '';
+    // });
 
-    const shortenAbi = computed(() => {
-      // @ts-ignore
-      const abi = JSON.stringify(contract.value.abi.json);
-      return abi ? `${abi.slice(0, 24)}...` : '';
-    });
+    // const shortenAbi = computed(() => {
+    //   const abi = code.value.json.abi;
+    //   return abi ? `${abi.slice(0, 24)}...` : '';
+    // });
 
     const store = useStore();
 
-    const onForget = () => {
-      emit('confirmRemoval', contract.value.address.toString());
-    };
-
-    const showAlert = (msg: string) => {
+    const showAlert = () => {
       store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
-        msg,
+        msg: 'Copy codeHash success!!',
         alertType: 'success',
       });
     };
@@ -172,28 +179,21 @@ export default defineComponent({
     return {
       address,
       shortenAddress,
-      shortenCodeHash,
-      shortenAbi,
-      onForget,
+      // shortenCodeHash,
+      // shortenAbi,
       showAlert,
     };
   },
   methods: {
-    copy(elementStr: string, alertMsg: string) {
-      var copyAddr = document.querySelector(elementStr) as HTMLInputElement;
+    copyAddress() {
+      var copyAddr = document.querySelector('#hiddenAddr') as HTMLInputElement;
       copyAddr.setAttribute('type', 'text');
       copyAddr.select();
       document.execCommand('copy');
       copyAddr.setAttribute('type', 'hidden');
       window.getSelection()?.removeAllRanges();
 
-      this.showAlert(alertMsg);
-    },
-    copyAddress() {
-      this.copy('#hiddenAddr', 'Copy address success!!');
-    },
-    copyCodeHash() {
-      this.copy('#hiddenCodeHash', 'Copy codehash success!!');
+      this.showAlert();
     },
   },
 });

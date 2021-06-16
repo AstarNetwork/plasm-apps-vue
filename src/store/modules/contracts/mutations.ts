@@ -8,10 +8,12 @@ export type Mutations<S = State> = {
 };
 
 export const mutations: MutationTree<State> & Mutations = {
-  [MutationTypes.ADD_CODE](state, json) {
-    state.allCode[json.codeHash] = json;
+  [MutationTypes.ADD_CODE](state, newJson) {
+    state.allCode[newJson.json.codeHash] = newJson;
   },
   [MutationTypes.REMOVE_CODE](state, codeHash) {
+    console.log('sb', state.allCode);
     delete state.allCode[codeHash];
+    console.log('sa', state.allCode);
   },
 };

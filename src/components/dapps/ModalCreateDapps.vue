@@ -167,7 +167,7 @@
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
                   >
-                    Max Gas Allowed (M)
+                    Max gas allowed
                   </label>
                   <input
                     class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
@@ -285,6 +285,7 @@
                     :extension="extensionFile"
                   />
                 </div>
+                <contract-info :messages="messages" />
               </div>
             </div>
           </div>
@@ -320,7 +321,6 @@ import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
 import type { QueueTx } from '@/types/Status';
-import type { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
@@ -335,14 +335,17 @@ import { useApi } from '@/hooks';
 import useFile, { FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
+import { AnyJson } from '@polkadot/types/types';
+import { AddressProxy } from '@/types/Signer';
+import { bnToBn } from '@polkadot/util';
+import type { ApiPromise } from '@polkadot/api';
+import { getParamValues } from '@/helper/params';
+import ContractInfo from './ContractInfo.vue';
+import useMessages from '@/hooks/useMessages';
 import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
 import { CodePromise, Abi } from '@polkadot/api-contract';
-import { AnyJson } from '@polkadot/types/types';
 import { useStore } from 'vuex';
-import { AddressProxy } from '@/types/Signer';
-import { bnToBn } from '@polkadot/util';
-import { getParamValues } from '@/helper/params';
 
 interface FormData {
   endowment: BN;
@@ -363,6 +366,7 @@ export default defineComponent({
     ModalSelectAccountOption,
     // CategoryMultiSelect,
     InputFile,
+    ContractInfo,
   },
   props: {
     allAccounts: {
@@ -443,7 +447,10 @@ export default defineComponent({
       setWasmFile(fileState);
     };
 
+    const { messages } = useMessages(abi);
+
     const { wasm, isWasmValid } = useWasm(
+      abi,
       wasmFromFile.value,
       isWasmFromFileValid
     );
@@ -473,7 +480,6 @@ export default defineComponent({
 
       try {
         const code = new CodePromise(apiPromise, abiData, wasm.value);
-
         //should be changable
         // const unit_d = 3;
         // const decimal = 12;
@@ -575,14 +581,14 @@ export default defineComponent({
 
       const { txqueue } = usePendingTx(
         uploadTx,
-        props.address,
+        toAddress.value,
         _onStart,
         _onFailed,
         _onSuccess,
         _onUpdate
       );
 
-      console.log('txQueue', txqueue[0]);
+      console.log('txQueue', txqueue);
 
       const currentItem: QueueTx = txqueue[0];
 
@@ -596,7 +602,7 @@ export default defineComponent({
         isUnlockCached: false,
         multiRoot: null,
         proxyRoot: null,
-        signAddress: props.address,
+        signAddress: toAddress.value,
         signPassword: '',
       };
       onSend(currentItem, senderInfo);
@@ -614,6 +620,7 @@ export default defineComponent({
       wasmFromFile,
       extensionFile,
       onDropFile,
+      messages,
     };
   },
 });

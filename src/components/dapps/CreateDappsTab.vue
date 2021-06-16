@@ -31,17 +31,9 @@
     </button>
   </div>
 
-  <h2
-    class="text-blue-900 dark:text-white text-lg font-bold mb-4 leading-tight"
-  >
-    Contract
-  </h2>
+  <codehash-table />
 
-  <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-    <template v-for="(code, index) in allCode" :key="index">
-      <contract-item :code="code" />
-    </template>
-  </div>
+  <contracts-table />
 
   <ModalCreateDapps
     v-if="modalCreateDapps"
@@ -59,14 +51,14 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
-import { useAccount, useApi } from '@/hooks';
+import { useAccount } from '@/hooks';
 import { useStore } from 'vuex';
 import IconPlus from '@/components/icons/IconPlus.vue';
 import IconBase from '@/components/icons/IconBase.vue';
-import ContractItem from '@/components/dapps/ContractItem.vue';
 import ModalCreateDapps from '@/components/dapps/ModalCreateDapps.vue';
 import ModalCodeHash from '@/components/dapps/ModalCodeHash.vue';
-import { ActionTypes } from '@/store/action-types';
+import CodehashTable from '@/components/dapps/CodehashTable.vue';
+import ContractsTable from '@/components/dapps/ContractsTable.vue';
 
 interface Modal {
   modalCreateDapps: boolean;
@@ -77,12 +69,12 @@ export default defineComponent({
   components: {
     IconPlus,
     IconBase,
-    ContractItem,
     ModalCreateDapps,
     ModalCodeHash,
+    CodehashTable,
+    ContractsTable,
   },
   setup() {
-    const { api } = useApi();
     const stateModal = reactive<Modal>({
       modalCreateDapps: false,
       modalCodeHash: false,
@@ -108,19 +100,11 @@ export default defineComponent({
       { immediate: true }
     );
 
-    // Get all contracts
-    const allCode = computed(() => store.getters.getAllCode);
-
-    store.dispatch(ActionTypes.LOAD_ALL_CONTRACTS, {
-      api: api?.value,
-    });
-
     return {
       allAccounts,
       allAccountNames,
       defaultAccount,
       currentAccountIdx,
-      allCode,
       ...toRefs(stateModal),
     };
   },

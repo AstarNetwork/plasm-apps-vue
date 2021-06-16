@@ -9,7 +9,7 @@
     </h1>
     <Tab
       :labels="[
-        { label: 'dApps Staking', path: 'dapps-staking' },
+        { label: 'dApp Store', path: 'dapp-store' },
         { label: 'Create dApps', path: 'create-dapps' },
       ]"
     />
