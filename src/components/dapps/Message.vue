@@ -44,6 +44,7 @@
 // import useAbi from '@/hooks/useAbi';
 import { PropType, defineComponent } from 'vue';
 import { MessageType } from '@/types/Message';
+import { getArgsString } from '@/helper/params';
 export default defineComponent({
   props: {
     message: {
@@ -52,9 +53,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    let argsString = props.message.args
-      .map(({ name, type }) => `${name}: ${type.type}`)
-      .join(', ');
+    let argsString = getArgsString(props.message);
     if (!argsString.length) {
       argsString = ' ';
     }
