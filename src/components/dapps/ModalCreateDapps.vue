@@ -326,7 +326,7 @@ import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 // import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
-import { compactAddLength, isWasm, stringify } from '@polkadot/util';
+import { stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -341,8 +341,7 @@ import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
-import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
-import type { TypeDef } from '@polkadot/types/create/types';
+import useMessages from '@/hooks/useMessages';
 import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
 import { CodePromise, Abi } from '@polkadot/api-contract';
@@ -448,58 +447,10 @@ export default defineComponent({
       setWasmFile(fileState);
     };
 
-    //TODO: move the code below to contract-info once useAbi is fixed
-    const messages = ref<
-      | {
-          identifier: string;
-          docs: string[];
-          args: AbiParam[];
-          returnType?: TypeDef | null;
-          isConstructor?: boolean;
-        }[]
-      | null
-    >(null);
-    watch(abi, () => {
-      if (abi?.value?.constructors && abi?.value?.messages) {
-        const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
-          return {
-            identifier: e.identifier,
-            docs: e.docs,
-            args: e.args,
-            returnType: e.returnType,
-            isConstructor: e.isConstructor,
-          };
-        });
-        const msgs = abi?.value?.messages.map((e: AbiMessage) => {
-          return {
-            identifier: e.identifier,
-            docs: e.docs,
-            args: e.args,
-            returnType: e.returnType,
-            isConstructor: e.isConstructor,
-          };
-        });
-        messages.value = [...constructors, ...msgs];
-      }
+    const { messages } = useMessages(abi);
 
-      if (abi.value && isWasm(abi.value.project.source.wasm)) {
-        wasm.value = abi.value.project.source.wasm;
-        isWasmValid.value = true;
-
-        return;
-      }
-
-      if (wasmFromFile.value && isWasmFromFileValid) {
-        wasm.value = compactAddLength(wasmFromFile.value.data);
-        isWasmValid.value = true;
-
-        return;
-      }
-
-      wasm.value = null;
-      isWasmValid.value = false;
-    });
     const { wasm, isWasmValid } = useWasm(
+      abi,
       wasmFromFile.value,
       isWasmFromFileValid
     );
