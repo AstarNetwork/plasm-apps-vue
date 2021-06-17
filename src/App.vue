@@ -1,4 +1,9 @@
 <template>
+  <metainfo>
+    <template v-slot:title="{ content }">{{
+      content ? `${content} | Plasm Apps Portal` : `Plasm Apps Portal`
+    }}</template>
+  </metainfo>
   <Suspense>
     <template #default>
       <api-loader>
@@ -24,6 +29,7 @@ import { defineComponent, computed } from 'vue';
 import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { useRouter } from 'vue-router';
+import { useMeta } from 'vue-meta';
 import ApiLoader from '@/hooks/providers/ApiLoader.vue';
 import Spinner from '@/components/common/Spinner.vue';
 import ModalLoading from '@/components/common/ModalLoading.vue';
@@ -45,6 +51,11 @@ export default defineComponent({
     const layout = computed(
       () => `${currentRoute.value.meta.layout || defaultLayout}-layout`
     );
+
+    useMeta({
+      title: '',
+      htmlAttrs: { lang: 'en', amp: true },
+    });
 
     const store = useStore();
 
