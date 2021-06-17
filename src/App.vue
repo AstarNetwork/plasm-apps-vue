@@ -30,6 +30,7 @@ import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { useRouter } from 'vue-router';
 import { useMeta } from 'vue-meta';
+import { providerEndpoints } from '@/config/chainEndpoints';
 import ApiLoader from '@/hooks/providers/ApiLoader.vue';
 import Spinner from '@/components/common/Spinner.vue';
 import ModalLoading from '@/components/common/ModalLoading.vue';
@@ -52,11 +53,6 @@ export default defineComponent({
       () => `${currentRoute.value.meta.layout || defaultLayout}-layout`
     );
 
-    useMeta({
-      title: '',
-      htmlAttrs: { lang: 'en', amp: true },
-    });
-
     const store = useStore();
 
     const isLoading = computed(() => store.getters.isLoading);
@@ -71,6 +67,20 @@ export default defineComponent({
     }
     if (customEndpoint) {
       store.commit(MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT, customEndpoint);
+    }
+
+    if (networkIdx) {
+      const favicon = providerEndpoints[parseInt(networkIdx)].favicon;
+      useMeta({
+        title: '',
+        htmlAttrs: { lang: 'en', amp: true },
+        link: [
+          {
+            rel: 'icon',
+            href: favicon,
+          },
+        ],
+      });
     }
 
     return {
