@@ -31,6 +31,7 @@ import { MutationTypes } from '@/store/mutation-types';
 import { useRouter } from 'vue-router';
 import { useMeta } from 'vue-meta';
 import { providerEndpoints } from '@/config/chainEndpoints';
+import { opengraphMeta } from '@/config/opengraph';
 import ApiLoader from '@/hooks/providers/ApiLoader.vue';
 import Spinner from '@/components/common/Spinner.vue';
 import ModalLoading from '@/components/common/ModalLoading.vue';
@@ -80,6 +81,7 @@ export default defineComponent({
             href: favicon,
           },
         ],
+        meta: opengraphMeta,
       });
     }
 

@@ -1,6 +1,5 @@
 import { ref, watch } from 'vue';
 import { compactAddLength, isWasm } from '@polkadot/util';
-// import useAbi from '@/hooks/useAbi';
 import { FileState } from '@/hooks/useFile';
 
 export default function useWasm(
@@ -8,9 +7,6 @@ export default function useWasm(
   wasmFromFile: FileState | null,
   isWasmFromFileValid: (_: FileState) => boolean
 ) {
-  // should be fixed
-  // const { abi } = useAbi();
-
   const wasm = ref();
   const isWasmValid = ref(false);
 

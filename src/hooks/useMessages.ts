@@ -1,12 +1,8 @@
 import { ref, watch } from 'vue';
-// import useAbi from '@/hooks/useAbi';
 import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
 import type { TypeDef } from '@polkadot/types/create/types';
 
 export default function useMessages(abi: any) {
-  // should be fixed
-  // const { abi } = useAbi();
-
   const messages = ref<
     | {
         identifier: string;

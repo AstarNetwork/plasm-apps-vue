@@ -81,7 +81,7 @@
         </icon-base>
         <span class="ml-3 flex-1">dApps</span>
       </router-link>
-
+      <!-- 
       <router-link
         to="/staking"
         :class="[
@@ -90,7 +90,6 @@
             : inactiveLinkClass,
         ]"
       >
-        <!-- original icon -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'staking'
@@ -112,7 +111,6 @@
             : inactiveLinkClass,
         ]"
       >
-        <!-- Heroicon name: outline/lock-closed -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'lockdrop'
@@ -136,7 +134,6 @@
             : inactiveLinkClass,
         ]"
       >
-        <!-- original icon -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'history'
@@ -148,7 +145,7 @@
           <icon-history />
         </icon-base>
         <span class="ml-3 flex-1">History</span>
-      </router-link>
+      </router-link> -->
     </nav>
   </div>
 
@@ -178,11 +175,11 @@ import Logotype from './Logotype.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
 import IconBase from '../icons/IconBase.vue';
-import IconStaking from '../icons/IconStaking.vue';
+// import IconStaking from '../icons/IconStaking.vue';
 import IconDapps from '../icons/IconDapps.vue';
-import IconDotLockdrop from '../icons/IconDotLockdrop.vue';
+// import IconDotLockdrop from '../icons/IconDotLockdrop.vue';
 import IconBalance from '../icons/IconBalance.vue';
-import IconHistory from '../icons/IconHistory.vue';
+// import IconHistory from '../icons/IconHistory.vue';
 import IconSolidChevronDown from '../icons/IconSolidChevronDown.vue';
 import ModalNetwork from '@/components/balance/ModalNetwork.vue';
 
@@ -193,10 +190,10 @@ export default defineComponent({
     LightDarkMode,
     IconBase,
     IconDapps,
-    IconDotLockdrop,
-    IconStaking,
+    // IconDotLockdrop,
+    // IconStaking,
     IconBalance,
-    IconHistory,
+    // IconHistory,
     IconSolidChevronDown,
     ModalNetwork,
   },

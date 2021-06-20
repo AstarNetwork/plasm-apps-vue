@@ -10,7 +10,7 @@
     <Tab
       :labels="[
         { label: 'Plasm', path: 'balance-plasm' },
-        { label: 'Cross-chain', path: 'cross-chain' },
+        //{ label: 'Cross-chain', path: 'cross-chain' },
       ]"
     />
   </div>

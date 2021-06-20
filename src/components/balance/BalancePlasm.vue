@@ -56,6 +56,7 @@ import {
 } from 'vue';
 import { useAccount, useBalance, useApi } from '@/hooks';
 import { useStore } from 'vuex';
+import { useMeta } from 'vue-meta';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
@@ -81,6 +82,8 @@ export default defineComponent({
     ModalTransferToken,
   },
   setup() {
+    useMeta({ title: 'Balance-Plasm' });
+
     const stateModal = reactive<Modal>({
       modalAccount: false,
       modalTransferAmount: false,
