@@ -35,7 +35,26 @@
       <div class="relative">
         <label for="tabs" class="sr-only">Category</label>
         <select
-          class="appearance-none bg-white dark:bg-darkGray-900 w-full border border-gray-300 dark:border-darkGray-500 rounded-md pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-darkGray-600 sm:text-sm text-blue-900 dark:text-darkGray-300"
+          class="
+            appearance-none
+            bg-white
+            dark:bg-darkGray-900
+            w-full
+            border border-gray-300
+            dark:border-darkGray-500
+            rounded-md
+            pl-3
+            pr-10
+            py-2
+            text-left
+            cursor-default
+            focus:outline-none
+            focus:ring focus:ring-blue-100
+            dark:focus:ring-darkGray-600
+            sm:text-sm
+            text-blue-900
+            dark:text-darkGray-300
+          "
         >
           <option selected>All</option>
           <option>#DeFi</option>
@@ -45,7 +64,15 @@
           <option>#Others</option>
         </select>
         <span
-          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+          class="
+            absolute
+            inset-y-0
+            right-0
+            flex
+            items-center
+            pr-2
+            pointer-events-none
+          "
         >
           <icon-base
             class="h-5 w-5 text-gray-400 dark:text-darkGray-400"
@@ -60,14 +87,41 @@
       <div class="relative">
         <label for="tabs" class="sr-only">Status</label>
         <select
-          class="appearance-none bg-white dark:bg-darkGray-900 w-full border border-gray-300 dark:border-darkGray-500 rounded-md pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-darkGray-600 sm:text-sm text-blue-900 dark:text-darkGray-300"
+          class="
+            appearance-none
+            bg-white
+            dark:bg-darkGray-900
+            w-full
+            border border-gray-300
+            dark:border-darkGray-500
+            rounded-md
+            pl-3
+            pr-10
+            py-2
+            text-left
+            cursor-default
+            focus:outline-none
+            focus:ring focus:ring-blue-100
+            dark:focus:ring-darkGray-600
+            sm:text-sm
+            text-blue-900
+            dark:text-darkGray-300
+          "
         >
           <option selected>All</option>
           <option>#Yours</option>
           <option>#Staked</option>
         </select>
         <span
-          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+          class="
+            absolute
+            inset-y-0
+            right-0
+            flex
+            items-center
+            pr-2
+            pointer-events-none
+          "
         >
           <icon-base
             class="h-5 w-5 text-gray-400 dark:text-darkGray-400"
@@ -85,38 +139,92 @@
         <!-- on -->
         <a
           href="#"
-          class="bg-blue-100 dark:bg-blue-200 text-blue-700 px-3 py-1 font-bold text-sm rounded-full"
+          class="
+            bg-blue-100
+            dark:bg-blue-200
+            text-blue-700
+            px-3
+            py-1
+            font-bold
+            text-sm
+            rounded-full
+          "
         >
           All
         </a>
         <!-- off -->
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #DeFi
         </a>
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #Games
         </a>
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #Oracles
         </a>
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #Parachains
         </a>
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #Others
         </a>
@@ -126,20 +234,47 @@
         <!-- on -->
         <a
           href="#"
-          class="bg-blue-100 dark:bg-blue-200 text-blue-700 px-3 py-1 font-bold text-sm rounded-full"
+          class="
+            bg-blue-100
+            dark:bg-blue-200
+            text-blue-700
+            px-3
+            py-1
+            font-bold
+            text-sm
+            rounded-full
+          "
         >
           All
         </a>
         <!-- off -->
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #Yours
         </a>
         <a
           href="#"
-          class="text-gray-500 dark:text-darkGray-400 hover:text-gray-700 dark:hover:text-darkGray-300 px-3 py-1 text-sm rounded-full"
+          class="
+            text-gray-500
+            dark:text-darkGray-400
+            hover:text-gray-700
+            dark:hover:text-darkGray-300
+            px-3
+            py-1
+            text-sm
+            rounded-full
+          "
         >
           #Staked
         </a>
@@ -161,7 +296,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useApi } from '@/hooks/useApi';
+import { useApi } from '@/hooks';
 import { useMeta } from 'vue-meta';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconSolidExclamationCircle from '@/components/icons/IconSolidExclamationCircle.vue';

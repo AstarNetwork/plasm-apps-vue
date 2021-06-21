@@ -2,15 +2,15 @@ import { ref, watch } from 'vue';
 import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
 import type { TypeDef } from '@polkadot/types/create/types';
 
-export default function useMessages(abi: any) {
+export function useMessages(abi: any) {
   const messages = ref<
     | {
-        identifier: string;
-        docs: string[];
-        args: AbiParam[];
-        returnType?: TypeDef | null;
-        isConstructor?: boolean;
-      }[]
+      identifier: string;
+      docs: string[];
+      args: AbiParam[];
+      returnType?: TypeDef | null;
+      isConstructor?: boolean;
+    }[]
     | null
   >(null);
 

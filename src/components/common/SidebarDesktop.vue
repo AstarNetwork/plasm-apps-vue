@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useSidebar } from '@/hooks/useSidebar';
+import { useSidebar } from '@/hooks';
 import SidebarCommon from './SidebarCommon.vue';
 
 export default defineComponent({

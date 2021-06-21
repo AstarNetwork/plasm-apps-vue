@@ -9,7 +9,27 @@
       <button
         type="button"
         @click="modalNetwork = true"
-        class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
+        class="
+          inline-flex
+          justify-center
+          w-full
+          rounded-full
+          border border-gray-300
+          dark:border-darkGray-600
+          px-4
+          py-3
+          bg-white
+          dark:bg-darkGray-900
+          text-xs
+          font-medium
+          text-gray-700
+          dark:text-darkGray-100
+          hover:bg-gray-100
+          dark:hover:bg-darkGray-700
+          focus:outline-none
+          focus:ring focus:ring-gray-100
+          dark:focus:ring-darkGray-600
+        "
       >
         {{ currentNetworkName }}
         <!-- Heroicon name: solid/chevron-down -->
@@ -49,7 +69,13 @@
           <p class="font-bold">Balance</p>
           <!-- TODO : Use current address and balance -->
           <p
-            class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
+            class="
+              text-xs text-blue-900
+              dark:text-darkGray-100
+              font-semibold
+              flex
+              justify-between
+            "
           >
             <span>{{ defaultAccountName }}</span>
             <!-- <span class="ml-2">{{ formatBalance }}PLM</span> -->
@@ -168,8 +194,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useAccount } from '@/hooks';
-import { useSidebar } from '@/hooks/useSidebar';
+import { useAccount, useSidebar } from '@/hooks';
 import { providerEndpoints } from '@/config/chainEndpoints';
 import Logotype from './Logotype.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
@@ -212,12 +237,8 @@ export default defineComponent({
 
     const store = useStore();
 
-    const {
-      allAccounts,
-      allAccountNames,
-      defaultAccount,
-      defaultAccountName,
-    } = useAccount();
+    const { allAccounts, allAccountNames, defaultAccount, defaultAccountName } =
+      useAccount();
 
     const shortenAddress = computed(() => {
       return `${defaultAccount.value.slice(0, 6)}${'.'.repeat(

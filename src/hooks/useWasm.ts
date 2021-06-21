@@ -1,8 +1,8 @@
-import { ref, watch } from 'vue';
+import { ref, watch, Ref } from 'vue';
 import { compactAddLength, isWasm } from '@polkadot/util';
 import { FileState } from '@/hooks/useFile';
 
-export default function useWasm(
+export function useWasm(
   abi: any,
   wasmFromFile: FileState | null,
   isWasmFromFileValid: (_: FileState) => boolean
