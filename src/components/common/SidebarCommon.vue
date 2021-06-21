@@ -9,27 +9,7 @@
       <button
         type="button"
         @click="modalNetwork = true"
-        class="
-          inline-flex
-          justify-center
-          w-full
-          rounded-full
-          border border-gray-300
-          dark:border-darkGray-600
-          px-4
-          py-3
-          bg-white
-          dark:bg-darkGray-900
-          text-xs
-          font-medium
-          text-gray-700
-          dark:text-darkGray-100
-          hover:bg-gray-100
-          dark:hover:bg-darkGray-700
-          focus:outline-none
-          focus:ring focus:ring-gray-100
-          dark:focus:ring-darkGray-600
-        "
+        class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
       >
         {{ currentNetworkName }}
         <!-- Heroicon name: solid/chevron-down -->
@@ -69,13 +49,7 @@
           <p class="font-bold">Balance</p>
           <!-- TODO : Use current address and balance -->
           <p
-            class="
-              text-xs text-blue-900
-              dark:text-darkGray-100
-              font-semibold
-              flex
-              justify-between
-            "
+            class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
           >
             <span>{{ defaultAccountName }}</span>
             <!-- <span class="ml-2">{{ formatBalance }}PLM</span> -->
@@ -107,6 +81,31 @@
         </icon-base>
         <span class="ml-3 flex-1">dApps</span>
       </router-link>
+
+      <a
+        href="https://lockdrop.plasmnet.io/"
+        target="_blank"
+        :class="[
+          $route.path.split('/')[1] === 'lockdrop'
+            ? activeLinkClass
+            : inactiveLinkClass,
+        ]"
+      >
+        <icon-base
+          :class="[
+            $route.path.split('/')[1] === 'lockdrop'
+              ? activeSvgClass
+              : inactiveSvgClass,
+          ]"
+          iconColor="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <icon-dot-lockdrop />
+        </icon-base>
+        <span class="ml-3 flex-1">Plasm Lockdrop</span>
+      </a>
+
       <!-- 
       <router-link
         to="/staking"
@@ -202,7 +201,7 @@ import LightDarkMode from './LightDarkMode.vue';
 import IconBase from '../icons/IconBase.vue';
 // import IconStaking from '../icons/IconStaking.vue';
 import IconDapps from '../icons/IconDapps.vue';
-// import IconDotLockdrop from '../icons/IconDotLockdrop.vue';
+import IconDotLockdrop from '../icons/IconDotLockdrop.vue';
 import IconBalance from '../icons/IconBalance.vue';
 // import IconHistory from '../icons/IconHistory.vue';
 import IconSolidChevronDown from '../icons/IconSolidChevronDown.vue';
@@ -215,7 +214,7 @@ export default defineComponent({
     LightDarkMode,
     IconBase,
     IconDapps,
-    // IconDotLockdrop,
+    IconDotLockdrop,
     // IconStaking,
     IconBalance,
     // IconHistory,
@@ -237,8 +236,12 @@ export default defineComponent({
 
     const store = useStore();
 
-    const { allAccounts, allAccountNames, defaultAccount, defaultAccountName } =
-      useAccount();
+    const {
+      allAccounts,
+      allAccountNames,
+      defaultAccount,
+      defaultAccountName,
+    } = useAccount();
 
     const shortenAddress = computed(() => {
       return `${defaultAccount.value.slice(0, 6)}${'.'.repeat(

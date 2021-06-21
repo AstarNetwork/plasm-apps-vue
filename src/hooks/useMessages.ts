@@ -5,12 +5,12 @@ import type { TypeDef } from '@polkadot/types/create/types';
 export function useMessages(abi: any) {
   const messages = ref<
     | {
-      identifier: string;
-      docs: string[];
-      args: AbiParam[];
-      returnType?: TypeDef | null;
-      isConstructor?: boolean;
-    }[]
+        identifier: string;
+        docs: string[];
+        args: AbiParam[];
+        returnType?: TypeDef | null;
+        isConstructor?: boolean;
+      }[]
     | null
   >(null);
 
