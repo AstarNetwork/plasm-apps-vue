@@ -331,8 +331,8 @@ import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { keyring } from '@polkadot/ui-keyring';
-import { useApi } from '@/hooks';
-import useFile, { FileState } from '@/hooks/useFile';
+import { useApi, useMessages, useWasm } from '@/hooks';
+import { useFile, FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
 import { AnyJson } from '@polkadot/types/types';
@@ -341,8 +341,6 @@ import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
-import useMessages from '@/hooks/useMessages';
-import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
 import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useStore } from 'vuex';
@@ -422,7 +420,6 @@ export default defineComponent({
       return `${address.slice(0, 6)}${'.'.repeat(6)}${address.slice(-6)}`;
     });
 
-    //abi
     const store = useStore();
 
     const { api } = useApi();

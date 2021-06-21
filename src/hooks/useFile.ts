@@ -14,7 +14,7 @@ interface FileOptions {
 }
 
 // Simple wrapper for a true/false toggle
-export default function useFile({
+export function useFile({
   defaultValue = null,
   onChange,
   onRemove,

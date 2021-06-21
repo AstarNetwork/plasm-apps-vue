@@ -8,7 +8,6 @@
   </div>
 </template>
 <script lang="ts">
-// import useAbi from '@/hooks/useAbi';
 import { defineComponent, PropType } from 'vue';
 import Message from './Message.vue';
 import { MessageType } from '@/types/Message';

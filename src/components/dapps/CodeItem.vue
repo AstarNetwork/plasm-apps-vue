@@ -65,7 +65,7 @@ import { useStore } from 'vuex';
 import { ActionTypes } from '@/store/action-types';
 import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
 import type { CodeStored } from '@/store/modules/contracts/state';
-import useMessages from '@/hooks/useMessages';
+import { useMessages } from '@/hooks';
 import Message from '@/components/dapps/Message.vue';
 
 export default defineComponent({

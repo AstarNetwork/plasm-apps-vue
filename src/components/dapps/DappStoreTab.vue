@@ -161,7 +161,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useApi } from '@/hooks/useApi';
+import { useApi } from '@/hooks';
+import { useMeta } from 'vue-meta';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconSolidExclamationCircle from '@/components/icons/IconSolidExclamationCircle.vue';
 import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
@@ -175,6 +176,8 @@ export default defineComponent({
     DappsItem,
   },
   setup() {
+    useMeta({ title: 'Dapps-dApp Store' });
+
     const { api } = useApi();
 
     return {

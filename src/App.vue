@@ -1,4 +1,9 @@
 <template>
+  <metainfo>
+    <template v-slot:title="{ content }">{{
+      content ? `${content} | Plasm Apps Portal` : `Plasm Apps Portal`
+    }}</template>
+  </metainfo>
   <Suspense>
     <template #default>
       <api-loader>
@@ -24,6 +29,9 @@ import { defineComponent, computed } from 'vue';
 import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { useRouter } from 'vue-router';
+import { useMeta } from 'vue-meta';
+import { providerEndpoints } from '@/config/chainEndpoints';
+import { opengraphMeta } from '@/config/opengraph';
 import ApiLoader from '@/hooks/providers/ApiLoader.vue';
 import Spinner from '@/components/common/Spinner.vue';
 import ModalLoading from '@/components/common/ModalLoading.vue';
@@ -60,6 +68,21 @@ export default defineComponent({
     }
     if (customEndpoint) {
       store.commit(MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT, customEndpoint);
+    }
+
+    if (networkIdx) {
+      const favicon = providerEndpoints[parseInt(networkIdx)].favicon;
+      useMeta({
+        title: '',
+        htmlAttrs: { lang: 'en', amp: true },
+        link: [
+          {
+            rel: 'icon',
+            href: favicon,
+          },
+        ],
+        meta: opengraphMeta,
+      });
     }
 
     return {
