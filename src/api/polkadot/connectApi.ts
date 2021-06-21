@@ -3,7 +3,8 @@ import { keyring } from '@polkadot/ui-keyring';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { isTestChain } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
-import chainTypeDefs from '@plasm/types';
+import * as typeDefs from '@plasm/types';
+import { RegistryTypes } from '@polkadot/types/types';
 
 interface InjectedAccountExt {
   address: string;
@@ -48,13 +49,13 @@ const loadAccounts = async (api: ApiPromise) => {
   );
 };
 
-export const connectApi = async (endpoint: string) => {
+export async function connectApi(endpoint: string) {
   const provider = new WsProvider(endpoint);
 
   const api = new ApiPromise({
     provider,
     types: {
-      ...chainTypeDefs.dustyDefinitions,
+      ...(typeDefs.dustyDefinitions as RegistryTypes),
       LookupSource: 'MultiAddress',
     },
   });
@@ -77,4 +78,4 @@ export const connectApi = async (endpoint: string) => {
     .catch((error: Error) => console.error(error));
 
   return api;
-};
+}
