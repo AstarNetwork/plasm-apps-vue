@@ -36,7 +36,6 @@
       v-on:completeTransfer="completeTransfer"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
-      :address="defaultAccount"
       :balance="balance"
     />
     <ModalTransferToken
@@ -53,6 +52,7 @@ import {
   computed,
   watch,
   provide,
+  ref,
 } from 'vue';
 import { useAccount, useBalance, useApi } from '@/hooks';
 import { useStore } from 'vuex';
@@ -113,15 +113,17 @@ export default defineComponent({
 
     const store = useStore();
 
-    const { balance } = useBalance(defaultAccount);
+    const { balance } = useBalance(api, defaultAccount);
     provide('balance', balance);
 
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
     const completeTransfer = () => {
-      const { balance: balanceRef } = useBalance(defaultAccount);
+      const curAccountRef = ref(defaultAccount.value);
+      const { balance: balanceRef } = useBalance(api, curAccountRef);
 
       watch(balanceRef, () => {
+        console.log('new balance:', balance.value);
         balance.value = balanceRef.value;
       });
     };

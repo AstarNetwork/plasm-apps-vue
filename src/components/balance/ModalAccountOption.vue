@@ -1,15 +1,6 @@
 <template>
   <div>
-    <!-- <% if (checked==='on' ) { %> -->
-    <li
-      role="option"
-      class="text-blue-900 dark:text-darkGray-100 cursor-default select-none relative py-2 pl-3 pr-6 bg-blue-200 dark:bg-blue-500 bg-opacity-20"
-    >
-      <!-- <% } else if (checked==='off' ) { %> -->
-      <!-- <li role="option"
-        class="text-blue-900 dark:text-darkGray-100 cursor-default select-none relative py-2 pl-3 pr-6 hover:bg-gray-50 dark:hover:bg-darkGray-800"> -->
-      <!-- <% } %> -->
-
+    <li role="option" :class="opClass(checked)">
       <label class="flex items-center justify-between cursor-pointer">
         <div class="flex items-center">
           <div
@@ -93,6 +84,15 @@ export default defineComponent({
       // balance,
       onChange,
     };
+  },
+  methods: {
+    opClass(checked: boolean) {
+      if (checked) {
+        return 'text-blue-900 dark:text-darkGray-100 cursor-default select-none relative py-2 pl-3 pr-6 bg-blue-200 dark:bg-blue-500 bg-opacity-20';
+      } else {
+        return 'text-blue-900 dark:text-darkGray-100 cursor-default select-none relative py-2 pl-3 pr-6 hover:bg-gray-50 dark:hover:bg-darkGray-800';
+      }
+    },
   },
 });
 </script>
