@@ -32,3 +32,11 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.dark\:bg-blue-500 {
+  background-color: rgba(27, 109, 193, 0.1) !important;
+}
+.checked\:border-blue-500:checked {
+  border-color: rgba(27, 109, 193, 1) !important;
+}
+</style>

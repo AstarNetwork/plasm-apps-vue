@@ -46,6 +46,7 @@
                           class="w-full text-blue-900 dark:text-darkGray-100 text-xl focus:outline-none bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600"
                           style="width: 21rem"
                           type="text"
+                          spellcheck="false"
                           v-model="toAddress"
                         />
                       </div>
