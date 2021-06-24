@@ -13,7 +13,6 @@ export default defineComponent({
   },
   setup(props) {
     const formattedBalance = ref('');
-    console.log(props.balance, 'HERE');
 
     watch(
       () => props.balance,
