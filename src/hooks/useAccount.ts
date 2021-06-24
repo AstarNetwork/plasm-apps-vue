@@ -1,5 +1,5 @@
 import { reactive, toRefs, watchEffect } from 'vue';
-import { u8aToHex } from '@polkadot/util';
+// import { u8aToHex } from '@polkadot/util';
 import { keyring } from '@polkadot/ui-keyring';
 
 interface UseAccounts {
@@ -28,9 +28,9 @@ export const useAccount = () => {
 
   const accounts = keyring.getAccounts();
   console.log('accounts', accounts);
-  accounts.forEach(({ address, meta, publicKey }) =>
-    console.log(address, JSON.stringify(meta), u8aToHex(publicKey))
-  );
+  // accounts.forEach(({ address, meta, publicKey }) =>
+  //   console.log(address, JSON.stringify(meta), u8aToHex(publicKey))
+  // );
 
   watchEffect((onInvalidate) => {
     const subscription = keyring.accounts.subject.subscribe((accounts) => {

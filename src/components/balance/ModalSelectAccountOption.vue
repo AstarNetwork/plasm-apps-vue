@@ -23,6 +23,15 @@
         </div>
       </div>
       <!-- <div class="text-sm">100PLM</div> -->
+
+      <div class="relative w-5 h-5" v-if="checked">
+        <input
+          name="choose_account"
+          type="radio"
+          class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
+          :checked="checked"
+        />
+      </div>
     </div>
   </li>
 </template>
@@ -68,11 +77,8 @@ export default defineComponent({
       emit('update:sel-option', keyIdx);
     };
 
-    // const { balance } = useBalance(address);
-
     return {
       shortenAddress,
-      // balance,
       onChange,
     };
   },

@@ -3,9 +3,9 @@ import { VoidFn } from '@polkadot/api/types';
 import { useApi } from '@/hooks';
 import BN from 'bn.js';
 
-function useCall(addressRef: Ref<string>) {
-  const { api: apiRef } = useApi();
-  // const apiRef = computed(() => store.getters.api);
+function useCall(apiRef: any, addressRef: Ref<string>) {
+  // should be fixed -- cannot refer it because it goes undefined once it called. to call balance again, it should pass apiRef by external params.
+  // const { api: apiRef } = useApi();
   const balanceRef = ref(new BN(0));
 
   const unsub: Ref<VoidFn | undefined> = ref();
@@ -13,7 +13,7 @@ function useCall(addressRef: Ref<string>) {
   watch(
     () => addressRef.value,
     (address) => {
-      console.log('addr', address);
+      // console.log('addr', address);
 
       const api = apiRef?.value;
       if (unsub.value) {
@@ -44,17 +44,16 @@ function useCall(addressRef: Ref<string>) {
   };
 }
 
-export function useBalance(addressRef: Ref<string>) {
+export function useBalance(apiRef: any, addressRef: Ref<string>) {
   const balance = ref(new BN(0));
 
-  const { balanceRef } = useCall(addressRef);
+  const { balanceRef } = useCall(apiRef, addressRef);
 
   watch(
     () => balanceRef?.value,
     (bal) => {
       if (bal) {
         balance.value = bal;
-        console.log('balance', balance.value.toString(10));
       }
     },
     { immediate: true }
