@@ -70,12 +70,12 @@
         >
           Transfer
         </button>
-        <button
+        <!-- <button
           type="button"
           class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-sm text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-darkGray-800 dark:hover:border-blue-300 dark:hover:text-blue-300 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-0.5"
         >
           Staking
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -93,19 +93,26 @@
           </p> -->
         </div>
       </div>
-      <div
-        class="flex justify-between items-center bg-blue-50 dark:bg-darkGray-700 rounded-lg mb-2 py-3 px-4"
+      <!-- <div
+        class="
+          flex
+          justify-between
+          items-center
+          bg-blue-50
+          dark:bg-darkGray-700
+          rounded-lg
+          mb-2
+          py-3
+          px-4
+        "
       >
         <div>dApps staking</div>
         <div>
           <p class="font-bold text-right">
             <span class="text-2xl leading-tight">0</span>
           </p>
-          <!-- <p class="text-xs text-gray-500 dark:text-darkGray-400 text-right">
-            ≈US $10
-          </p> -->
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

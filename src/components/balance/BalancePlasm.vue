@@ -16,13 +16,11 @@
       />
     </div>
 
-    <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>
+    <!-- <h2 class="text-blue-900 dark:text-white text-lg font-bold my-3">Tokens</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <Token v-model:isOpenTransfer="modalTransferToken" />
-      <!-- <Token v-model:isOpenTransfer="modalTransferToken" />
-      <Token v-model:isOpenTransfer="modalTransferToken" /> -->
-    </div>
+    </div> -->
 
     <!-- Modals -->
     <ModalAccount
@@ -38,7 +36,6 @@
       v-on:completeTransfer="completeTransfer"
       :all-accounts="allAccounts"
       :all-account-names="allAccountNames"
-      :address="defaultAccount"
       :balance="balance"
     />
     <ModalTransferToken
@@ -55,13 +52,15 @@ import {
   computed,
   watch,
   provide,
+  ref,
 } from 'vue';
 import { useAccount, useBalance, useApi } from '@/hooks';
 import { useStore } from 'vuex';
+import { useMeta } from 'vue-meta';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
-import Token from '@/components/balance/Token.vue';
+// import Token from '@/components/balance/Token.vue';
 import ModalAccount from '@/components/balance/ModalAccount.vue';
 import ModalTransferAmount from '@/components/balance/ModalTransferAmount.vue';
 import ModalTransferToken from '@/components/balance/ModalTransferToken.vue';
@@ -77,12 +76,14 @@ export default defineComponent({
     Address,
     PlmBalance,
     TotalBalance,
-    Token,
+    // Token,
     ModalAccount,
     ModalTransferAmount,
     ModalTransferToken,
   },
   setup() {
+    useMeta({ title: 'Balance-Plasm' });
+
     const stateModal = reactive<Modal>({
       modalAccount: false,
       modalTransferAmount: false,
@@ -112,15 +113,17 @@ export default defineComponent({
 
     const store = useStore();
 
-    const { balance } = useBalance(defaultAccount);
+    const { balance } = useBalance(api, defaultAccount);
     provide('balance', balance);
 
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
     const completeTransfer = () => {
-      const { balance: balanceRef } = useBalance(defaultAccount);
+      const curAccountRef = ref(defaultAccount.value);
+      const { balance: balanceRef } = useBalance(api, curAccountRef);
 
       watch(balanceRef, () => {
+        console.log('new balance:', balance.value);
         balance.value = balanceRef.value;
       });
     };

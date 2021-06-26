@@ -37,19 +37,13 @@
         </div>
       </div>
       <div>
-        <div class="text-xs text-gray-500 dark:text-darkGray-400">
-          Code bundle name
-        </div>
+        <div class="text-xs text-gray-500 dark:text-darkGray-400">Messages</div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ code.json.name }}
-        </div>
-      </div>
-      <div>
-        <div class="text-xs text-gray-500 dark:text-darkGray-400">
-          Contract ABI
-        </div>
-        <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ shortenAbi }}
+          <message
+            v-for="message in messages"
+            :message="message"
+            :key="message.identifier"
+          />
         </div>
       </div>
     </div>
@@ -66,15 +60,18 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, computed } from 'vue';
+import { defineComponent, ref, toRefs, computed } from 'vue';
 import { useStore } from 'vuex';
 import { ActionTypes } from '@/store/action-types';
 import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
 import type { CodeStored } from '@/store/modules/contracts/state';
+import { useMessages } from '@/hooks';
+import Message from '@/components/dapps/Message.vue';
 
 export default defineComponent({
   components: {
     IconDocumentDuplicate,
+    Message,
   },
   props: {
     code: {
@@ -94,10 +91,8 @@ export default defineComponent({
         : '';
     });
 
-    const shortenAbi = computed(() => {
-      const abi = code.value.json.abi;
-      return abi ? `${abi.slice(0, 24)}...` : '';
-    });
+    const abi = ref(code.value.contractAbi);
+    const { messages } = useMessages(abi);
 
     const store = useStore();
 
@@ -114,7 +109,7 @@ export default defineComponent({
 
     return {
       shortenCodeHash,
-      shortenAbi,
+      messages,
       showAlert,
       onForget,
     };

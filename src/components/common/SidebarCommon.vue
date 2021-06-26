@@ -82,6 +82,31 @@
         <span class="ml-3 flex-1">dApps</span>
       </router-link>
 
+      <a
+        href="https://lockdrop.plasmnet.io/"
+        target="_blank"
+        :class="[
+          $route.path.split('/')[1] === 'lockdrop'
+            ? activeLinkClass
+            : inactiveLinkClass,
+        ]"
+      >
+        <icon-base
+          :class="[
+            $route.path.split('/')[1] === 'lockdrop'
+              ? activeSvgClass
+              : inactiveSvgClass,
+          ]"
+          iconColor="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <icon-dot-lockdrop />
+        </icon-base>
+        <span class="ml-3 flex-1">Plasm Lockdrop</span>
+      </a>
+
+      <!-- 
       <router-link
         to="/staking"
         :class="[
@@ -90,7 +115,6 @@
             : inactiveLinkClass,
         ]"
       >
-        <!-- original icon -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'staking'
@@ -112,7 +136,6 @@
             : inactiveLinkClass,
         ]"
       >
-        <!-- Heroicon name: outline/lock-closed -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'lockdrop'
@@ -136,7 +159,6 @@
             : inactiveLinkClass,
         ]"
       >
-        <!-- original icon -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'history'
@@ -148,7 +170,7 @@
           <icon-history />
         </icon-base>
         <span class="ml-3 flex-1">History</span>
-      </router-link>
+      </router-link> -->
     </nav>
   </div>
 
@@ -171,18 +193,17 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useAccount } from '@/hooks';
-import { useSidebar } from '@/hooks/useSidebar';
+import { useAccount, useSidebar } from '@/hooks';
 import { providerEndpoints } from '@/config/chainEndpoints';
 import Logotype from './Logotype.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
 import IconBase from '../icons/IconBase.vue';
-import IconStaking from '../icons/IconStaking.vue';
+// import IconStaking from '../icons/IconStaking.vue';
 import IconDapps from '../icons/IconDapps.vue';
 import IconDotLockdrop from '../icons/IconDotLockdrop.vue';
 import IconBalance from '../icons/IconBalance.vue';
-import IconHistory from '../icons/IconHistory.vue';
+// import IconHistory from '../icons/IconHistory.vue';
 import IconSolidChevronDown from '../icons/IconSolidChevronDown.vue';
 import ModalNetwork from '@/components/balance/ModalNetwork.vue';
 
@@ -194,9 +215,9 @@ export default defineComponent({
     IconBase,
     IconDapps,
     IconDotLockdrop,
-    IconStaking,
+    // IconStaking,
     IconBalance,
-    IconHistory,
+    // IconHistory,
     IconSolidChevronDown,
     ModalNetwork,
   },

@@ -10,10 +10,9 @@
     <Tab
       :labels="[
         { label: 'Plasm', path: 'balance-plasm' },
-        { label: 'Cross-chain', path: 'cross-chain' },
+        //{ label: 'Cross-chain', path: 'cross-chain' },
       ]"
     />
-    <!-- <AddressChange /> -->
   </div>
 
   <router-view />
@@ -21,13 +20,23 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useMeta } from 'vue-meta';
 import Tab from '@/components/common/Tab.vue';
-// import AddressChange from '@/components/common/AddressChange.vue';
 
 export default defineComponent({
   components: {
     Tab,
-    // AddressChange
+  },
+  setup() {
+    useMeta({ title: 'Balance' });
   },
 });
 </script>
+<style>
+.dark\:bg-blue-500 {
+  background-color: rgba(27, 109, 193, 0.1) !important;
+}
+.checked\:border-blue-500:checked {
+  border-color: rgba(27, 109, 193, 1) !important;
+}
+</style>

@@ -49,6 +49,7 @@
                           class="w-full text-blue-900 dark:text-darkGray-100 text-xl focus:outline-none bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600"
                           style="width: 21rem"
                           type="text"
+                          spellcheck="false"
                           v-model="toAddress"
                         />
                       </div>
@@ -383,8 +384,8 @@ import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { keyring } from '@polkadot/ui-keyring';
-import { useApi } from '@/hooks';
-import useFile, { FileState } from '@/hooks/useFile';
+import { useApi, useMessages, useWasm } from '@/hooks';
+import { useFile, FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
 import { AnyJson } from '@polkadot/types/types';
@@ -393,13 +394,10 @@ import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
-import type { AbiMessage } from '@polkadot/api-contract/types';
-import useWasm from '@/hooks/useWasm';
 import usePendingTx from '@/hooks/signer/usePendingTx';
+import ParamsGenerator from './ParamsGenerator.vue';
 import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useStore } from 'vuex';
-import { MessageType } from '@/types/Message';
-import ParamsGenerator from './ParamsGenerator.vue';
 
 interface FormData {
   endowment: BN;
@@ -477,7 +475,6 @@ export default defineComponent({
       return `${address.slice(0, 6)}${'.'.repeat(6)}${address.slice(-6)}`;
     });
 
-    //abi
     const store = useStore();
 
     const { api } = useApi();
@@ -502,56 +499,10 @@ export default defineComponent({
       setWasmFile(fileState);
     };
 
-    //TODO: move the code below to contract-info once useAbi is fixed
-    const messages = ref<MessageType[] | null>(null);
-    watch(abi, () => {
-      if (abi?.value?.constructors && abi?.value?.messages) {
-        // for (let i = 0; i <= 2; i++) {
-        //   const params = abi?.value?.constructors[i].args;
-        //   const arrValues = getParamValues(abi.value?.registry, params);
-        //   console.log('values', arrValues);
-        // }
-        const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
-          return {
-            index: e.index,
-            identifier: e.identifier,
-            docs: e.docs,
-            args: e.args,
-            returnType: e.returnType,
-            isConstructor: e.isConstructor,
-          };
-        });
-        const msgs = abi?.value?.messages.map((e: AbiMessage) => {
-          return {
-            index: e.index,
-            identifier: e.identifier,
-            docs: e.docs,
-            args: e.args,
-            returnType: e.returnType,
-            isConstructor: e.isConstructor,
-          };
-        });
-        messages.value = [...constructors, ...msgs];
-      }
+    const { messages } = useMessages(abi);
 
-      if (abi.value && isWasm(abi.value.project.source.wasm)) {
-        wasm.value = abi.value.project.source.wasm;
-        isWasmValid.value = true;
-
-        return;
-      }
-
-      if (wasmFromFile.value && isWasmFromFileValid) {
-        wasm.value = compactAddLength(wasmFromFile.value.data);
-        isWasmValid.value = true;
-
-        return;
-      }
-
-      wasm.value = null;
-      isWasmValid.value = false;
-    });
     const { wasm, isWasmValid } = useWasm(
+      abi,
       wasmFromFile.value,
       isWasmFromFileValid
     );

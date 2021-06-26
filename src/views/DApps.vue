@@ -9,7 +9,7 @@
     </h1>
     <Tab
       :labels="[
-        { label: 'dApp Store', path: 'dapp-store' },
+        //{ label: 'dApp Store', path: 'dapp-store' },
         { label: 'Create dApps', path: 'create-dapps' },
       ]"
     />
@@ -19,11 +19,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useMeta } from 'vue-meta';
 import Tab from '@/components/common/Tab.vue';
 
 export default defineComponent({
   components: {
     Tab,
+  },
+  setup() {
+    useMeta({ title: 'Dapps' });
   },
 });
 </script>

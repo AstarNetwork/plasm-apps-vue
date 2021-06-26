@@ -2,8 +2,8 @@ import { provide, inject, reactive, toRefs, readonly } from 'vue';
 import { ApiPromise } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
 import type { KeyringPair } from '@polkadot/keyring/types';
-import { Balance } from '../models';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import BN from 'bn.js';
 // note: this is a simplified Redux-like state management pattern using the Vue composition API.
 // unlike Vuex; this method is not very strict, meaning that if someone really wanted to,
 // they could just directly inject the raw state symbol and mutate it
@@ -11,7 +11,7 @@ import { UnsubscribePromise } from '@polkadot/api/types';
 interface ProviderState {
   api?: ApiPromise;
   currentAccount?: KeyringPair;
-  currentBalance?: Balance;
+  currentBalance?: BN;
   unsubscribeAccountInfo?: UnsubscribePromise;
 }
 

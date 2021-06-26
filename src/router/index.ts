@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        redirect: '/dapps/dapp-store',
+        redirect: '/dapps/create-dapps',
       },
       {
         path: 'dapp-store',
