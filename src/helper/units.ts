@@ -1,5 +1,5 @@
 // it's varient based on decimal from network metadata
-const defaultUnitIndex = 5;
+export const defaultUnitIndex = 5;
 const arrUnitPrefixes = [-15, -12, -9, -6, -3, 0, 3, 6, 9, 12];
 const arrUnitNames = [
   'femto',
