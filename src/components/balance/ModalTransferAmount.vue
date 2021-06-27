@@ -9,19 +9,57 @@
       </div>
 
       <div
-        class="inline-block bg-white dark:bg-darkGray-900 rounded-lg px-4 sm:px-8 py-10 shadow-xl transform transition-all mx-2 my-2 align-middle max-w-lg w-full"
+        class="
+          inline-block
+          bg-white
+          dark:bg-darkGray-900
+          rounded-lg
+          px-4
+          sm:px-8
+          py-10
+          shadow-xl
+          transform
+          transition-all
+          mx-2
+          my-2
+          align-middle
+          max-w-lg
+          w-full
+        "
       >
         <div>
           <div>
             <h3
-              class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
+              class="
+                text-lg
+                font-extrabold
+                text-blue-900
+                dark:text-white
+                mb-6
+                text-center
+              "
             >
               Transfer {{ unitToken }}
             </h3>
 
             <button
               type="button"
-              class="w-full bg-blue-500 dark:bg-blue-800 text-white rounded-lg px-5 py-5 mb-4 relative hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400"
+              class="
+                w-full
+                bg-blue-500
+                dark:bg-blue-800
+                text-white
+                rounded-lg
+                px-5
+                py-5
+                mb-4
+                relative
+                hover:bg-blue-600
+                dark:hover:bg-blue-700
+                focus:outline-none
+                focus:ring focus:ring-blue-100
+                dark:focus:ring-blue-400
+              "
             >
               <span class="block text-left font-bold text-sm mb-2"
                 >{{ unitToken }} Balance</span
@@ -35,7 +73,14 @@
             <form>
               <div class="mb-4">
                 <label
-                  class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
+                  class="
+                    block
+                    text-sm
+                    font-medium
+                    text-gray-500
+                    dark:text-darkGray-400
+                    mb-2
+                  "
                 >
                   Send from
                 </label>
@@ -49,7 +94,14 @@
 
               <div class="mb-4">
                 <label
-                  class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
+                  class="
+                    block
+                    text-sm
+                    font-medium
+                    text-gray-500
+                    dark:text-darkGray-400
+                    mb-2
+                  "
                 >
                   Send to
                 </label>
@@ -73,14 +125,52 @@
           <button
             type="button"
             @click="transfer(transferAmt, fromAddress, toAddress)"
-            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
+            class="
+              inline-flex
+              items-center
+              px-6
+              py-3
+              border border-transparent
+              text-sm
+              font-medium
+              rounded-full
+              shadow-sm
+              text-white
+              bg-blue-500
+              hover:bg-blue-700
+              dark:hover:bg-blue-400
+              focus:outline-none
+              focus:ring focus:ring-blue-100
+              dark:focus:ring-blue-400
+              mx-1
+            "
           >
             Confirm
           </button>
           <button
             type="button"
             @click="closeModal"
-            class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
+            class="
+              inline-flex
+              items-center
+              px-6
+              py-3
+              border border-gray-300
+              dark:border-darkGray-500
+              text-sm
+              font-medium
+              rounded-full
+              text-gray-500
+              dark:text-darkGray-400
+              bg-white
+              dark:bg-darkGray-900
+              hover:bg-gray-100
+              dark:hover:bg-darkGray-700
+              focus:outline-none
+              focus:ring focus:ring-gray-100
+              dark:focus:ring-darkGray-600
+              mx-1
+            "
           >
             Cancel
           </button>
