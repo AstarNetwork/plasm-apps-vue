@@ -1,10 +1,9 @@
 <template>
   <div class="flex-1 flex flex-col pt-10 overflow-y-auto">
-    <div class="flex items-center justify-center flex-shrink-0">
-      <img class="w-10 h-10" src="@/assets/img/plasm.png" />
-      <logotype />
+    <div class="flex items-center">
+      <img width="200" src="@/assets/img/astar.png" />
       <connection-indicator
-        class="pl-1 pt-4"
+        class="pt-4"
         :connectionType="currentNetworkStatus"
       />
     </div>
@@ -229,7 +228,6 @@ import { defineComponent, ref, reactive, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useAccount, useSidebar } from '@/hooks';
 import { providerEndpoints } from '@/config/chainEndpoints';
-import Logotype from './Logotype.vue';
 import ConnectionIndicator from './ConnectionIndicator.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
@@ -244,7 +242,6 @@ import ModalNetwork from '@/components/balance/ModalNetwork.vue';
 
 export default defineComponent({
   components: {
-    Logotype,
     ConnectionIndicator,
     SocialMediaLinks,
     LightDarkMode,

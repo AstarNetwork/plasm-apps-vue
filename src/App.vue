@@ -1,7 +1,7 @@
 <template>
   <metainfo>
     <template v-slot:title="{ content }">{{
-      content ? `${content} | Plasm Apps Portal` : `Plasm Apps Portal`
+      content ? `${content} | Astar Apps Portal` : `Astar Apps Portal`
     }}</template>
   </metainfo>
 
