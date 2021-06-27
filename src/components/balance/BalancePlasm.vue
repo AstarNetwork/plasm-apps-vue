@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isWeb3Injected && isConnected(currentNetworkStatus)">
     <div class="grid lg:grid-cols-2 gap-4 mb-4">
       <Address
         :address="defaultAccount"
@@ -43,6 +43,12 @@
       v-model:isOpen="modalTransferToken"
     />
   </div>
+
+  <modal-alert-box
+    v-if="!isWeb3Injected"
+    :hasClose="false"
+    msg="Web3 is not found in the browser. You should install the polkadot extension or wallet."
+  />
 </template>
 <script lang="ts">
 import {
@@ -57,10 +63,12 @@ import {
 import { useAccount, useBalance, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import { useMeta } from 'vue-meta';
+import { isWeb3Injected } from '@polkadot/extension-dapp';
 import Address from '@/components/balance/Address.vue';
 import PlmBalance from '@/components/balance/PlmBalance.vue';
 import TotalBalance from '@/components/balance/TotalBalance.vue';
 // import Token from '@/components/balance/Token.vue';
+import ModalAlertBox from '@/components/common/ModalAlertBox.vue';
 import ModalAccount from '@/components/balance/ModalAccount.vue';
 import ModalTransferAmount from '@/components/balance/ModalTransferAmount.vue';
 import ModalTransferToken from '@/components/balance/ModalTransferToken.vue';
@@ -77,6 +85,7 @@ export default defineComponent({
     PlmBalance,
     TotalBalance,
     // Token,
+    ModalAlertBox,
     ModalAccount,
     ModalTransferAmount,
     ModalTransferToken,
@@ -116,6 +125,7 @@ export default defineComponent({
     const { balance } = useBalance(api, defaultAccount);
     provide('balance', balance);
 
+    const currentNetworkStatus = computed(() => store.getters.networkStatus);
     const currentAccountIdx = computed(() => store.getters.accountIdx);
 
     const completeTransfer = () => {
@@ -140,14 +150,21 @@ export default defineComponent({
 
     return {
       ...toRefs(stateModal),
+      isWeb3Injected,
       balance,
       allAccounts,
       allAccountNames,
       defaultAccount,
       defaultAccountName,
+      currentNetworkStatus,
       currentAccountIdx,
       completeTransfer,
     };
+  },
+  methods: {
+    isConnected(networkStatus: string) {
+      return networkStatus === 'connected';
+    },
   },
 });
 </script>

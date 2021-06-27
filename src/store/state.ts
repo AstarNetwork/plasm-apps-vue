@@ -6,12 +6,15 @@ export type AlertBox = {
   alertType: string;
 };
 
+export type ConnectionType = 'connected' | 'connecting' | 'offline';
+
 export type Theme = 'LIGHT' | 'DARK';
 
 export interface GeneralState extends StateContract {
   initialized: boolean;
   isLoading: boolean;
   alertBox: AlertBox;
+  currentNetworkStatus: ConnectionType;
   currentNetworkIdx: Number;
   currentAccountIdx: Number;
   currentCustomEndpoint: string;
@@ -26,6 +29,7 @@ export const state: GeneralState = {
     alertMsg: '',
     alertType: 'success',
   },
+  currentNetworkStatus: 'connecting',
   currentNetworkIdx: 0,
   currentAccountIdx: 0,
   currentCustomEndpoint: '',

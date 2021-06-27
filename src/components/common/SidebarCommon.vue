@@ -3,6 +3,10 @@
     <div class="flex items-center justify-center flex-shrink-0">
       <img class="w-10 h-10" src="@/assets/img/plasm.png" />
       <logotype />
+      <connection-indicator
+        class="pl-1 pt-4"
+        :connectionType="currentNetworkStatus"
+      />
     </div>
 
     <div class="p-4">
@@ -21,6 +25,36 @@
           <icon-solid-chevron-down />
         </icon-base>
       </button>
+
+      <!-- <button
+        type="button"
+        v-if="!isLocalChain"
+        @click="updateMetadata"
+        class="
+          my-3
+          inline-flex
+          justify-center
+          w-full
+          rounded-full
+          border border-gray-300
+          dark:border-darkGray-600
+          px-4
+          py-3
+          bg-white
+          dark:bg-darkGray-900
+          text-xs
+          font-medium
+          text-gray-700
+          dark:text-darkGray-100
+          hover:bg-gray-100
+          dark:hover:bg-darkGray-700
+          focus:outline-none
+          focus:ring focus:ring-gray-100
+          dark:focus:ring-darkGray-600
+        "
+      >
+        Update metadata
+      </button> -->
     </div>
 
     <nav class="flex-1">
@@ -196,6 +230,7 @@ import { useStore } from 'vuex';
 import { useAccount, useSidebar } from '@/hooks';
 import { providerEndpoints } from '@/config/chainEndpoints';
 import Logotype from './Logotype.vue';
+import ConnectionIndicator from './ConnectionIndicator.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
 import IconBase from '../icons/IconBase.vue';
@@ -210,6 +245,7 @@ import ModalNetwork from '@/components/balance/ModalNetwork.vue';
 export default defineComponent({
   components: {
     Logotype,
+    ConnectionIndicator,
     SocialMediaLinks,
     LightDarkMode,
     IconBase,
@@ -256,6 +292,7 @@ export default defineComponent({
       defaultAccountName.value = allAccountNames.value[currentAccountIdx.value];
     });
 
+    const currentNetworkStatus = computed(() => store.getters.networkStatus);
     const currentNetworkIdx = computed(() => store.getters.networkIdx);
     const currentNetworkName = ref(
       providerEndpoints[currentNetworkIdx.value].displayName
@@ -265,14 +302,21 @@ export default defineComponent({
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
     });
 
+    const isLocalChain = currentNetworkIdx.value == 2;
+
+    const updateMetadata = () => {};
+
     return {
       isOpen,
       modalNetwork,
       ...classes,
       shortenAddress,
       defaultAccountName,
+      currentNetworkStatus,
       currentNetworkIdx,
       currentNetworkName,
+      isLocalChain,
+      updateMetadata,
     };
   },
 });
