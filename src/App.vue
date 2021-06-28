@@ -81,6 +81,7 @@ export default defineComponent({
 
     if (networkIdx) {
       const favicon = providerEndpoints[parseInt(networkIdx)].favicon;
+
       useMeta({
         title: '',
         htmlAttrs: { lang: 'en', amp: true },

@@ -9,7 +9,7 @@
     </h1>
     <Tab
       :labels="[
-        { label: 'Astar', path: 'balance-plasm' },
+        { label: 'Wallet', path: 'balance-plasm' },
         //{ label: 'Cross-chain', path: 'cross-chain' },
       ]"
     />

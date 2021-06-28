@@ -61,8 +61,8 @@
         to="/balance"
         :class="[
           $route.path.split('/')[1] === 'balance'
-            ? activeLinkClass
-            : inactiveLinkClass,
+            ? 'activeLink'
+            : 'inactiveLink',
         ]"
         class="items-center justify-center"
         style="height: 104px"
@@ -71,8 +71,8 @@
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'balance'
-              ? activeSvgClass
-              : inactiveSvgClass,
+              ? 'activeSvg'
+              : 'inactiveSvg',
           ]"
           viewBox="0 0 24 24"
         >
@@ -96,17 +96,13 @@
       <router-link
         to="/dapps"
         :class="[
-          $route.path.split('/')[1] === 'dapps'
-            ? activeLinkClass
-            : inactiveLinkClass,
+          $route.path.split('/')[1] === 'dapps' ? 'activeLink' : 'inactiveLink',
         ]"
       >
         <!-- original icon -->
         <icon-base
           :class="[
-            $route.path.split('/')[1] === 'dapps'
-              ? activeSvgClass
-              : inactiveSvgClass,
+            $route.path.split('/')[1] === 'dapps' ? 'activeSvg' : 'inactiveSvg',
           ]"
           viewBox="0 0 24 24"
         >
@@ -120,15 +116,15 @@
         target="_blank"
         :class="[
           $route.path.split('/')[1] === 'lockdrop'
-            ? activeLinkClass
-            : inactiveLinkClass,
+            ? 'activeLink'
+            : 'inactiveLink',
         ]"
       >
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'lockdrop'
-              ? activeSvgClass
-              : inactiveSvgClass,
+              ? 'activeSvg'
+              : 'inactiveSvg',
           ]"
           iconColor="none"
           viewBox="0 0 24 24"
@@ -224,7 +220,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, watch } from 'vue';
+import { defineComponent, ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useAccount, useSidebar } from '@/hooks';
 import { providerEndpoints } from '@/config/chainEndpoints';
@@ -257,15 +253,6 @@ export default defineComponent({
   setup() {
     const { isOpen } = useSidebar();
     const modalNetwork = ref(false);
-    const classes = reactive({
-      activeLinkClass:
-        'bg-blue-200 dark:bg-blue-500 bg-opacity-20 dark:text-white text-blue-500 group flex px-4 py-6 border-r-4 border-blue-500 cursor-default',
-      inactiveLinkClass:
-        'text-gray-500 dark:text-darkGray-300 hover:text-gray-700 dark:hover:text-white group flex items-center px-4 py-6 text-sm font-medium',
-      activeSvgClass: 'text-blue-500 dark:text-white h-6 w-6',
-      inactiveSvgClass:
-        'text-gray-500 dark:text-darkGray-300 group-hover:text-gray-700 dark:group-hover:text-white h-6 w-6',
-    });
 
     const store = useStore();
 
@@ -306,7 +293,6 @@ export default defineComponent({
     return {
       isOpen,
       modalNetwork,
-      ...classes,
       shortenAddress,
       defaultAccountName,
       currentNetworkStatus,
@@ -318,3 +304,17 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+.activeLink {
+  @apply bg-blue-200 dark:bg-blue-500 bg-opacity-20 dark:text-white text-blue-500 group flex px-4 py-6 border-r-4 border-blue-500 cursor-default;
+}
+.inactiveLink {
+  @apply text-gray-500 dark:text-darkGray-300 hover:text-gray-700 dark:hover:text-white group flex items-center px-4 py-6 text-sm font-medium;
+}
+.activeSvg {
+  @apply text-blue-500 dark:text-white h-6 w-6;
+}
+.inactiveSvg {
+  @apply text-gray-500 dark:text-darkGray-300 group-hover:text-gray-700 dark:group-hover:text-white h-6 w-6;
+}
+</style>
