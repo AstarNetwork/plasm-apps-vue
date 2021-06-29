@@ -82,8 +82,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const { code } = toRefs(props);
 
-    console.log('aff', code.value);
-
     const shortenCodeHash = computed(() => {
       const codeHash = code.value.json.codeHash;
       return codeHash
