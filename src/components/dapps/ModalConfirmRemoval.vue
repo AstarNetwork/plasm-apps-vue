@@ -22,7 +22,7 @@
               removal
             </h3>
 
-            <div class="grid grid-cols-1 gap-6">
+            <div class="grid grid-cols-1 gap-6 dark:text-white">
               <div>
                 <div v-if="ctype === 'codehash'">
                   You are about to remove this code from your list of available

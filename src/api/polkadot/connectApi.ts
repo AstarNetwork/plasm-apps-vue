@@ -5,6 +5,8 @@ import { isTestChain } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 import * as typeDefs from '@plasm/types';
 import { RegistryTypes } from '@polkadot/types/types';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
 
 interface InjectedAccountExt {
   address: string;
@@ -35,6 +37,7 @@ const loadAccounts = async (api: ApiPromise) => {
       )
     ),
   ]);
+
   const isDevelopment = isTestChain(
     systemChain ? systemChain.toString() : '<unknown>'
   );
@@ -60,6 +63,10 @@ export async function connectApi(endpoint: string) {
     },
   });
 
+  const store = useStore();
+
+  store.commit(MutationTypes.SET_CURRENT_NETWORK_STATUS, 'connecting');
+
   try {
     await api.isReadyOrError;
   } catch (err) {
@@ -68,8 +75,12 @@ export async function connectApi(endpoint: string) {
 
   try {
     await loadAccounts(api);
+
+    store.commit(MutationTypes.SET_CURRENT_NETWORK_STATUS, 'connected');
   } catch (err) {
     console.error(err);
+
+    store.commit(MutationTypes.SET_CURRENT_NETWORK_STATUS, 'offline');
   }
 
   // load the web3 extension

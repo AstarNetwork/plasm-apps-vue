@@ -61,56 +61,11 @@
                 />
               </div>
 
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                >
-                  Amount
-                </label>
-                <div
-                  class="border border-gray-300 dark:border-darkGray-500 rounded-md relative"
-                >
-                  <div
-                    class="flex items-center border-b border-gray-300 dark:border-darkGray-500"
-                  >
-                    <div class="flex-1 pl-16">
-                      <input
-                        class="w-full text-blue-900 dark:text-darkGray-100 text-2xl focus:outline-none bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600"
-                        inputmode="decimal"
-                        type="number"
-                        min="0"
-                        pattern="^[0-9]*(\.)?[0-9]*$"
-                        placeholder="0.0"
-                        v-model="transferAmt"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      @click="setMaxAmount(formatBalance)"
-                      class="bg-blue-100 dark:bg-blue-200 hover:bg-blue-200 dark:hover:bg-blue-300 text-xs rounded-full px-3 py-2 text-blue-900 dark:text-darkGray-900 mx-3 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-300"
-                    >
-                      MAX
-                    </button>
-                    <div
-                      class="text-blue-900 dark:text-darkGray-100 text-lg border-l border-gray-300 dark:border-darkGray-500 px-3 py-4"
-                    >
-                      <select
-                        name="units"
-                        class="dark:bg-darkGray-900"
-                        v-model="selectUnit"
-                      >
-                        <option
-                          v-for="item in arrUnitNames"
-                          :key="item"
-                          :value="item"
-                        >
-                          {{ item }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <input-balance
+                :maxBalanceInDefaultUnit="formatBalance"
+                v-model:balance="transferAmt"
+                v-model:selectedUnit="selectUnit"
+              />
             </form>
           </div>
         </div>
@@ -143,14 +98,16 @@ import * as plasmUtils from '@/helper';
 import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { ActionTypes } from '@/store/action-types';
-import { getUnitNames, getUnit } from '@/helper/units';
+import { getUnit } from '@/helper/units';
 import ModalSelectAccount from '@/components/balance/ModalSelectAccount.vue';
 import FormatBalance from '@/components/balance/FormatBalance.vue';
+import InputBalance from '@/components/common/InputBalance.vue';
 
 export default defineComponent({
   components: {
     ModalSelectAccount,
     FormatBalance,
+    InputBalance,
   },
   props: {
     allAccounts: {
@@ -180,7 +137,7 @@ export default defineComponent({
     const fromAddress = ref('');
     const toAddress = ref('');
 
-    const arrUnitNames = getUnitNames(unitToken);
+    // const arrUnitNames = getUnitNames(unitToken);
     const selectUnit = ref(unitToken);
 
     const formatBalance = computed(() => {
@@ -284,14 +241,8 @@ export default defineComponent({
       openOption,
       transferAmt,
       unitToken,
-      arrUnitNames,
       selectUnit,
     };
-  },
-  methods: {
-    setMaxAmount(balance: number) {
-      this.transferAmt = balance;
-    },
   },
 });
 </script>

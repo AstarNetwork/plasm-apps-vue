@@ -9,6 +9,7 @@ export interface GeneralGetters extends GettersContract {
   initialized(state: State): boolean;
   isLoading(state: State): boolean;
   showAlert(state: State): AlertBox;
+  networkStatus(state: State): string;
   networkIdx(state: State): Number;
   accountIdx(state: State): Number;
   customEndpoint(state: State): string;
@@ -19,6 +20,7 @@ export const getters: GetterTree<State, State> & GeneralGetters = {
   initialized: (state) => state.initialized,
   isLoading: (state) => state.isLoading,
   showAlert: (state) => state.alertBox,
+  networkStatus: (state) => state.currentNetworkStatus,
   networkIdx: (state) => state.currentNetworkIdx,
   accountIdx: (state) => state.currentAccountIdx,
   customEndpoint: (state) => state.currentCustomEndpoint,

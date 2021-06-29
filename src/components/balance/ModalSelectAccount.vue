@@ -66,6 +66,7 @@ import { useStore } from 'vuex';
 
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
+import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 
 export default defineComponent({
@@ -73,6 +74,7 @@ export default defineComponent({
     ModalSelectAccountOption,
     IconBase,
     IconAccountSample,
+    IconSolidSelector,
   },
   props: {
     allAccounts: {
