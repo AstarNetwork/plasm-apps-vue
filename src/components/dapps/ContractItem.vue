@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
-  >
+  <div class="bg-white dark:bg-darkGray-800 shadow rounded-lg p-5">
     <div class="flex items-center -mx-5 px-4">
       <div
         class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-2"
@@ -27,21 +25,7 @@
         class="ml-auto tooltip p-3 rounded-full hover:bg-gray-100 dark:hover:bg-darkGray-600 focus:z-10 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 focus:bg-blue-50 dark:focus:bg-darkGray-900 relative group -mr-1"
         @click="copyAddress"
       >
-        <svg
-          class="text-blue-900 dark:text-darkGray-300 h-4 w-4"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-          />
-        </svg>
-        <!-- Tooltip -->
+        <icon-document-duplicate />
         <span
           class="pointer-events-none hidden absolute top-0 left-1/2 z-10 transform -translate-y-full -translate-x-1/2 p-2 text-xs leading-tight text-white bg-gray-800 dark:bg-darkGray-500 rounded-md shadow-lg"
         >
@@ -79,25 +63,28 @@
           />
         </div>
       </div>
+
       <div>
-        <div class="text-xs text-gray-500 dark:text-darkGray-400">
-          Code bundle name
-        </div>
+        <div class="text-xs text-gray-500 dark:text-darkGray-400">Messages</div>
         <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ contract.abi.json.contract.name }}
-        </div>
-      </div>
-      <div>
-        <div class="text-xs text-gray-500 dark:text-darkGray-400">
-          Contract ABI
-        </div>
-        <div class="text-xs text-blue-900 dark:text-darkGray-100">
-          {{ shortenAbi }}
+          <message
+            v-for="message in messages"
+            :message="message"
+            :key="message.identifier"
+          />
         </div>
       </div>
     </div>
 
     <div class="text-right">
+      <button
+        type="button"
+        class="inline-flex items-center rounded-full border border-blue-300 dark:border-darkBlue-500 px-3 py-2 bg-white dark:bg-darkBlue-800 text-xs font-medium hover:bg-blue-100 dark:hover:bg-darkBlue-700 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-darkBlue-600 text-gray-500 dark:text-darkBlue-400 mr-2"
+        @click="copyABI"
+      >
+        Copy ABI
+      </button>
+      <input type="hidden" id="hiddenAbi" :value="abi" />
       <button
         type="button"
         class="inline-flex items-center rounded-full border border-gray-300 dark:border-darkGray-500 px-3 py-2 bg-white dark:bg-darkGray-800 text-xs font-medium hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 text-gray-500 dark:text-darkGray-400"
@@ -109,12 +96,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, computed } from 'vue';
+import { ref, defineComponent, toRefs, computed } from 'vue';
 import { useStore } from 'vuex';
+import { useMessages } from '@/hooks';
 import { ActionTypes } from '@/store/action-types';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconDocumentDuplicate from '@/components/icons/IconDocumentDuplicate.vue';
+import Message from '@/components/dapps/Message.vue';
 import { ContractPromise } from '@polkadot/api-contract';
 
 export default defineComponent({
@@ -122,6 +111,7 @@ export default defineComponent({
     IconBase,
     IconAccountSample,
     IconDocumentDuplicate,
+    Message,
   },
   props: {
     contract: {
@@ -131,8 +121,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { contract } = toRefs(props);
-
-    // console.log('dfd', contract.value);
 
     const address = contract.value.address.toString();
 
@@ -150,13 +138,24 @@ export default defineComponent({
         : '';
     });
 
-    const shortenAbi = computed(() => {
-      // @ts-ignore
-      const abi = JSON.stringify(contract.value.abi.json);
-      return abi ? `${abi.slice(0, 24)}...` : '';
-    });
-
     const store = useStore();
+
+    const downloadURI = (uri: string, name: string) => {
+      var link = document.createElement('a');
+      link.download = name;
+      link.href = uri;
+      link.click();
+    };
+
+    const abiRef = ref(contract.value.abi);
+    const { messages } = useMessages(abiRef);
+
+    const abi = JSON.stringify(contract.value.abi.json);
+
+    const onExport = () => {
+      const abiData = 'text/json;charset=utf-8,' + encodeURIComponent(abi);
+      downloadURI(abiData, 'metadata.json');
+    };
 
     const onForget = () => {
       emit('confirmRemoval', contract.value.address.toString());
@@ -173,7 +172,9 @@ export default defineComponent({
       address,
       shortenAddress,
       shortenCodeHash,
-      shortenAbi,
+      abi,
+      messages,
+      onExport,
       onForget,
       showAlert,
     };
@@ -194,6 +195,9 @@ export default defineComponent({
     },
     copyCodeHash() {
       this.copy('#hiddenCodeHash', 'Copy codehash success!!');
+    },
+    copyABI() {
+      this.copy('#hiddenAbi', 'Copy ABI success!!');
     },
   },
 });
