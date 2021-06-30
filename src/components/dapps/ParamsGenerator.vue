@@ -74,12 +74,13 @@
         >
           <div class="mb-3 font-bold">
             {{ argString }}
-            {{ constructors[constructorIndex].args[i].type.info }}
-            {{ constructors[constructorIndex].args[i].type.type }}
+            <!-- info:{{ constructors[constructorIndex].args[i].type.info }}  -->
+            <!-- type:{{ constructors[constructorIndex].args[i].type.type }} -->
           </div>
           <input
             class="p-2 w-full text-blue-900 dark:text-darkGray-100 text-2xl bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600 bg-white dark:bg-darkGray-900 border border-gray-300 dark:border-darkGray-500 rounded-md pl-3 text-left focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-darkGray-600 hover:bg-gray-50 dark:hover:bg-darkGray-800"
             type="string"
+            :value="getValue(i)"
           />
           <!-- pattern="^[0-9]*(\.)?[0-9]*$" -->
         </div>
@@ -92,13 +93,14 @@
 import { getArgsString } from '@/helper/params';
 
 // import useAbi from '@/hooks/useAbi';
-import { defineComponent, PropType, ref, watch } from 'vue';
 import { MessageType } from '@/types/Message';
+import { defineComponent, PropType, ref, watchEffect } from 'vue';
 import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 import IconBase from '@/components/icons/IconBase.vue';
-import { Registry } from '@polkadot/types/types';
+// import { Registry } from '@polkadot/types/types';
 import { useApi } from '@/hooks';
-import { getParamValues, createValues } from '@/helper/params';
+import { getParamValues } from '@/helper/params';
+import BN from 'bn.js';
 
 export default defineComponent({
   props: {
@@ -119,6 +121,7 @@ export default defineComponent({
     //TODO use useAbi once it's fixed
     const constructorIndex = ref<number>(0);
     const openOption = ref<boolean>(false);
+    const initValues = ref<any>([]);
     const argsStrings = props.constructors
       .map(getArgsString)
       .map((argString) => (argString ? argString : ' '));
@@ -128,21 +131,60 @@ export default defineComponent({
     };
     const { api } = useApi();
 
-    watch([constructorIndex, api], () => {
+    watchEffect(() => {
       if (!api?.value?.registry) return;
-
-      const ps = getParamValues(
-        api?.value?.registry,
-        props.constructors[constructorIndex.value].args
-      );
-
-      console.log(ps, 'PARAMS');
+      props.constructors.forEach((_, i) => {
+        initValues.value.push(
+          getParamValues(api?.value?.registry, props.constructors[i].args)
+        );
+      });
     });
+
+    const getValue = (paramIndex: number) => {
+      const type =
+        props.constructors[constructorIndex.value].args[paramIndex].type.type;
+      const paramValues = initValues.value[constructorIndex.value];
+      switch (type) {
+        case 'AccountIndex':
+        case 'Balance':
+        case 'BalanceOf':
+        case 'BlockNumber':
+        case 'Compact':
+        case 'Gas':
+        case 'Index':
+        case 'Nonce':
+        case 'ParaId':
+        case 'PropIndex':
+        case 'ProposalIndex':
+        case 'ReferendumIndex':
+        case 'i8':
+        case 'i16':
+        case 'i32':
+        case 'i64':
+        case 'i128':
+        case 'u8':
+        case 'u16':
+        case 'u32':
+        case 'u64':
+        case 'u128':
+        case 'VoteIndex':
+          return (paramValues[paramIndex] as BN).toString();
+
+        case 'bool':
+          console.log(initValues.value[paramIndex]);
+          return paramValues[paramIndex];
+
+        default:
+          return '';
+      }
+    };
+
     return {
       constructorIndex,
       openOption,
       argsStrings,
       onSelectConstructor,
+      getValue,
     };
   },
 });
