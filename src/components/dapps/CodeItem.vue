@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
-  >
+  <div class="bg-white dark:bg-darkGray-800 shadow rounded-lg p-5">
     <p
       class="text-blue-900 dark:text-darkGray-100 text-lg font-bold leading-tight mb-3"
     >

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="bg-white dark:bg-darkGray-800 overflow-hidden shadow rounded-lg p-5"
-  >
+  <div class="bg-white dark:bg-darkGray-800 shadow rounded-lg p-5">
     <div class="flex items-center -mx-5 px-4">
       <div
         class="h-8 w-8 rounded-full overflow-hidden border border-gray-100 mr-2"
@@ -123,8 +121,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { contract } = toRefs(props);
-
-    console.log('cont', contract.value);
 
     const address = contract.value.address.toString();
 
