@@ -50,8 +50,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
-import { useAccount } from '@/hooks';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+  watch,
+  provide,
+} from 'vue';
+import { useAccount, useApi } from '@/hooks';
 import { useStore } from 'vuex';
 import { useMeta } from 'vue-meta';
 import IconPlus from '@/components/icons/IconPlus.vue';
@@ -102,6 +109,18 @@ export default defineComponent({
       },
       { immediate: true }
     );
+
+    // it should be refactored
+    const { api } = useApi();
+
+    const registry = api?.value?.registry;
+
+    const decimals = registry?.chainDecimals;
+    const tokens = registry?.chainTokens;
+    const decimal = (decimals || [])[0];
+    const unitToken = (tokens || [])[0];
+    provide('decimal', decimal);
+    provide('unitToken', unitToken);
 
     return {
       allAccounts,

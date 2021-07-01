@@ -26,6 +26,12 @@ export const reduceDenomToBalance = (
   return formatted;
 };
 
+export const convertToBalance = (bal: BN, unit: number) => {
+  const decPoint = new BN(10).pow(new BN(unit));
+  const formatted = decPoint.mul(bal);
+  return formatted;
+};
+
 export const isValidAddressPolkadotAddress = (address: string) => {
   try {
     encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));

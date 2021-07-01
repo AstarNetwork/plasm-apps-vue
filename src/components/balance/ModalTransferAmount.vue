@@ -61,9 +61,10 @@
                 />
               </div>
 
-              <input-balance
-                :maxBalanceInDefaultUnit="formatBalance"
-                v-model:balance="transferAmt"
+              <input-amount
+                title="Amount"
+                :maxInDefaultUnit="formatBalance"
+                v-model:amount="transferAmt"
                 v-model:selectedUnit="selectUnit"
               />
             </form>
@@ -101,13 +102,13 @@ import { ActionTypes } from '@/store/action-types';
 import { getUnit } from '@/helper/units';
 import ModalSelectAccount from '@/components/balance/ModalSelectAccount.vue';
 import FormatBalance from '@/components/balance/FormatBalance.vue';
-import InputBalance from '@/components/common/InputBalance.vue';
+import InputAmount from '@/components/common/InputAmount.vue';
 
 export default defineComponent({
   components: {
     ModalSelectAccount,
     FormatBalance,
-    InputBalance,
+    InputAmount,
   },
   props: {
     allAccounts: {
