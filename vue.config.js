@@ -14,4 +14,5 @@ module.exports = {
   pwa: {
     name: 'plasm-apps',
   },
+  publicPath: process.env.NODE_ENV === 'production' ? '/plasm-apps-vue/' : '/',
 };
