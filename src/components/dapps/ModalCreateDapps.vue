@@ -100,61 +100,21 @@
                   />
                 </div>
 
-                <!-- <div>
-                  <label
-                    class="
-                      block
-                      text-sm
-                      font-medium
-                      text-gray-500
-                      dark:text-darkGray-400
-                      mb-2
-                    "
-                  >
-                    Endowment (UNIT)
-                  </label>
-                  <input
-                    class="
-                      border border-gray-300
-                      dark:border-darkGray-500
-                      rounded-md
-                      w-full
-                      text-blue-900
-                      dark:text-darkGray-100
-                      focus:outline-none
-                      placeholder-gray-300
-                      dark:placeholder-darkGray-600
-                      px-3
-                      py-3
-                      appearance-none
-                      bg-white
-                      dark:bg-darkGray-900
-                    "
-                    placeholder=""
-                    v-model="endowment"
-                  />
-                </div> -->
-
                 <input-amount
                   title="Endowment"
                   :noMax="true"
                   :maxInDefaultUnit="endowment"
                   v-model:amount="endowment"
-                  v-model:selectedUnit="selectUnit"
+                  v-model:selectedUnit="selectUnitEndowment"
                 />
 
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Max gas allowed
-                  </label>
-                  <input
-                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                    placeholder=""
-                    v-model="weight"
-                  />
-                </div>
+                <input-amount
+                  title="Max gas allowed"
+                  :noMax="true"
+                  :maxInDefaultUnit="weight"
+                  v-model:amount="weight"
+                  v-model:selectedUnit="selectUnitGas"
+                />
               </div>
             </div>
 
@@ -282,7 +242,8 @@ export default defineComponent({
     const unitToken = inject('unitToken', '');
     const decimal = inject('decimal', 10);
 
-    const selectUnit = ref(unitToken);
+    const selectUnitEndowment = ref(unitToken);
+    const selectUnitGas = ref(unitToken);
 
     const formData = reactive<FormData>({
       endowment: bnToBn(plasmUtils.reduceDenomToBalance(27, 3, decimal)),
@@ -384,11 +345,17 @@ export default defineComponent({
         console.log('code', code);
         console.log('method', code.tx);
 
-        const unit = getUnit(selectUnit.value);
+        const unit = getUnit(selectUnitEndowment.value);
         const toEndowment = bnToBn(
           plasmUtils.convertToBalance(formData.endowment, unit)
         );
-        console.log('toEndowment', toEndowment.toString(10));
+        // console.log('toEndowment', toEndowment.toString(10));
+
+        const unit2 = getUnit(selectUnitGas.value);
+        const toWeight = bnToBn(
+          plasmUtils.convertToBalance(formData.weight, unit2)
+        );
+        // console.log('toWeight', toWeight.toString(10));
 
         const constructorIndex = 0;
         const params = abi?.value?.constructors[constructorIndex].args;
@@ -403,8 +370,8 @@ export default defineComponent({
           formData.endowment
             ? code.tx[abi.value?.constructors[constructorIndex].method](
                 {
-                  gasLimit: formData.weight,
-                  value: formData.endowment,
+                  gasLimit: toWeight,
+                  value: toEndowment,
                 },
                 ...arrValues
               )
@@ -488,11 +455,6 @@ export default defineComponent({
 
       const currentItem: QueueTx = txqueue[0];
 
-      ///sendRpc
-      // if (currentItem) {
-      //   await sendRpc(currentItem).catch(console.error);
-      // }
-
       const senderInfo: AddressProxy = {
         isMultiCall: false,
         isUnlockCached: false,
@@ -517,7 +479,8 @@ export default defineComponent({
       extensionFile,
       onDropFile,
       messages,
-      selectUnit,
+      selectUnitEndowment,
+      selectUnitGas,
     };
   },
 });
