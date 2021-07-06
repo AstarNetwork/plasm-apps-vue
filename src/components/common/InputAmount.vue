@@ -54,12 +54,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, inject } from 'vue';
-import {
-  setDefaultUnitName,
-  getUnitNames,
-  defaultUnitIndex,
-} from '@/helper/units';
+import { defineComponent, PropType } from 'vue';
+import { getUnitNames, defaultUnitIndex } from '@/helper/units';
 import BN from 'bn.js';
 export default defineComponent({
   props: {
@@ -72,9 +68,6 @@ export default defineComponent({
   },
   emits: ['update:amount', 'update:selectedUnit'],
   setup(props, { emit }) {
-    const defaultUnit = inject('unitToken', '');
-    setDefaultUnitName(defaultUnit);
-
     const arrUnitNames = getUnitNames();
     const setMaxAmount = () => {
       if (props.maxInDefaultUnit) {

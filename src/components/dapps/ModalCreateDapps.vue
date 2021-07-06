@@ -112,7 +112,6 @@
                   title="Max gas allowed"
                   :noMax="true"
                   :maxInDefaultUnit="weight"
-                  :fixUnit="true"
                   v-model:amount="weight"
                   v-model:selectedUnit="selectUnitGas"
                 />
@@ -163,11 +162,11 @@
 import {
   defineComponent,
   ref,
+  Ref,
   watch,
   computed,
   reactive,
   toRefs,
-  inject,
 } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
@@ -186,7 +185,7 @@ import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { keyring } from '@polkadot/ui-keyring';
-import { useApi, useMessages, useWasm } from '@/hooks';
+import { useApi, useMessages, useWasm, useChainMetadata } from '@/hooks';
 import { useFile, FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
@@ -239,11 +238,10 @@ export default defineComponent({
 
     const openOption = ref(false);
 
-    const unitToken = inject('unitToken', '');
-    const decimal = inject('decimal', 12);
+    const { defaultUnitToken, decimal } = useChainMetadata();
 
-    const selectUnitEndowment = ref(unitToken);
-    const selectUnitGas = ref('micro');
+    const selectUnitEndowment: Ref<string> = ref(defaultUnitToken.value);
+    const selectUnitGas: Ref<string> = ref('micro');
 
     const formData = reactive<FormData>({
       endowment: new BN(27000),
@@ -346,7 +344,7 @@ export default defineComponent({
         const toEndowment = plasmUtils.reduceDenomToBalance(
           formData.endowment,
           unit,
-          decimal
+          decimal.value
         );
         console.log('toEndowment', toEndowment.toString(10));
 
@@ -354,7 +352,7 @@ export default defineComponent({
         const toWeight = plasmUtils.reduceDenomToBalance(
           formData.weight,
           unit2,
-          decimal
+          decimal.value
         );
         console.log('toWeight', toWeight.toString(10));
 

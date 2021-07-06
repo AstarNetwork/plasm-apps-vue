@@ -16,7 +16,7 @@
             <h3
               class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
             >
-              Transfer {{ unitToken }}
+              Transfer {{ defaultUnitToken }}
             </h3>
 
             <button
@@ -24,7 +24,7 @@
               class="w-full bg-blue-500 dark:bg-blue-800 text-white rounded-lg px-5 py-5 mb-4 relative hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400"
             >
               <span class="block text-left font-bold text-sm mb-2"
-                >{{ unitToken }} Balance</span
+                >{{ defaultUnitToken }} Balance</span
               >
               <span class="block font-semibold text-2xl mb-1"
                 ><format-balance
@@ -91,9 +91,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, ref } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import BN from 'bn.js';
-import { useApi } from '@/hooks';
+import { useApi, useChainMetadata } from '@/hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import * as plasmUtils from '@/helper';
 import { useStore } from 'vuex';
@@ -131,18 +131,16 @@ export default defineComponent({
 
     const openOption = ref(false);
 
-    const unitToken = inject('unitToken', '');
-    const decimal = inject('decimal', 10);
+    const { defaultUnitToken, decimal } = useChainMetadata();
 
     const transferAmt = ref(new BN(0));
     const fromAddress = ref('');
     const toAddress = ref('');
 
-    // const arrUnitNames = getUnitNames(unitToken);
-    const selectUnit = ref(unitToken);
+    const selectUnit = ref(defaultUnitToken.value);
 
     const formatBalance = computed(() => {
-      const tokenDecimal = decimal;
+      const tokenDecimal = decimal.value;
       return plasmUtils.reduceBalanceToDenom(
         props.balance.clone(),
         tokenDecimal
@@ -184,7 +182,7 @@ export default defineComponent({
         const toAmt = plasmUtils.reduceDenomToBalance(
           transferAmt,
           unit,
-          decimal
+          decimal.value
         );
         console.log('toAmt', toAmt.toString(10));
 
@@ -241,7 +239,7 @@ export default defineComponent({
       toAddress,
       openOption,
       transferAmt,
-      unitToken,
+      defaultUnitToken,
       selectUnit,
     };
   },
