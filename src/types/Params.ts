@@ -1,4 +1,4 @@
-import type { Registry, TypeDef } from '@polkadot/types/types';
+import type { TypeDefInfo, TypeDef } from '@polkadot/types/types';
 
 // FIXME Ideally, we want these as Base from api-codec - as a stop-gap, any this until we have
 // params returning types extending Base (i.e. anything from api-codec)
@@ -29,3 +29,14 @@ export interface ParamDef {
   name?: string;
   type: TypeDef;
 }
+
+///////////////////////////////////////////////////////////
+// the types below are not from polkadot app
+
+export type Param = {
+  type: string;
+  info: TypeDefInfo;
+  value: ParamValue;
+};
+
+export type ParamValue = string | { balance: string; unit: string };
