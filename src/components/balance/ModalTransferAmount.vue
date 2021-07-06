@@ -134,7 +134,7 @@ export default defineComponent({
     const unitToken = inject('unitToken', '');
     const decimal = inject('decimal', 10);
 
-    const transferAmt = ref(0);
+    const transferAmt = ref(new BN(0));
     const fromAddress = ref('');
     const toAddress = ref('');
 
@@ -153,11 +153,11 @@ export default defineComponent({
     const store = useStore();
 
     const transfer = async (
-      transferAmt: number,
+      transferAmt: BN,
       fromAddress: string,
       toAddress: string
     ) => {
-      console.log('transfer', transferAmt);
+      console.log('transfer', transferAmt.toString(10));
       console.log('fromAccount', fromAddress);
       console.log('toAccount', toAddress);
       console.log('selUnit', selectUnit.value);

@@ -112,6 +112,7 @@
                   title="Max gas allowed"
                   :noMax="true"
                   :maxInDefaultUnit="weight"
+                  :fixUnit="true"
                   v-model:amount="weight"
                   v-model:selectedUnit="selectUnitGas"
                 />
@@ -191,7 +192,6 @@ import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
 import { AnyJson } from '@polkadot/types/types';
 import { AddressProxy } from '@/types/Signer';
-import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
@@ -240,14 +240,14 @@ export default defineComponent({
     const openOption = ref(false);
 
     const unitToken = inject('unitToken', '');
-    const decimal = inject('decimal', 10);
+    const decimal = inject('decimal', 12);
 
     const selectUnitEndowment = ref(unitToken);
-    const selectUnitGas = ref(unitToken);
+    const selectUnitGas = ref('micro');
 
     const formData = reactive<FormData>({
-      endowment: bnToBn(plasmUtils.reduceDenomToBalance(27, 3, decimal)),
-      weight: new BN(200000000000),
+      endowment: new BN(27000),
+      weight: new BN(200000),
       projectName: '',
       projectDesc: '',
       webpage: '',
@@ -325,8 +325,8 @@ export default defineComponent({
 
       const abiData = abi.value as Abi | AnyJson;
 
-      console.log('s', abiData);
-      console.log('w', wasm.value);
+      // console.log('s', abiData);
+      // console.log('w', wasm.value);
 
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
 
@@ -340,22 +340,23 @@ export default defineComponent({
         // );
         // const weight = new BN(200000000000);
         ///
-        console.log('weight', formData.weight);
-
         console.log('code', code);
-        console.log('method', code.tx);
 
         const unit = getUnit(selectUnitEndowment.value);
-        const toEndowment = bnToBn(
-          plasmUtils.convertToBalance(formData.endowment, unit)
+        const toEndowment = plasmUtils.reduceDenomToBalance(
+          formData.endowment,
+          unit,
+          decimal
         );
-        // console.log('toEndowment', toEndowment.toString(10));
+        console.log('toEndowment', toEndowment.toString(10));
 
         const unit2 = getUnit(selectUnitGas.value);
-        const toWeight = bnToBn(
-          plasmUtils.convertToBalance(formData.weight, unit2)
+        const toWeight = plasmUtils.reduceDenomToBalance(
+          formData.weight,
+          unit2,
+          decimal
         );
-        // console.log('toWeight', toWeight.toString(10));
+        console.log('toWeight', toWeight.toString(10));
 
         const constructorIndex = 0;
         const params = abi?.value?.constructors[constructorIndex].args;

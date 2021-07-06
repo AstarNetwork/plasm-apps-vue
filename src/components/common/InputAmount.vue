@@ -35,6 +35,7 @@
           class="text-blue-900 dark:text-darkGray-100 text-lg border-l border-gray-300 dark:border-darkGray-500 px-3 py-4"
         >
           <select
+            v-if="!fixUnit"
             name="units"
             class="dark:bg-darkGray-900"
             :value="selectedUnit"
@@ -44,26 +45,37 @@
               {{ item }}
             </option>
           </select>
+          <div v-else>
+            {{ selectedUnit }}
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { getUnitNames, defaultUnitIndex } from '@/helper/units';
+import { defineComponent, PropType, inject } from 'vue';
+import {
+  setDefaultUnitName,
+  getUnitNames,
+  defaultUnitIndex,
+} from '@/helper/units';
 import BN from 'bn.js';
 export default defineComponent({
   props: {
     title: { type: String },
     noMax: { type: Boolean },
-    selectedUnit: { type: String, required: true },
+    selectedUnit: { type: String },
     maxInDefaultUnit: Object as PropType<BN>,
+    fixUnit: { type: Boolean, default: false },
     amount: { required: true, type: Object as PropType<BN> },
   },
   emits: ['update:amount', 'update:selectedUnit'],
   setup(props, { emit }) {
-    const arrUnitNames = getUnitNames(props.selectedUnit);
+    const defaultUnit = inject('unitToken', '');
+    setDefaultUnitName(defaultUnit);
+
+    const arrUnitNames = getUnitNames();
     const setMaxAmount = () => {
       if (props.maxInDefaultUnit) {
         emit('update:selectedUnit', arrUnitNames[defaultUnitIndex]);
