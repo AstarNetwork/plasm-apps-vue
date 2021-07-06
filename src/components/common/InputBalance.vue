@@ -5,7 +5,7 @@
     <div
       class="flex items-center border-b border-gray-300 dark:border-darkGray-500"
     >
-      <div class="flex-1 pl-16">
+      <div class="flex-1 pl-4">
         <input
           class="w-full text-blue-900 dark:text-darkGray-100 text-2xl focus:outline-none bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600"
           inputmode="decimal"
