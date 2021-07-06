@@ -68,7 +68,7 @@
               <input-balance
                 :maxBalanceInDefaultUnit="formatBalance"
                 v-model:balance="transferAmt"
-                v-model:selectedUnit="selectUnit"
+                v-model:unit="selectUnit"
               />
             </form>
           </div>

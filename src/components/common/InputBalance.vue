@@ -14,7 +14,7 @@
           pattern="^[0-9]*(\.)?[0-9]*$"
           placeholder="0.0"
           :value="balance"
-          @input="$emit('update:balance', $event.target.value)"
+          @input="update($event.target.value, unit)"
         />
       </div>
       <button
@@ -31,8 +31,8 @@
         <select
           name="units"
           class="dark:bg-darkGray-900"
-          :value="selectedUnit"
-          @change="$emit('update:selectedUnit', $event.target.value)"
+          :value="unit"
+          @change="update(balance, $event.target.value)"
         >
           <option v-for="item in arrUnitNames" :key="item" :value="item">
             {{ item }}
@@ -48,20 +48,25 @@ import { getUnitNames, defaultUnitIndex } from '@/helper/units';
 import BN from 'bn.js';
 export default defineComponent({
   props: {
-    selectedUnit: { type: String, required: true },
+    unit: { type: String, required: true },
     maxBalanceInDefaultUnit: Object as PropType<BN>,
     balance: { required: true, type: Object as PropType<BN> },
   },
-  emits: ['update:balance', 'update:selectedUnit'],
+  emits: ['update:balance', 'update:unit', 'input'],
   setup(props, { emit }) {
-    const arrUnitNames = getUnitNames(props.selectedUnit);
+    const arrUnitNames = getUnitNames(props.unit);
     const setMaxAmount = () => {
       if (props.maxBalanceInDefaultUnit) {
-        emit('update:selectedUnit', arrUnitNames[defaultUnitIndex]);
         emit('update:balance', props.maxBalanceInDefaultUnit);
+        emit('update:unit', arrUnitNames[defaultUnitIndex]);
       }
     };
-    return { arrUnitNames, setMaxAmount };
+    const update = (balance: number, unit: string) => {
+      emit('update:balance', balance);
+      emit('update:unit', unit);
+      emit('input', { balance, unit });
+    };
+    return { arrUnitNames, setMaxAmount, update };
   },
 });
 </script>
