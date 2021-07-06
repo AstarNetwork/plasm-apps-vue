@@ -60,7 +60,11 @@
                   v-model:selAddress="toAddress"
                 />
               </div>
-
+              <label
+                class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
+              >
+                Amount
+              </label>
               <input-balance
                 :maxBalanceInDefaultUnit="formatBalance"
                 v-model:balance="transferAmt"
