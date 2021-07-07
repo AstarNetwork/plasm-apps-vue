@@ -16,7 +16,7 @@
             <h3
               class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
             >
-              Transfer {{ unitToken }}
+              Transfer {{ defaultUnitToken }}
             </h3>
 
             <button
@@ -24,7 +24,7 @@
               class="w-full bg-blue-500 dark:bg-blue-800 text-white rounded-lg px-5 py-5 mb-4 relative hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400"
             >
               <span class="block text-left font-bold text-sm mb-2"
-                >{{ unitToken }} Balance</span
+                >{{ defaultUnitToken }} Balance</span
               >
               <span class="block font-semibold text-2xl mb-1"
                 ><format-balance
@@ -60,15 +60,12 @@
                   v-model:selAddress="toAddress"
                 />
               </div>
-              <label
-                class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-              >
-                Amount
-              </label>
-              <input-balance
-                :maxBalanceInDefaultUnit="formatBalance"
-                v-model:balance="transferAmt"
-                v-model:unit="selectUnit"
+
+              <input-amount
+                title="Amount"
+                :maxInDefaultUnit="formatBalance"
+                v-model:amount="transferAmt"
+                v-model:selectedUnit="selectUnit"
               />
             </form>
           </div>
@@ -94,9 +91,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, ref } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import BN from 'bn.js';
-import { useApi } from '@/hooks';
+import { useApi, useChainMetadata } from '@/hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import * as plasmUtils from '@/helper';
 import { useStore } from 'vuex';
@@ -105,13 +102,13 @@ import { ActionTypes } from '@/store/action-types';
 import { getUnit } from '@/helper/units';
 import ModalSelectAccount from '@/components/balance/ModalSelectAccount.vue';
 import FormatBalance from '@/components/balance/FormatBalance.vue';
-import InputBalance from '@/components/common/InputBalance.vue';
+import InputAmount from '@/components/common/InputAmount.vue';
 
 export default defineComponent({
   components: {
     ModalSelectAccount,
     FormatBalance,
-    InputBalance,
+    InputAmount,
   },
   props: {
     allAccounts: {
@@ -134,18 +131,16 @@ export default defineComponent({
 
     const openOption = ref(false);
 
-    const unitToken = inject('unitToken', '');
-    const decimal = inject('decimal', 10);
+    const { defaultUnitToken, decimal } = useChainMetadata();
 
-    const transferAmt = ref(0);
+    const transferAmt = ref(new BN(0));
     const fromAddress = ref('');
     const toAddress = ref('');
 
-    // const arrUnitNames = getUnitNames(unitToken);
-    const selectUnit = ref(unitToken);
+    const selectUnit = ref(defaultUnitToken.value);
 
     const formatBalance = computed(() => {
-      const tokenDecimal = decimal;
+      const tokenDecimal = decimal.value;
       return plasmUtils.reduceBalanceToDenom(
         props.balance.clone(),
         tokenDecimal
@@ -156,11 +151,11 @@ export default defineComponent({
     const store = useStore();
 
     const transfer = async (
-      transferAmt: number,
+      transferAmt: BN,
       fromAddress: string,
       toAddress: string
     ) => {
-      console.log('transfer', transferAmt);
+      console.log('transfer', transferAmt.toString(10));
       console.log('fromAccount', fromAddress);
       console.log('toAccount', toAddress);
       console.log('selUnit', selectUnit.value);
@@ -187,7 +182,7 @@ export default defineComponent({
         const toAmt = plasmUtils.reduceDenomToBalance(
           transferAmt,
           unit,
-          decimal
+          decimal.value
         );
         console.log('toAmt', toAmt.toString(10));
 
@@ -244,7 +239,7 @@ export default defineComponent({
       toAddress,
       openOption,
       transferAmt,
-      unitToken,
+      defaultUnitToken,
       selectUnit,
     };
   },

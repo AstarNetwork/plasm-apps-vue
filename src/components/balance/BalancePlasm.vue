@@ -105,20 +105,8 @@ export default defineComponent({
       defaultAccount,
       defaultAccountName,
     } = useAccount();
-    // const defaultAccount = ref(
-    //   'Wh2nf6F5ZNJguoQu22Z361xo6VFqX1Y2BuQMcJBSJxERh5E'
-    // );
 
     const { api } = useApi();
-
-    const registry = api?.value?.registry;
-
-    const decimals = registry?.chainDecimals;
-    const tokens = registry?.chainTokens;
-    const decimal = (decimals || [])[0];
-    const unitToken = (tokens || [])[0];
-    provide('decimal', decimal);
-    provide('unitToken', unitToken);
 
     const store = useStore();
 

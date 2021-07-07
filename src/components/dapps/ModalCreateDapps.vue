@@ -88,45 +88,7 @@
                       />
                     </ul>
                   </div>
-
-                  <!-- <div
-                    class="absolute mt-1 w-full rounded-md bg-white dark:bg-darkGray-800 shadow-lg z-10 border border-gray-200 dark:border-darkGray-600"
-                  >
-                    <ul
-                      class="max-h-56 rounded-md py-1 text-base overflow-auto focus:outline-none"
-                    >
-                      <deployment-account-select-option />
-                      <deployment-account-select-option />
-                      <deployment-account-select-option />
-                      <deployment-account-select-option />
-                      <deployment-account-select-option />
-                      <deployment-account-select-option />
-                    </ul>
-                  </div> -->
                 </div>
-
-                <!-- <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Project web page
-                  </label>
-                  <div class="flex rounded-md">
-                    <span
-                      class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 dark:border-darkGray-500 bg-gray-50 dark:bg-darkGray-800 text-gray-500 dark:text-darkGray-400 text-sm"
-                    >
-                      https://
-                    </span>
-                    <input
-                      type="text"
-                      name="company_website"
-                      id="company_website"
-                      class="border border-gray-300 dark:border-darkGray-500 rounded-r-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                      placeholder="www.example.com"
-                      v-model="webpage"
-                    />
-                  </div>
-                </div> -->
 
                 <div>
                   <label
@@ -141,141 +103,26 @@
                   />
                 </div>
 
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Endowment (UNIT)
-                  </label>
-                  <input
-                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                    placeholder=""
-                    v-model="endowment"
-                  />
-                  <!-- <select
-                      name="units"
-                      class="dark:bg-darkGray-900"
-                      v-model="selectUnit"
-                    >
-                      <option
-                        v-for="item in arrUnitNames"
-                        :key="item"
-                        :value="item"
-                      >
-                        {{ item }}
-                      </option>
-                    </select> -->
-                </div>
+                <input-amount
+                  title="Endowment"
+                  :noMax="true"
+                  :maxInDefaultUnit="endowment"
+                  v-model:amount="endowment"
+                  v-model:selectedUnit="selectUnitEndowment"
+                />
 
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Max gas allowed
-                  </label>
-                  <input
-                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                    placeholder=""
-                    v-model="weight"
-                  />
-                </div>
-
-                <!-- <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Project description
-                  </label>
-                  <textarea
-                    rows="3"
-                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                    v-model="projectDesc"
-                  ></textarea>
-                </div>
-
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Category
-                  </label>
-
-                  <div class="relative">
-                    <div
-                      class="block absolute mt-1 w-full rounded-md bg-white dark:bg-darkGray-800 shadow-lg z-10 bottom-1 border border-gray-200 dark:border-darkGray-600"
-                    >
-                      <ul
-                        class="max-h-56 rounded-md py-1 text-base overflow-auto focus:outline-none"
-                      >
-                        <li
-                          role="option"
-                          class="text-blue-900 dark:text-darkGray-100 py-2 px-3 hover:bg-gray-50 dark:hover:bg-darkGray-700 text-sm cursor-pointer"
-                        >
-                          Suggestion
-                        </li>
-                        <li
-                          role="option"
-                          class="text-blue-900 dark:text-darkGray-100 py-2 px-3 hover:bg-gray-50 dark:hover:bg-darkGray-700 text-sm cursor-pointer"
-                        >
-                          Suggestion
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <input
-                    class="border border-gray-300 dark:border-darkGray-500 rounded-md w-full text-blue-900 dark:text-darkGray-100 focus:outline-none placeholder-gray-300 dark:placeholder-darkGray-600 px-3 py-3 appearance-none bg-white dark:bg-darkGray-900"
-                    placeholder=""
-                    value=""
-                  />
-
-                  <div class="flex flex-wrap mt-2">
-                    <category-multi-select />
-                    <category-multi-select />
-                    <category-multi-select />
-                    <category-multi-select />
-                  </div>
-                </div> -->
+                <input-amount
+                  title="Max gas allowed"
+                  :noMax="true"
+                  :maxInDefaultUnit="weight"
+                  v-model:amount="weight"
+                  v-model:selectedUnit="selectUnitGas"
+                />
               </div>
             </div>
 
             <div class="sm:w-1/2">
               <div class="grid grid-cols-1 gap-6">
-                <!-- <div>
-                  <label
-                    class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
-                  >
-                    Top picture
-                  </label>
-                  <div
-                    class="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-darkGray-500 border-dashed rounded-md bg-blue-50 dark:bg-darkGray-800"
-                  >
-                    <div class="space-y-1 text-center">
-                      <icon-top-picture />
-                      <div
-                        class="flex text-sm text-gray-500 dark:text-darkGray-400"
-                      >
-                        <label
-                          for="file-upload"
-                          class="relative cursor-pointer rounded-md font-medium text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 focus-within:ring-offset-none"
-                        >
-                          <span>Upload a file</span>
-                          <input
-                            id="file-upload"
-                            name="file-upload"
-                            type="file"
-                            class="sr-only"
-                          />
-                        </label>
-                        <p class="pl-1">or drag and drop</p>
-                      </div>
-                      <p class="text-xs text-gray-500 dark:text-darkGray-400">
-                        PNG, JPG, GIF up to 00MB
-                      </p>
-                    </div>
-                  </div>
-                </div> -->
-
                 <div>
                   <label
                     class="block text-sm font-medium text-gray-500 dark:text-darkGray-400 mb-2"
@@ -350,7 +197,7 @@
               @click="step = 1"
               class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
             >
-              previoius page
+              previoius step
             </button>
             <button
               type="button"
@@ -370,29 +217,26 @@ import { defineComponent, ref, watch, computed, reactive, toRefs } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
-// import IconDocument from '@/components/icons/IconDocument.vue';
-// import IconTopPicture from '@/components/icons/IconTopPicture.vue';
-// import DeploymentAccountSelectOption from '@/components/dapps/DeploymentAccountSelectOption.vue';
+
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
 import type { QueueTx } from '@/types/Status';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
-// import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
+import InputAmount from '@/components/common/InputAmount.vue';
 import { stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { keyring } from '@polkadot/ui-keyring';
-import { useApi, useMessages, useWasm } from '@/hooks';
+import { useApi, useMessages, useWasm, useChainMetadata } from '@/hooks';
 import { useFile, FileState } from '@/hooks/useFile';
 import useAbi from '@/hooks/useAbi';
 import useSendTx from '@/hooks/signer/useSendTx';
 import { AnyJson } from '@polkadot/types/types';
 import { AddressProxy } from '@/types/Signer';
-import { bnToBn } from '@polkadot/util';
 import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
@@ -401,6 +245,7 @@ import ParamsGenerator from './ParamsGenerator.vue';
 import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useStore } from 'vuex';
 import { Param } from '@/types/Params';
+import { getUnit } from '@/helper/units';
 
 interface FormData {
   endowment: BN;
@@ -415,14 +260,11 @@ export default defineComponent({
     IconBase,
     IconAccountSample,
     IconSolidSelector,
-    // IconDocument,
-    // IconTopPicture,
-    // DeploymentAccountSelectOption,
     ModalSelectAccountOption,
-    // CategoryMultiSelect,
     InputFile,
     ContractInfo,
     ParamsGenerator,
+    InputAmount,
   },
   props: {
     allAccounts: {
@@ -445,12 +287,14 @@ export default defineComponent({
 
     const openOption = ref(false);
 
-    const unit_d = 3;
-    const decimal = 12;
+    const { defaultUnitToken, decimal } = useChainMetadata();
+
+    const selectUnitEndowment = ref<string>(defaultUnitToken.value);
+    const selectUnitGas = ref<string>('micro');
 
     const formData = reactive<FormData>({
-      endowment: bnToBn(plasmUtils.reduceDenomToBalance(27, unit_d, decimal)),
-      weight: new BN(200000000000),
+      endowment: new BN(27000),
+      weight: new BN(200000),
       projectName: '',
       projectDesc: '',
       webpage: '',
@@ -528,8 +372,8 @@ export default defineComponent({
 
       const abiData = abi.value as Abi | AnyJson;
 
-      console.log('s', abiData);
-      console.log('w', wasm.value);
+      // console.log('s', abiData);
+      // console.log('w', wasm.value);
 
       let uploadTx: SubmittableExtrinsic<'promise'> | null = null;
 
@@ -543,11 +387,23 @@ export default defineComponent({
         // );
         // const weight = new BN(200000000000);
         ///
-        console.log('endowment', formData.endowment);
-        console.log('weight', formData.weight);
-
         console.log('code', code);
-        console.log('method', code.tx);
+
+        const unit = getUnit(selectUnitEndowment.value);
+        const toEndowment = plasmUtils.reduceDenomToBalance(
+          formData.endowment,
+          unit,
+          decimal.value
+        );
+        console.log('toEndowment', toEndowment.toString(10));
+
+        const unit2 = getUnit(selectUnitGas.value);
+        const toWeight = plasmUtils.reduceDenomToBalance(
+          formData.weight,
+          unit2,
+          decimal.value
+        );
+        console.log('toWeight', toWeight.toString(10));
 
         const constructorIndex = 0;
         const params = abi?.value?.constructors[constructorIndex].args;
@@ -562,8 +418,8 @@ export default defineComponent({
           formData.endowment
             ? code.tx[abi.value?.constructors[constructorIndex].method](
                 {
-                  gasLimit: formData.weight,
-                  value: formData.endowment,
+                  gasLimit: toWeight,
+                  value: toEndowment,
                 },
                 ...arrValues
               )
@@ -647,11 +503,6 @@ export default defineComponent({
 
       const currentItem: QueueTx = txqueue[0];
 
-      ///sendRpc
-      // if (currentItem) {
-      //   await sendRpc(currentItem).catch(console.error);
-      // }
-
       const senderInfo: AddressProxy = {
         isMultiCall: false,
         isUnlockCached: false,
@@ -696,9 +547,10 @@ export default defineComponent({
       messages,
       step,
       canMoveToStep2,
-
       constructorIndex,
       params,
+      selectUnitEndowment,
+      selectUnitGas,
     };
   },
 });

@@ -14,8 +14,11 @@ const arrUnitNames = [
   'Tril',
 ];
 
-export const getUnitNames = (defaultName: string) => {
+export const setDefaultUnitName = (defaultName: string) => {
   arrUnitNames[defaultUnitIndex] = defaultName;
+};
+
+export const getUnitNames = () => {
   return arrUnitNames;
 };
 

@@ -7,3 +7,4 @@ export * from './useContracts';
 export * from './useFile';
 export * from './useMessages';
 export * from './useWasm';
+export * from './useChainMetadata';

@@ -77,10 +77,10 @@
           <div class="mb-3 font-bold">
             {{ argString }}
           </div>
-          <input-balance
+          <input-amount
             v-if="isBalanceType(paramIndex)"
-            v-model:balance="balance"
-            v-model:unit="unit"
+            v-model:amount="balance"
+            v-model:selectedUnit="unit"
             @input="updateParam({ balance, unit }, paramIndex)"
           />
           <input
@@ -105,7 +105,7 @@ import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import { useApi } from '@/hooks';
 import { getParamValues } from '@/helper/params';
-import InputBalance from '@/components/common/InputBalance.vue';
+import InputAmount from '@/components/common/InputAmount.vue';
 
 export default defineComponent({
   props: {
@@ -125,7 +125,7 @@ export default defineComponent({
   components: {
     IconBase,
     IconSolidSelector,
-    InputBalance,
+    InputAmount,
   },
   setup(props, { emit }) {
     const openOption = ref<boolean>(false);
