@@ -7,17 +7,18 @@ interface ogMeta {
 export const opengraphMeta: ogMeta[] = [
   {
     property: 'og:title',
-    content: 'Plasm Apps Portal',
+    content: 'Astar Portal',
     vmid: 'og:title',
   },
   {
     property: 'og:description',
-    content: 'Plasm Apps Portal',
+    content:
+      'All in one Astar portal that allows you to transfer your token and manage your application.',
     vmid: 'og:description',
   },
   {
     property: 'og:site_name',
-    content: 'Plasm Apps Portal',
+    content: 'Astar Portal',
     vmid: 'og:site_name',
   },
   {

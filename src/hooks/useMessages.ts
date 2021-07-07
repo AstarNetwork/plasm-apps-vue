@@ -9,7 +9,6 @@ export function useMessages(abi: any) {
     abi,
     () => {
       if (abi?.value?.constructors && abi?.value?.messages) {
-        console.log('abi', abi.value);
         const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
           return {
             index: e.index,

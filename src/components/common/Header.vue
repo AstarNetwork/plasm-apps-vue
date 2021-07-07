@@ -19,8 +19,7 @@
     </button>
 
     <div class="flex items-center justify-center">
-      <img class="w-8 h-8 sm:w-10 sm:h-10" src="@/assets/img/plasm.png" />
-      <logotype />
+      <img width="200" src="@/assets/img/astar.png" />
     </div>
 
     <button
@@ -41,10 +40,8 @@ import IconBase from '../icons/IconBase.vue';
 import IconOutlineMenu from '../icons/IconOutlineMenu.vue';
 import IconAccountSample from '../icons/IconAccountSample.vue';
 
-import Logotype from './Logotype.vue';
-
 export default defineComponent({
-  components: { Logotype, IconBase, IconOutlineMenu, IconAccountSample },
+  components: { IconBase, IconOutlineMenu, IconAccountSample },
   setup() {
     const { isOpen } = useSidebar();
     return {

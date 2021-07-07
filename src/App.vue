@@ -1,21 +1,30 @@
 <template>
   <metainfo>
     <template v-slot:title="{ content }">{{
-      content ? `${content} | Plasm Apps Portal` : `Plasm Apps Portal`
+      content ? `${content} | Astar Apps Portal` : `Astar Apps Portal`
     }}</template>
   </metainfo>
-  <Suspense>
-    <template #default>
-      <api-loader>
-        <component :is="layout">
-          <router-view />
-        </component>
-      </api-loader>
-    </template>
-    <template #fallback>
-      <spinner />
-    </template>
-  </Suspense>
+
+  <component :is="layout">
+    <router-view v-slot="{ Component }">
+      <template v-if="Component">
+        <transition name="fade" mode="out-in">
+          <keep-alive>
+            <Suspense>
+              <template #default>
+                <api-loader>
+                  <component :is="Component"></component>
+                </api-loader>
+              </template>
+              <template #fallback>
+                <modal-loading />
+              </template>
+            </Suspense>
+          </keep-alive>
+        </transition>
+      </template>
+    </router-view>
+  </component>
 
   <modal-loading v-if="isLoading" />
 
@@ -72,6 +81,7 @@ export default defineComponent({
 
     if (networkIdx) {
       const favicon = providerEndpoints[parseInt(networkIdx)].favicon;
+
       useMeta({
         title: '',
         htmlAttrs: { lang: 'en', amp: true },

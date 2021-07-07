@@ -24,7 +24,8 @@ export default defineComponent({
           });
           formattedBalance.value = formatted.split(' ').slice(0, 2).join(' ');
         }
-      }
+      },
+      { immediate: true }
     );
 
     return { formattedBalance };

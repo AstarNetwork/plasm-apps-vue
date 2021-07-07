@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex';
 import { MutationTypes } from './mutation-types';
-import { GeneralState as State, Theme } from './state';
+import { ConnectionType, GeneralState as State, Theme } from './state';
 import {
   Mutations as MutationsContract,
   mutations as mutationsContract,
@@ -12,6 +12,10 @@ export interface GeneralMutations<S = State> extends MutationsContract {
   [MutationTypes.SET_SHOW_ALERT_MSG](state: S, showAlert: boolean): void;
   [MutationTypes.SET_ALERT_MSG](state: S, msg: string): void;
   [MutationTypes.SET_ALERT_TYPE](state: S, type: string): void;
+  [MutationTypes.SET_CURRENT_NETWORK_STATUS](
+    state: S,
+    networkStatus: ConnectionType
+  ): void;
   [MutationTypes.SET_CURRENT_NETWORK_IDX](state: S, networkIdx: Number): void;
   [MutationTypes.SET_CURRENT_ACCOUNT_IDX](state: S, accountIdx: Number): void;
   [MutationTypes.SET_CURRENT_CUSTOM_ENDPOINT](state: S, endpoint: string): void;
@@ -32,6 +36,9 @@ export const mutations: MutationTree<State> & GeneralMutations = {
   },
   [MutationTypes.SET_ALERT_TYPE](state, type) {
     state.alertBox.alertType = type;
+  },
+  [MutationTypes.SET_CURRENT_NETWORK_STATUS](state, networkStatus) {
+    state.currentNetworkStatus = networkStatus;
   },
   [MutationTypes.SET_CURRENT_NETWORK_IDX](state, networkIdx) {
     state.currentNetworkIdx = networkIdx;
