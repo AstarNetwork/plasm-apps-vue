@@ -76,21 +76,19 @@
         >
           <div class="mb-3 font-bold">
             {{ argString }}
-            <!-- info:{{ constructors[constructorIndex].args[i].type.info }} type:{{
-              constructors[constructorIndex].args[i].type.type
-            }} -->
           </div>
           <input-balance
             v-if="isBalanceType(paramIndex)"
             v-model:balance="balance"
             v-model:unit="unit"
+            @input="updateParam({ balance, unit }, paramIndex)"
           />
           <input
             v-else
             class="p-4 w-full text-blue-900 dark:text-darkGray-100 text-2xl bg-transparent placeholder-gray-300 dark:placeholder-darkGray-600 bg-white dark:bg-darkGray-900 border border-gray-300 dark:border-darkGray-500 rounded-md pl-3 text-left focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-darkGray-600 hover:bg-gray-50 dark:hover:bg-darkGray-800"
             type="string"
-            :value="params[paramIndex].value"
-            @input="params[paramIndex].value = $event.target.value"
+            :value="params[paramIndex] && params[paramIndex].value"
+            @input="updateParam($event.target.value, paramIndex)"
           />
         </div>
       </div>
@@ -115,21 +113,27 @@ export default defineComponent({
       required: true,
       type: Array as PropType<MessageType[]>,
     },
+    params: {
+      required: true,
+      type: Array as PropType<(Param | never)[]>,
+    },
+    constructorIndex: {
+      required: true,
+      type: Number,
+    },
   },
   components: {
     IconBase,
     IconSolidSelector,
     InputBalance,
   },
-  setup(props) {
-    const constructorIndex = ref<number>(0);
+  setup(props, { emit }) {
     const openOption = ref<boolean>(false);
-    const params = ref<(Param | never)[]>([]);
     const argsStrings = props.constructors
       .map(getArgsString)
       .map((argString) => (argString ? argString : ' '));
     const onSelectConstructor = (index: number) => {
-      constructorIndex.value = index;
+      emit('update:constructorIndex', index);
       openOption.value = false;
     };
     const { api } = useApi();
@@ -140,15 +144,15 @@ export default defineComponent({
 
     const isBalanceType = (paramIndex: number) => {
       return (
-        props.constructors[constructorIndex.value].args[paramIndex].type
+        props.constructors[props.constructorIndex].args[paramIndex].type
           .type === 'Balance'
       );
     };
 
     watch(
-      constructorIndex,
+      () => props.constructorIndex,
       (i) => {
-        params.value = (getParamValues(
+        const params = (getParamValues(
           api?.value?.registry,
           props.constructors[i].args
         ) as any[]).map((pv, paramIndex) => {
@@ -162,19 +166,25 @@ export default defineComponent({
             value: paramValue,
           };
         });
+        emit('update:params', params);
       },
       { immediate: true }
     );
 
+    const updateParam = (paramValue: ParamValue, paramIndex: number) => {
+      const params = props.params;
+      params[paramIndex].value = paramValue;
+      emit('update:params', params);
+    };
+
     return {
-      constructorIndex,
       openOption,
       argsStrings,
       onSelectConstructor,
       isBalanceType,
       balance,
       unit,
-      params,
+      updateParam,
     };
   },
 });

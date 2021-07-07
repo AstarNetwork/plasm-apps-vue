@@ -296,6 +296,8 @@
           <div v-else class="dark:text-white">
             <params-generator
               :constructors="messages.filter((msg) => msg.isConstructor)"
+              v-model:constructorIndex="constructorIndex"
+              v-model:params="params"
             />
           </div>
         </div>
@@ -379,7 +381,7 @@ import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 // import CategoryMultiSelect from '@/components/dapps/CategoryMultiSelect.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
-import { compactAddLength, isWasm, stringify } from '@polkadot/util';
+import { stringify } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -398,6 +400,7 @@ import usePendingTx from '@/hooks/signer/usePendingTx';
 import ParamsGenerator from './ParamsGenerator.vue';
 import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useStore } from 'vuex';
+import { Param } from '@/types/Params';
 
 interface FormData {
   endowment: BN;
@@ -671,6 +674,13 @@ export default defineComponent({
       );
     });
 
+    const constructorIndex = ref(0);
+    const params = ref<(Param | never)[]>([]);
+
+    setTimeout(() => {
+      console.log(params.value[0].value, 'FIRST PARAM VALUE');
+    }, 10000);
+
     return {
       ...toRefs(formData),
       closeModal,
@@ -686,6 +696,9 @@ export default defineComponent({
       messages,
       step,
       canMoveToStep2,
+
+      constructorIndex,
+      params,
     };
   },
 });
