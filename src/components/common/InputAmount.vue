@@ -20,7 +20,7 @@
             pattern="^[0-9]*(\.)?[0-9]*$"
             placeholder="0.0"
             :value="amount"
-            @input="$emit('update:amount', $event.target.value)"
+            @input="update($event.target.value, selectedUnit)"
           />
         </div>
         <button
@@ -39,7 +39,7 @@
             name="units"
             class="dark:bg-darkGray-900"
             :value="selectedUnit"
-            @change="$emit('update:selectedUnit', $event.target.value)"
+            @change="update(amount, $event.target.value)"
           >
             <option v-for="item in arrUnitNames" :key="item" :value="item">
               {{ item }}
@@ -66,7 +66,7 @@ export default defineComponent({
     fixUnit: { type: Boolean, default: false },
     amount: { required: true, type: Object as PropType<BN> },
   },
-  emits: ['update:amount', 'update:selectedUnit'],
+  emits: ['update:amount', 'update:selectedUnit', 'input'],
   setup(props, { emit }) {
     const arrUnitNames = getUnitNames();
     const setMaxAmount = () => {
@@ -75,7 +75,12 @@ export default defineComponent({
         emit('update:amount', props.maxInDefaultUnit);
       }
     };
-    return { arrUnitNames, setMaxAmount };
+    const update = (amount: number, unit: string) => {
+      emit('update:amount', amount);
+      emit('update:selectedUnit', unit);
+      emit('input', { amount, unit });
+    };
+    return { arrUnitNames, setMaxAmount, update };
   },
 });
 </script>

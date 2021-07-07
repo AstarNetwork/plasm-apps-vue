@@ -15,10 +15,13 @@
           <h3
             class="text-lg font-extrabold text-blue-900 dark:text-white mb-6 text-center"
           >
-            Create Your dApps
+            Create Your dApps ({{ step }} / 2)
           </h3>
 
-          <div class="sm:flex grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div
+            v-if="step === 1"
+            class="sm:flex grid grid-cols-1 sm:grid-cols-2 gap-6"
+          >
             <div class="sm:w-1/2">
               <div class="grid grid-cols-1 gap-6">
                 <div class="relative">
@@ -137,8 +140,18 @@
               </div>
             </div>
           </div>
+          <div v-else class="dark:text-white">
+            <params-generator
+              :constructors="messages.filter((msg) => msg.isConstructor)"
+              v-model:constructorIndex="constructorIndex"
+              v-model:params="params"
+            />
+          </div>
         </div>
-        <div class="mt-6 flex justify-center flex-row-reverse">
+        <!-- <div
+          v-if="step === 2"
+          class="mt-6 flex justify-center flex-row-reverse"
+        >
           <button
             type="button"
             @click="upload"
@@ -153,21 +166,54 @@
           >
             Cancel
           </button>
+        </div> -->
+
+        <div class="mt-6 flex justify-end">
+          <button
+            type="button"
+            @click="closeModal"
+            class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="step = 2"
+            :disabled="!canMoveToStep2"
+            v-if="step === 1"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
+            :class="{
+              'placeholder-opacity-90': !canMoveToStep2,
+              'dark:hover:bg-blue-400': canMoveToStep2,
+              'hover:bg-blue-700': canMoveToStep2,
+              'cursor-not-allowed': !canMoveToStep2,
+            }"
+          >
+            next step
+          </button>
+          <div v-if="step === 2">
+            <button
+              type="button"
+              @click="step = 1"
+              class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
+            >
+              previoius step
+            </button>
+            <button
+              type="button"
+              @click="upload"
+              class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
+            >
+              Upload
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  Ref,
-  watch,
-  computed,
-  reactive,
-  toRefs,
-} from 'vue';
+import { defineComponent, ref, watch, computed, reactive, toRefs } from 'vue';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
@@ -195,8 +241,10 @@ import type { ApiPromise } from '@polkadot/api';
 import { getParamValues } from '@/helper/params';
 import ContractInfo from './ContractInfo.vue';
 import usePendingTx from '@/hooks/signer/usePendingTx';
+import ParamsGenerator from './ParamsGenerator.vue';
 import { CodePromise, Abi } from '@polkadot/api-contract';
 import { useStore } from 'vuex';
+import { Param } from '@/types/Params';
 import { getUnit } from '@/helper/units';
 
 interface FormData {
@@ -215,6 +263,7 @@ export default defineComponent({
     ModalSelectAccountOption,
     InputFile,
     ContractInfo,
+    ParamsGenerator,
     InputAmount,
   },
   props: {
@@ -240,8 +289,8 @@ export default defineComponent({
 
     const { defaultUnitToken, decimal } = useChainMetadata();
 
-    const selectUnitEndowment: Ref<string> = ref(defaultUnitToken.value);
-    const selectUnitGas: Ref<string> = ref('micro');
+    const selectUnitEndowment = ref<string>(defaultUnitToken.value);
+    const selectUnitGas = ref<string>('micro');
 
     const formData = reactive<FormData>({
       endowment: new BN(27000),
@@ -465,6 +514,24 @@ export default defineComponent({
       onSend(currentItem, senderInfo);
     };
 
+    const step = ref<number>(1);
+
+    const canMoveToStep2 = computed(() => {
+      return (
+        !!abi.value &&
+        formData.projectName &&
+        formData.endowment &&
+        formData.weight
+      );
+    });
+
+    const constructorIndex = ref(0);
+    const params = ref<(Param | never)[]>([]);
+
+    setTimeout(() => {
+      console.log(params.value[0].value, 'FIRST PARAM VALUE');
+    }, 10000);
+
     return {
       ...toRefs(formData),
       closeModal,
@@ -478,6 +545,10 @@ export default defineComponent({
       extensionFile,
       onDropFile,
       messages,
+      step,
+      canMoveToStep2,
+      constructorIndex,
+      params,
       selectUnitEndowment,
       selectUnitGas,
     };

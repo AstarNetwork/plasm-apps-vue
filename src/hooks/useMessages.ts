@@ -1,18 +1,9 @@
 import { ref, watch } from 'vue';
 import type { AbiMessage, AbiParam } from '@polkadot/api-contract/types';
-import type { TypeDef } from '@polkadot/types/create/types';
+import { MessageType } from '@/types/Message';
 
 export function useMessages(abi: any) {
-  const messages = ref<
-    | {
-        identifier: string;
-        docs: string[];
-        args: AbiParam[];
-        returnType?: TypeDef | null;
-        isConstructor?: boolean;
-      }[]
-    | null
-  >(null);
+  const messages = ref<MessageType[] | null>(null);
 
   watch(
     abi,
@@ -20,6 +11,7 @@ export function useMessages(abi: any) {
       if (abi?.value?.constructors && abi?.value?.messages) {
         const constructors = abi?.value?.constructors.map((e: AbiMessage) => {
           return {
+            index: e.index,
             identifier: e.identifier,
             docs: e.docs,
             args: e.args,
@@ -29,6 +21,7 @@ export function useMessages(abi: any) {
         });
         const msgs = abi?.value?.messages.map((e: AbiMessage) => {
           return {
+            index: e.index,
             identifier: e.identifier,
             docs: e.docs,
             args: e.args,
