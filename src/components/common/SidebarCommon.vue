@@ -286,7 +286,7 @@ export default defineComponent({
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
     });
 
-    const isLocalChain = currentNetworkIdx.value == 2;
+    const isLocalChain = currentNetworkIdx.value == 3;
 
     const updateMetadata = () => {};
 

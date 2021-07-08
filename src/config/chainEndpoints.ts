@@ -16,6 +16,14 @@ export const providerEndpoints: ChainProvider[] = [
     favicon: 'favicon.png',
   },
   {
+    networkAlias: 'shiden-shell',
+    displayName: 'Shiden Shell (Kusama)',
+    info:
+      'Smart contract platform for decentralized applications (dapps) on the Kusama network',
+    endpoint: 'wss://rpc.shiden.plasmnet.io',
+    favicon: 'img/shiden.png',
+  },
+  {
     networkAlias: 'dusty-testnet',
     displayName: 'Dusty Network (Testnet)',
     info:

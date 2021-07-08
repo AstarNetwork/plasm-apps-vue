@@ -17,7 +17,7 @@ export default defineComponent({
     const store = useStore();
     const networkIdx = computed(() => store.getters.networkIdx);
     let endpoint = providerEndpoints[networkIdx.value].endpoint;
-    if (networkIdx.value == 3) {
+    if (networkIdx.value == 4) {
       const customEndpoint = computed(() => store.getters.customEndpoint);
       endpoint = customEndpoint.value;
     }

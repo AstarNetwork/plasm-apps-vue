@@ -61,7 +61,7 @@
                           selNetwork === 1 ? classRadioTxtOn : classRadioTxtOff
                         "
                       >
-                        Dusty Network (Testnet)
+                        Shiden Network (Kusama)
                       </p>
                     </div>
                   </label>
@@ -84,7 +84,7 @@
                           selNetwork === 2 ? classRadioTxtOn : classRadioTxtOff
                         "
                       >
-                        Local Network
+                        Dusty Network (Testnet)
                       </p>
                     </div>
                   </label>
@@ -105,6 +105,29 @@
                       <p
                         :class="
                           selNetwork === 3 ? classRadioTxtOn : classRadioTxtOff
+                        "
+                      >
+                        Local Network
+                      </p>
+                    </div>
+                  </label>
+                </li>
+
+                <li class="mb-2">
+                  <label
+                    :class="selNetwork === 4 ? classRadioOn : classRadioOff"
+                  >
+                    <input
+                      name="choose_networks"
+                      type="radio"
+                      :checked="selNetwork === 4"
+                      @change="selNetwork = 4"
+                      class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
+                    />
+                    <div class="text-left flex-1">
+                      <p
+                        :class="
+                          selNetwork === 4 ? classRadioTxtOn : classRadioTxtOff
                         "
                       >
                         Custom Network
