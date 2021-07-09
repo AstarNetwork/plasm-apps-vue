@@ -4,6 +4,7 @@ interface ChainProvider {
   displayName: string;
   info?: string;
   endpoint: string;
+  fallback?: string;
   favicon: string;
 }
 
@@ -17,10 +18,11 @@ export const providerEndpoints: ChainProvider[] = [
   },
   {
     networkAlias: 'shiden-shell',
-    displayName: 'Shiden Shell (Kusama)',
+    displayName: 'Shiden Network (Kusama)',
     info:
       'Smart contract platform for decentralized applications (dapps) on the Kusama network',
     endpoint: 'wss://rpc.shiden.plasmnet.io',
+    fallback: 'wss://shiden.api.onfinality.io/public-ws',
     favicon: 'img/shiden.png',
   },
   {
