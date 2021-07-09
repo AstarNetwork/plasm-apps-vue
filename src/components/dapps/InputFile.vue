@@ -1,22 +1,26 @@
 <template>
   <div
     class="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-darkGray-500 border-dashed rounded-md bg-blue-50 dark:bg-darkGray-800"
+    v-bind="getRootProps()"
   >
     <div class="space-y-1 text-center">
       <icon-document />
-      <div class="flex text-sm text-gray-500 dark:text-darkGray-400">
-        <div v-if="file">File : {{ file.name }}</div>
-        <div v-else>
-          <div v-bind="getRootProps()">
-            <input v-bind="getInputProps()" />
-            <div
-              class="relative cursor-pointer rounded-md font-medium text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 focus-within:ring-offset-none"
-            >
-              Upload a file
-            </div>
-            <p v-if="isDragActive">Drop the files here ...</p>
-            <p class="pl-1" v-else>or drag and drop</p>
+      <div
+        v-if="file"
+        class="flex text-sm text-gray-500 dark:text-darkGray-400"
+      >
+        <div>File : {{ file.name }}</div>
+      </div>
+      <div v-else class="flex text-sm text-gray-500 dark:text-darkGray-400">
+        <div>
+          <input v-bind="getInputProps()" />
+          <div
+            class="relative cursor-pointer rounded-md font-medium text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 focus-within:ring-offset-none"
+          >
+            Upload a file
           </div>
+          <p v-if="isDragActive">Drop the files here ...</p>
+          <p class="pl-1" v-else>or drag and drop</p>
         </div>
       </div>
     </div>
