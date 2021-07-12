@@ -7,7 +7,7 @@ import { isUndefined } from '@polkadot/util';
 import { getTypeDef } from '@polkadot/types';
 import { TypeDefInfo } from '@polkadot/types/types';
 import { BN_ZERO, isBn } from '@polkadot/util';
-
+import { MessageType } from '@/types/Message';
 export interface AbiParam {
   name: string;
   type: TypeDef;
@@ -194,3 +194,9 @@ export function getParamValues(registry: any, params: AbiParam[] | undefined) {
   const arrValues: any = pvalues?.map(({ value }) => value);
   return arrValues;
 }
+
+export const getArgsString = (message: MessageType): string => {
+  return message.args
+    .map(({ name, type }) => `${name}: ${type.type}`)
+    .join(', ');
+};

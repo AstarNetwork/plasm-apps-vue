@@ -12,7 +12,7 @@
           </icon-base>
         </div>
         <p class="text-blue-900 dark:text-darkGray-100 font-bold text-lg">
-          {{ unitToken }} Balance
+          {{ defaultUnitToken }} Balance
         </p>
       </div>
 
@@ -117,7 +117,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
+import { useChainMetadata } from '@/hooks';
 import IconBase from '@/components/icons/IconBase.vue';
 import IconAccountSample from '@/components/icons/IconAccountSample.vue';
 import FormatBalance from '@/components/balance/FormatBalance.vue';
@@ -143,11 +144,11 @@ export default defineComponent({
       emit('update:is-open-transfer', true);
     };
 
-    const unitToken = inject('unitToken', '');
+    const { defaultUnitToken } = useChainMetadata();
 
     return {
       openTransferModal,
-      unitToken,
+      defaultUnitToken,
     };
   },
 });

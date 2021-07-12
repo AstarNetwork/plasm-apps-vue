@@ -7,4 +7,5 @@ export interface MessageType {
   args: AbiParam[];
   returnType?: TypeDef | null;
   isConstructor?: boolean;
+  index: number;
 }

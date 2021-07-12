@@ -15,7 +15,6 @@
         class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
       >
         {{ currentNetworkName }}
-        <!-- Heroicon name: solid/chevron-down -->
         <icon-base
           class="-mr-1 ml-2 h-4 w-4"
           viewBox="0 0 20 20"
@@ -67,7 +66,6 @@
         class="items-center justify-center"
         style="height: 104px"
       >
-        <!-- original icon -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'balance'
@@ -80,12 +78,10 @@
         </icon-base>
         <span class="ml-3 flex-1">
           <p class="font-bold">Balance</p>
-          <!-- TODO : Use current address and balance -->
           <p
             class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
           >
             <span>{{ defaultAccountName }}</span>
-            <!-- <span class="ml-2">{{ formatBalance }}PLM</span> -->
           </p>
           <p class="text-xs text-gray-500 dark:text-darkGray-400">
             {{ shortenAddress }}
@@ -99,7 +95,6 @@
           $route.path.split('/')[1] === 'dapps' ? 'activeLink' : 'inactiveLink',
         ]"
       >
-        <!-- original icon -->
         <icon-base
           :class="[
             $route.path.split('/')[1] === 'dapps' ? 'activeSvg' : 'inactiveSvg',
@@ -223,7 +218,7 @@
 import { defineComponent, ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useAccount, useSidebar } from '@/hooks';
-import { providerEndpoints } from '@/config/chainEndpoints';
+import { providerEndpoints, endpointKey } from '@/config/chainEndpoints';
 import ConnectionIndicator from './ConnectionIndicator.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
@@ -286,7 +281,7 @@ export default defineComponent({
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
     });
 
-    const isLocalChain = currentNetworkIdx.value == 2;
+    const isLocalChain = currentNetworkIdx.value == endpointKey.LOCAL;
 
     const updateMetadata = () => {};
 

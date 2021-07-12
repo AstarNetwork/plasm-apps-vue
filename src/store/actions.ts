@@ -1,5 +1,4 @@
 import { ActionTree, ActionContext } from 'vuex';
-import { connectApi } from '@/api/polkadot';
 import { GeneralState as State } from './state';
 import { GeneralMutations as Mutations } from './mutations';
 import { ActionTypes } from './action-types';
@@ -16,20 +15,9 @@ export type AugmentedActionContext = {
   ): ReturnType<Mutations[K]>;
 } & Omit<ActionContext<State, State>, 'commit'>;
 
-export interface GeneralActions extends ActionsContract {
-  // [ActionTypes.GET_NETWORK_API](
-  //   { commit }: AugmentedActionContext,
-  //   url: string
-  // ): Promise<ApiPromise>;
-}
+export interface GeneralActions extends ActionsContract {}
 
 export const actions: ActionTree<State, State> & GeneralActions = {
-  // async [ActionTypes.GET_NETWORK_API]({ commit }, url: string) {
-  //   const api = await connectApi(url);
-  //   commit(MutationTypes.SET_NETWORK_API, api);
-  //   commit(MutationTypes.SET_INITIALIZED, undefined);
-  //   return api;
-  // },
   [ActionTypes.SHOW_ALERT_MSG]({ commit }, { msg, alertType }) {
     commit(MutationTypes.SET_SHOW_ALERT_MSG, true);
     commit(MutationTypes.SET_ALERT_MSG, msg);

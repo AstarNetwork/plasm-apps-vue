@@ -4,7 +4,16 @@ interface ChainProvider {
   displayName: string;
   info?: string;
   endpoint: string;
+  fallback?: string;
   favicon: string;
+}
+
+export enum endpointKey {
+  PLASM = 0,
+  SHIDEN = 1,
+  DUSTY = 2,
+  LOCAL = 3,
+  CUSTOM = 4,
 }
 
 export const providerEndpoints: ChainProvider[] = [
@@ -14,6 +23,15 @@ export const providerEndpoints: ChainProvider[] = [
     info: 'The main network of the layer 2 scaling blockchain, Plasm Network',
     endpoint: 'wss://rpc.plasmnet.io/',
     favicon: 'favicon.png',
+  },
+  {
+    networkAlias: 'shiden-shell',
+    displayName: 'Shiden Network (Kusama)',
+    info:
+      'Smart contract platform for decentralized applications (dapps) on the Kusama network',
+    endpoint: 'wss://rpc.shiden.plasmnet.io',
+    fallback: 'wss://shiden.api.onfinality.io/public-ws',
+    favicon: 'img/shiden.png',
   },
   {
     networkAlias: 'dusty-testnet',

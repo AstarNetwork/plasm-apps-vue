@@ -21,98 +21,38 @@
 
             <fieldset>
               <ul role="radiogroup">
-                <li class="mb-2">
+                <li
+                  v-for="(provider, index) in providerEndpoints"
+                  :key="index"
+                  class="mb-2"
+                >
                   <label
-                    :class="selNetwork === 0 ? classRadioOn : classRadioOff"
+                    :class="selNetwork === index ? classRadioOn : classRadioOff"
                   >
                     <input
                       name="choose_networks"
                       type="radio"
-                      :checked="selNetwork === 0"
-                      @change="selNetwork = 0"
+                      :checked="selNetwork === index"
+                      @change="selNetwork = index"
                       class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
                     />
                     <div class="text-left flex-1">
                       <p
                         :class="
-                          selNetwork === 0 ? classRadioTxtOn : classRadioTxtOff
+                          selNetwork === index
+                            ? classRadioTxtOn
+                            : classRadioTxtOff
                         "
                       >
-                        Plasm Network (Mainnet)
+                        {{ provider.displayName }}
                       </p>
-                    </div>
-                  </label>
-                </li>
 
-                <li class="mb-2">
-                  <label
-                    :class="selNetwork === 1 ? classRadioOn : classRadioOff"
-                  >
-                    <input
-                      name="choose_networks"
-                      type="radio"
-                      :checked="selNetwork === 1"
-                      @change="selNetwork = 1"
-                      class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
-                    />
-                    <div class="text-left flex-1">
-                      <p
-                        :class="
-                          selNetwork === 1 ? classRadioTxtOn : classRadioTxtOff
-                        "
-                      >
-                        Dusty Network (Testnet)
-                      </p>
-                    </div>
-                  </label>
-                </li>
-
-                <li class="mb-2">
-                  <label
-                    :class="selNetwork === 2 ? classRadioOn : classRadioOff"
-                  >
-                    <input
-                      name="choose_networks"
-                      type="radio"
-                      :checked="selNetwork === 2"
-                      @change="selNetwork = 2"
-                      class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
-                    />
-                    <div class="text-left flex-1">
-                      <p
-                        :class="
-                          selNetwork === 2 ? classRadioTxtOn : classRadioTxtOff
-                        "
-                      >
-                        Local Network
-                      </p>
-                    </div>
-                  </label>
-                </li>
-
-                <li class="mb-2">
-                  <label
-                    :class="selNetwork === 3 ? classRadioOn : classRadioOff"
-                  >
-                    <input
-                      name="choose_networks"
-                      type="radio"
-                      :checked="selNetwork === 3"
-                      @change="selNetwork = 3"
-                      class="appearance-none border-2 border-gray-300 dark:border-darkGray-600 rounded-full focus:ring-blue-500 h-4 w-4 mr-3 focus:outline-none bg-white dark:bg-darkGray-900 checked:border-4 checked:border-blue-500"
-                    />
-                    <div class="text-left flex-1">
-                      <p
-                        :class="
-                          selNetwork === 3 ? classRadioTxtOn : classRadioTxtOff
-                        "
-                      >
-                        Custom Network
-                      </p>
+                      <!-- custom endpoint -->
                       <input
+                        v-if="index === 4"
                         type="text"
                         placeholder="IP Address / Domain"
-                        class="appearance-none bg-gray-50 dark:bg-darkGray-800 block w-full border border-gray-300 dark:border-darkGray-600 focus:ring-blue-500 focus:border-blue-500 rounded-md px-2 py-2 focus:outline-none text-sm text-gray-700 dark:text-darkGray-100 focus:bg-white dark:focus:bg-darkGray-900 placeholder-gray-300 dark:placeholder-darkGray-600"
+                        class="appearance-none bg-gray-50 dark:bg-darkGray-800 block w-full border border-gray-300 dark:border-darkGray-600 focus:ring-blue-500 focus:border-blue-500 rounded-md mt-2 px-2 py-2 focus:outline-none text-sm text-gray-700 dark:text-darkGray-100 focus:bg-white dark:focus:bg-darkGray-900 placeholder-gray-300 dark:placeholder-darkGray-600"
                         v-model="customEndpoint"
                       />
                     </div>
@@ -144,6 +84,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { providerEndpoints } from '@/config/chainEndpoints';
 
 export default defineComponent({
   props: {
@@ -191,6 +132,7 @@ export default defineComponent({
       classRadioOff,
       classRadioTxtOn,
       classRadioTxtOff,
+      providerEndpoints,
     };
   },
 });
