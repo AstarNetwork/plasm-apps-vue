@@ -8,6 +8,14 @@ interface ChainProvider {
   favicon: string;
 }
 
+export enum endpointKey {
+  PLASM = 0,
+  SHIDEN = 1,
+  DUSTY = 2,
+  LOCAL = 3,
+  CUSTOM = 4,
+}
+
 export const providerEndpoints: ChainProvider[] = [
   {
     networkAlias: 'plasm-main',

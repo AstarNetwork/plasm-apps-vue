@@ -5,6 +5,7 @@ import { isTestChain } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 import * as typeDefs from '@plasm/types';
 import { RegistryTypes } from '@polkadot/types/types';
+import { endpointKey } from '@/config';
 import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 
@@ -52,13 +53,22 @@ const loadAccounts = async (api: ApiPromise) => {
   );
 };
 
-export async function connectApi(endpoint: string) {
+export async function connectApi(endpoint: string, networkIdx: number) {
   const provider = new WsProvider(endpoint);
+
+  let typeDefinitions = null;
+  if (networkIdx === endpointKey.SHIDEN) {
+    typeDefinitions = typeDefs.plasmCollatorDefinitions as RegistryTypes;
+  } else if (networkIdx === endpointKey.PLASM) {
+    typeDefinitions = typeDefs.plasmDefinitions as RegistryTypes;
+  } else {
+    typeDefinitions = typeDefs.dustyDefinitions as RegistryTypes;
+  }
 
   const api = new ApiPromise({
     provider,
     types: {
-      ...(typeDefs.dustyDefinitions as RegistryTypes),
+      ...typeDefinitions,
       LookupSource: 'MultiAddress',
     },
   });

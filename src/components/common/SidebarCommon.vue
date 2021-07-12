@@ -218,7 +218,7 @@
 import { defineComponent, ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useAccount, useSidebar } from '@/hooks';
-import { providerEndpoints } from '@/config/chainEndpoints';
+import { providerEndpoints, endpointKey } from '@/config/chainEndpoints';
 import ConnectionIndicator from './ConnectionIndicator.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
@@ -281,7 +281,7 @@ export default defineComponent({
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
     });
 
-    const isLocalChain = currentNetworkIdx.value == 3;
+    const isLocalChain = currentNetworkIdx.value == endpointKey.LOCAL;
 
     const updateMetadata = () => {};
 
