@@ -12,7 +12,27 @@
       <button
         type="button"
         @click="modalNetwork = true"
-        class="inline-flex justify-center w-full rounded-full border border-gray-300 dark:border-darkGray-600 px-4 py-3 bg-white dark:bg-darkGray-900 text-xs font-medium text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
+        class="
+          inline-flex
+          justify-center
+          w-full
+          rounded-full
+          border border-gray-300
+          dark:border-darkGray-600
+          px-4
+          py-3
+          bg-white
+          dark:bg-darkGray-900
+          text-xs
+          font-medium
+          text-gray-700
+          dark:text-darkGray-100
+          hover:bg-gray-100
+          dark:hover:bg-darkGray-700
+          focus:outline-none
+          focus:ring focus:ring-gray-100
+          dark:focus:ring-darkGray-600
+        "
       >
         {{ currentNetworkName }}
         <icon-base
@@ -79,7 +99,13 @@
         <span class="ml-3 flex-1">
           <p class="font-bold">Balance</p>
           <p
-            class="text-xs text-blue-900 dark:text-darkGray-100 font-semibold flex justify-between"
+            class="
+              text-xs text-blue-900
+              dark:text-darkGray-100
+              font-semibold
+              flex
+              justify-between
+            "
           >
             <span>{{ defaultAccountName }}</span>
           </p>
@@ -90,6 +116,7 @@
       </router-link>
 
       <router-link
+        v-if="isSupportContract"
         to="/dapps"
         :class="[
           $route.path.split('/')[1] === 'dapps' ? 'activeLink' : 'inactiveLink',
@@ -251,12 +278,8 @@ export default defineComponent({
 
     const store = useStore();
 
-    const {
-      allAccounts,
-      allAccountNames,
-      defaultAccount,
-      defaultAccountName,
-    } = useAccount();
+    const { allAccounts, allAccountNames, defaultAccount, defaultAccountName } =
+      useAccount();
 
     const shortenAddress = computed(() => {
       return `${defaultAccount.value.slice(0, 6)}${'.'.repeat(
@@ -281,7 +304,10 @@ export default defineComponent({
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
     });
 
-    const isLocalChain = currentNetworkIdx.value == endpointKey.LOCAL;
+    const isLocalChain = currentNetworkIdx.value === endpointKey.LOCAL;
+    const isSupportContract = ref(
+      providerEndpoints[currentNetworkIdx.value].isSupportContract
+    );
 
     const updateMetadata = () => {};
 
@@ -294,6 +320,7 @@ export default defineComponent({
       currentNetworkIdx,
       currentNetworkName,
       isLocalChain,
+      isSupportContract,
       updateMetadata,
     };
   },
