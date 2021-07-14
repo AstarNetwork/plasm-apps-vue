@@ -1,11 +1,11 @@
 interface ChainProvider {
-  // property key used for referencing chain types from a list
   networkAlias: string;
   displayName: string;
   info?: string;
   endpoint: string;
   fallback?: string;
   favicon: string;
+  isSupportContract: boolean;
 }
 
 export enum endpointKey {
@@ -23,6 +23,7 @@ export const providerEndpoints: ChainProvider[] = [
     info: 'The main network of the layer 2 scaling blockchain, Plasm Network',
     endpoint: 'wss://rpc.plasmnet.io/',
     favicon: 'favicon.png',
+    isSupportContract: false,
   },
   {
     networkAlias: 'shiden-shell',
@@ -32,6 +33,7 @@ export const providerEndpoints: ChainProvider[] = [
     endpoint: 'wss://rpc.shiden.plasmnet.io',
     fallback: 'wss://shiden.api.onfinality.io/public-ws',
     favicon: 'img/shiden.png',
+    isSupportContract: false,
   },
   {
     networkAlias: 'dusty-testnet',
@@ -40,17 +42,20 @@ export const providerEndpoints: ChainProvider[] = [
       'The test network of the layer 2 scaling blockchain, Dusty Plasm Network',
     endpoint: 'wss://rpc.dusty.plasmnet.io/',
     favicon: 'https://polkadot.js.org/apps/static/dusty.16cf115c.png',
+    isSupportContract: true,
   },
   {
     networkAlias: 'local-node',
     displayName: 'Local Network',
     endpoint: 'ws://127.0.0.1:9944',
     favicon: 'favicon.png',
+    isSupportContract: true,
   },
   {
     networkAlias: 'custom-node',
     displayName: 'Custom Network',
     endpoint: 'ws://127.0.0.1:9944',
     favicon: 'favicon.png',
+    isSupportContract: true,
   },
 ];

@@ -29,7 +29,6 @@
               <span class="block font-semibold text-2xl mb-1"
                 ><format-balance
               /></span>
-              <!-- <span class="block font-normal text-sm mb-2">≈US $0</span> -->
             </button>
 
             <form>

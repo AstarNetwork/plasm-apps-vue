@@ -111,6 +111,20 @@
                   v-model:selectedUnit="selectUnitEndowment"
                 />
 
+                <div
+                  v-if="isInsufficientFee"
+                  class="inline-flex text-red-700 text-xs"
+                >
+                  Fees of
+                  <balance
+                    class="ml-1 mr-1"
+                    :balance="partialFee"
+                    :decimals="decimal"
+                    :unit="defaultUnitToken"
+                  />
+                  will be applied to the submission
+                </div>
+
                 <input-amount
                   title="Max gas allowed"
                   :noMax="true"
@@ -148,25 +162,6 @@
             />
           </div>
         </div>
-        <!-- <div
-          v-if="step === 2"
-          class="mt-6 flex justify-center flex-row-reverse"
-        >
-          <button
-            type="button"
-            @click="upload"
-            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
-          >
-            Upload
-          </button>
-          <button
-            type="button"
-            @click="closeModal"
-            class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-darkGray-500 text-sm font-medium rounded-full text-gray-500 dark:text-darkGray-400 bg-white dark:bg-darkGray-900 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600 mx-1"
-          >
-            Cancel
-          </button>
-        </div> -->
 
         <div class="mt-6 flex justify-end">
           <button
@@ -178,7 +173,7 @@
           </button>
           <button
             type="button"
-            @click="step = 2"
+            @click="moveStep2"
             :disabled="!canMoveToStep2"
             v-if="step === 1"
             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-blue-500 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 mx-1"
@@ -220,13 +215,15 @@ import IconSolidSelector from '@/components/icons/IconSolidSelector.vue';
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { CodeSubmittableResult } from '@polkadot/api-contract/promise/types';
+import type { Balance as BalanceType } from '@polkadot/types/interfaces/runtime';
 import type { QueueTx } from '@/types/Status';
 import BN from 'bn.js';
 import * as plasmUtils from '@/helper';
 import ModalSelectAccountOption from '@/components/balance/ModalSelectAccountOption.vue';
 import InputFile from '@/components/dapps/InputFile.vue';
 import InputAmount from '@/components/common/InputAmount.vue';
-import { stringify } from '@polkadot/util';
+import Balance from '@/components/common/Balance.vue';
+import { stringify, isFunction } from '@polkadot/util';
 import { SubmittableResult } from '@polkadot/api';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -265,6 +262,7 @@ export default defineComponent({
     ContractInfo,
     ParamsGenerator,
     InputAmount,
+    Balance,
   },
   props: {
     allAccounts: {
@@ -356,7 +354,67 @@ export default defineComponent({
 
     const { onSend } = useSendTx();
 
-    const upload = async () => {
+    const constructorIndex = ref(0);
+    const partialFee = ref<BalanceType>();
+
+    //handlers for transactions
+    const _onFailedTx = (result: SubmittableResult | null) => {
+      console.error('_onFailed', result);
+      store.commit(MutationTypes.SET_LOADING, false);
+      store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+        msg: result,
+        alertType: 'error',
+      });
+    };
+
+    const _onStartTx = () => {
+      console.log('_onStart');
+      store.commit(MutationTypes.SET_LOADING, true);
+    };
+
+    const _onSuccessTx = (result: CodeSubmittableResult) => {
+      console.log('_onSuccess', result);
+
+      const codeHash = result.blueprint?.codeHash;
+      const codeJson = {
+        abi: stringify(result.blueprint?.abi.json),
+        name: formData.projectName || '<>',
+        tags: [],
+      };
+      console.log('codeHash', codeHash?.toHex());
+      console.log('codeJson', codeJson);
+
+      result.blueprint &&
+        store.dispatch(ActionTypes.SAVE_CODE, {
+          api: apiPromise,
+          _codeHash: codeHash,
+          partial: codeJson,
+        });
+
+      result.contract &&
+        keyring.saveContract(result.contract.address.toString(), {
+          contract: {
+            abi: stringify(result.contract.abi.json),
+            genesisHash: apiPromise.genesisHash.toHex(),
+          },
+          name: formData.projectName || '<>',
+          tags: [],
+        });
+
+      store.commit(MutationTypes.SET_LOADING, false);
+      store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
+        msg: `Success to deploying contract- codeHash: ${codeHash?.toHex()} `,
+        alertType: 'success',
+      });
+
+      closeModal();
+    };
+    const _onUpdateTx = () => {};
+
+    const curQueueTx = ref<QueueTx>();
+    const toEndowment = ref<BN>(new BN(0));
+
+    const pushPendingTx = async () => {
       if (
         formData.projectName === '' ||
         toAddress.value === '' ||
@@ -390,12 +448,12 @@ export default defineComponent({
         console.log('code', code);
 
         const unit = getUnit(selectUnitEndowment.value);
-        const toEndowment = plasmUtils.reduceDenomToBalance(
+        toEndowment.value = plasmUtils.reduceDenomToBalance(
           formData.endowment,
           unit,
           decimal.value
         );
-        console.log('toEndowment', toEndowment.toString(10));
+        console.log('toEndowment', toEndowment.value.toString(10));
 
         const unit2 = getUnit(selectUnitGas.value);
         const toWeight = plasmUtils.reduceDenomToBalance(
@@ -405,8 +463,7 @@ export default defineComponent({
         );
         console.log('toWeight', toWeight.toString(10));
 
-        const constructorIndex = 0;
-        const params = abi?.value?.constructors[constructorIndex].args;
+        const params = abi?.value?.constructors[constructorIndex.value].args;
         console.log('params', params);
 
         const arrValues = getParamValues(abi.value?.registry, params);
@@ -414,12 +471,12 @@ export default defineComponent({
 
         uploadTx =
           code &&
-          abi.value?.constructors[constructorIndex].method &&
+          abi.value?.constructors[constructorIndex.value].method &&
           formData.endowment
-            ? code.tx[abi.value?.constructors[constructorIndex].method](
+            ? code.tx[abi.value?.constructors[constructorIndex.value].method](
                 {
                   gasLimit: toWeight,
-                  value: toEndowment,
+                  value: toEndowment.value,
                 },
                 ...arrValues
               )
@@ -436,82 +493,55 @@ export default defineComponent({
 
       console.log('uploadTx', uploadTx);
 
-      //send from txButton
-      const _onFailed = (result: SubmittableResult | null) => {
-        console.error('_onFailed', result);
-        store.commit(MutationTypes.SET_LOADING, false);
-        store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
-          msg: result,
-          alertType: 'error',
-        });
-      };
-
-      const _onStart = () => {
-        console.log('_onStart');
-        store.commit(MutationTypes.SET_LOADING, true);
-      };
-
-      const _onSuccess = (result: CodeSubmittableResult) => {
-        console.log('_onSuccess', result);
-
-        const codeHash = result.blueprint?.codeHash;
-        const codeJson = {
-          abi: stringify(result.blueprint?.abi.json),
-          name: formData.projectName || '<>',
-          tags: [],
-        };
-        console.log('codeHash', codeHash?.toHex());
-        console.log('codeJson', codeJson);
-
-        result.blueprint &&
-          store.dispatch(ActionTypes.SAVE_CODE, {
-            api: apiPromise,
-            _codeHash: codeHash,
-            partial: codeJson,
-          });
-
-        result.contract &&
-          keyring.saveContract(result.contract.address.toString(), {
-            contract: {
-              abi: stringify(result.contract.abi.json),
-              genesisHash: apiPromise.genesisHash.toHex(),
-            },
-            name: formData.projectName || '<>',
-            tags: [],
-          });
-
-        store.commit(MutationTypes.SET_LOADING, false);
-        store.dispatch(ActionTypes.SHOW_ALERT_MSG, {
-          msg: `Success to deploying contract- codeHash: ${codeHash?.toHex()} `,
-          alertType: 'success',
-        });
-
-        closeModal();
-      };
-      const _onUpdate = () => {};
-
       const { txqueue } = usePendingTx(
         uploadTx,
         toAddress.value,
-        _onStart,
-        _onFailed,
-        _onSuccess,
-        _onUpdate
+        _onStartTx,
+        _onFailedTx,
+        _onSuccessTx,
+        _onUpdateTx
       );
 
       console.log('txQueue', txqueue);
 
       const currentItem: QueueTx = txqueue[0];
 
-      const senderInfo: AddressProxy = {
-        isMultiCall: false,
-        isUnlockCached: false,
-        multiRoot: null,
-        proxyRoot: null,
-        signAddress: toAddress.value,
-        signPassword: '',
-      };
-      onSend(currentItem, senderInfo);
+      // set estimation fee of endowment
+      if (
+        currentItem.accountId &&
+        currentItem.extrinsic &&
+        isFunction(currentItem.extrinsic.paymentInfo)
+      ) {
+        try {
+          const info = await currentItem.extrinsic?.paymentInfo(
+            currentItem.accountId!
+          );
+
+          partialFee.value = info.partialFee;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      curQueueTx.value = currentItem;
+    };
+
+    const upload = async () => {
+      const currentItem: QueueTx | undefined = curQueueTx?.value;
+
+      if (currentItem) {
+        const senderInfo: AddressProxy = {
+          isMultiCall: false,
+          isUnlockCached: false,
+          multiRoot: null,
+          proxyRoot: null,
+          signAddress: toAddress.value,
+          signPassword: '',
+        };
+        onSend(currentItem, senderInfo);
+      } else {
+        console.log("there's no pending tx");
+      }
     };
 
     const step = ref<number>(1);
@@ -524,13 +554,24 @@ export default defineComponent({
         formData.weight
       );
     });
+    const isInsufficientFee = ref(false);
 
-    const constructorIndex = ref(0);
+    const moveStep2 = async () => {
+      try {
+        await pushPendingTx();
+      } catch (e) {
+        console.error(e);
+        return;
+      }
+
+      if (toEndowment.value.lte(partialFee.value!)) {
+        isInsufficientFee.value = true;
+      } else {
+        step.value = 2;
+      }
+    };
+
     const params = ref<(Param | never)[]>([]);
-
-    setTimeout(() => {
-      console.log(params.value[0].value, 'FIRST PARAM VALUE');
-    }, 10000);
 
     return {
       ...toRefs(formData),
@@ -551,6 +592,11 @@ export default defineComponent({
       params,
       selectUnitEndowment,
       selectUnitGas,
+      defaultUnitToken,
+      decimal,
+      partialFee,
+      isInsufficientFee,
+      moveStep2,
     };
   },
 });

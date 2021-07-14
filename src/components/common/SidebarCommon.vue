@@ -90,6 +90,7 @@
       </router-link>
 
       <router-link
+        v-if="isSupportContract"
         to="/dapps"
         :class="[
           $route.path.split('/')[1] === 'dapps' ? 'activeLink' : 'inactiveLink',
@@ -281,7 +282,10 @@ export default defineComponent({
       currentNetworkName.value = providerEndpoints[networkIdx].displayName;
     });
 
-    const isLocalChain = currentNetworkIdx.value == endpointKey.LOCAL;
+    const isLocalChain = currentNetworkIdx.value === endpointKey.LOCAL;
+    const isSupportContract = ref(
+      providerEndpoints[currentNetworkIdx.value].isSupportContract
+    );
 
     const updateMetadata = () => {};
 
@@ -294,6 +298,7 @@ export default defineComponent({
       currentNetworkIdx,
       currentNetworkName,
       isLocalChain,
+      isSupportContract,
       updateMetadata,
     };
   },
