@@ -24,35 +24,7 @@
         </icon-base>
       </button>
 
-      <!-- <button
-        type="button"
-        v-if="!isLocalChain"
-        @click="updateMetadata"
-        class="
-          my-3
-          inline-flex
-          justify-center
-          w-full
-          rounded-full
-          border border-gray-300
-          dark:border-darkGray-600
-          px-4
-          py-3
-          bg-white
-          dark:bg-darkGray-900
-          text-xs
-          font-medium
-          text-gray-700
-          dark:text-darkGray-100
-          hover:bg-gray-100
-          dark:hover:bg-darkGray-700
-          focus:outline-none
-          focus:ring focus:ring-gray-100
-          dark:focus:ring-darkGray-600
-        "
-      >
-        Update metadata
-      </button> -->
+      <extensions-metadata v-if="!isLocalChain" />
     </div>
 
     <nav class="flex-1">
@@ -221,6 +193,7 @@ import { useStore } from 'vuex';
 import { useAccount, useSidebar } from '@/hooks';
 import { providerEndpoints, endpointKey } from '@/config/chainEndpoints';
 import ConnectionIndicator from './ConnectionIndicator.vue';
+import ExtensionsMetadata from './ExtensionsMetadata.vue';
 import SocialMediaLinks from './SocialMediaLinks.vue';
 import LightDarkMode from './LightDarkMode.vue';
 import IconBase from '../icons/IconBase.vue';
@@ -235,6 +208,7 @@ import ModalNetwork from '@/components/balance/ModalNetwork.vue';
 export default defineComponent({
   components: {
     ConnectionIndicator,
+    ExtensionsMetadata,
     SocialMediaLinks,
     LightDarkMode,
     IconBase,
@@ -287,8 +261,6 @@ export default defineComponent({
       providerEndpoints[currentNetworkIdx.value].isSupportContract
     );
 
-    const updateMetadata = () => {};
-
     return {
       isOpen,
       modalNetwork,
@@ -299,7 +271,6 @@ export default defineComponent({
       currentNetworkName,
       isLocalChain,
       isSupportContract,
-      updateMetadata,
     };
   },
 });

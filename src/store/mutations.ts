@@ -5,6 +5,8 @@ import {
   Mutations as MutationsContract,
   mutations as mutationsContract,
 } from './modules/contracts/mutations';
+import type { InjectedExtension } from '@polkadot/extension-inject/types';
+import { ApiPromise } from '@polkadot/api';
 
 export interface GeneralMutations<S = State> extends MutationsContract {
   [MutationTypes.SET_INITIALIZED](state: S): void;
@@ -12,6 +14,8 @@ export interface GeneralMutations<S = State> extends MutationsContract {
   [MutationTypes.SET_SHOW_ALERT_MSG](state: S, showAlert: boolean): void;
   [MutationTypes.SET_ALERT_MSG](state: S, msg: string): void;
   [MutationTypes.SET_ALERT_TYPE](state: S, type: string): void;
+  [MutationTypes.SET_API](state: S, type: ApiPromise): void;
+  [MutationTypes.SET_EXTENSIONS](state: S, type: InjectedExtension[]): void;
   [MutationTypes.SET_CURRENT_NETWORK_STATUS](
     state: S,
     networkStatus: ConnectionType
@@ -36,6 +40,12 @@ export const mutations: MutationTree<State> & GeneralMutations = {
   },
   [MutationTypes.SET_ALERT_TYPE](state, type) {
     state.alertBox.alertType = type;
+  },
+  [MutationTypes.SET_API](state, api) {
+    state.api = api;
+  },
+  [MutationTypes.SET_EXTENSIONS](state, extensions) {
+    state.extensions = extensions;
   },
   [MutationTypes.SET_CURRENT_NETWORK_STATUS](state, networkStatus) {
     state.currentNetworkStatus = networkStatus;
