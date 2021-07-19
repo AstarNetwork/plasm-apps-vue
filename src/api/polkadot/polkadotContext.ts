@@ -83,8 +83,6 @@ export const providePolkadotContainer = (
   mutations.setApi(initApi);
   mutations.setExtensions(extensions);
 
-  console.log('ex', extensions);
-
   // provide a readonly reference of the current state and mutation methods
   provide(STATE_SYMBOL, toRefs(readonly(state)));
   provide(MUTATION_SYMBOL, mutations);
