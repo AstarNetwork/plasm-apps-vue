@@ -1,11 +1,13 @@
 <template>
   <button
-    :disabled="!isNeedUpdate(extensionCount) || isBusy"
+    :disabled="!isNeedUpdate(extensionCount) || isBusy || isComplete"
     type="button"
     @click="updateMetadata"
     class="inline-flex items-center w-full justify-center px-6 py-1 border border-transparent text-xs rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 my-1"
   >
-    <template v-if="isNeedUpdate(extensionCount)">Update Metadata</template>
+    <template v-if="isNeedUpdate(extensionCount) && !isComplete"
+      >Update Metadata</template
+    >
     <template v-else>Metadata Already Installed</template>
   </button>
 </template>
@@ -29,7 +31,8 @@ export default defineComponent({
     );
 
     const selectedIndex = 0;
-    let isBusy = ref(false);
+    const isBusy = ref(false);
+    const isComplete = ref(false);
     const updateMetadata = () => {
       const extensions = metaExtensions?.value?.extensions;
 
@@ -38,8 +41,11 @@ export default defineComponent({
 
         extensions[selectedIndex]
           .update(JSON.parse(JSON.stringify(chainInfo.value)))
-          .catch((e) => console.error(e))
-          .then(() => (isBusy.value = false))
+          .then(() => {
+            console.log('updated');
+            isBusy.value = false;
+            isComplete.value = true;
+          })
           .catch(console.error);
       }
     };
@@ -48,6 +54,7 @@ export default defineComponent({
       extensionCount,
       updateMetadata,
       isBusy,
+      isComplete,
     };
   },
   methods: {
