@@ -156,6 +156,7 @@ export function useMetaExtensions(
   extensionsRef: Ref<InjectedExtension[]>
 ) {
   const metaExtensions = ref<Extensions>();
+  const extensionCount = ref<number>();
 
   watch(
     () => extensionsRef?.value,
@@ -163,8 +164,9 @@ export function useMetaExtensions(
       const all = await getKnown(apiRef?.value, extensionsRef?.value);
 
       metaExtensions.value = filterAll(apiRef?.value, all);
+      extensionCount.value = metaExtensions.value.count;
     }
   );
 
-  return { metaExtensions };
+  return { metaExtensions, extensionCount };
 }

@@ -1,11 +1,12 @@
 <template>
   <button
-    :disabled="isBusy"
+    :disabled="!isNeedUpdate(extensionCount) || isBusy"
     type="button"
     @click="updateMetadata"
-    class="my-1 inline-flex justify-center w-full border border-gray-300 dark:border-darkGray-600 px-2 py-1 bg-white dark:bg-darkGray-900 text-xs font-light text-gray-700 dark:text-darkGray-100 hover:bg-gray-100 dark:hover:bg-darkGray-700 focus:outline-none focus:ring focus:ring-gray-100 dark:focus:ring-darkGray-600"
+    class="inline-flex items-center w-full justify-center px-6 py-1 border border-transparent text-xs rounded-full shadow-sm text-white bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-100 dark:focus:ring-blue-400 my-1"
   >
-    Update Metadata
+    <template v-if="isNeedUpdate(extensionCount)">Update Metadata</template>
+    <template v-else>Metadata Already Installed</template>
   </button>
 </template>
 <script lang="ts">
@@ -22,7 +23,11 @@ export default defineComponent({
 
     const { chainInfo } = useChainInfo(apiRef);
 
-    const { metaExtensions } = useMetaExtensions(apiRef, extensionsRef);
+    const { metaExtensions, extensionCount } = useMetaExtensions(
+      apiRef,
+      extensionsRef
+    );
+
     const selectedIndex = 0;
     let isBusy = ref(false);
     const updateMetadata = () => {
@@ -40,9 +45,20 @@ export default defineComponent({
     };
 
     return {
+      extensionCount,
       updateMetadata,
       isBusy,
     };
   },
+  methods: {
+    isNeedUpdate(extensionCount: number) {
+      return extensionCount > 0;
+    },
+  },
 });
 </script>
+<style scoped>
+button:disabled {
+  @apply bg-blue-300 hover:bg-blue-300 dark:hover:bg-blue-300;
+}
+</style>
