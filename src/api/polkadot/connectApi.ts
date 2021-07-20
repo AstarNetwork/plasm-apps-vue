@@ -8,12 +8,14 @@ import { RegistryTypes } from '@polkadot/types/types';
 import { endpointKey } from '@/config';
 import { useStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
+import type { InjectedExtension } from '@polkadot/extension-inject/types';
 
 interface InjectedAccountExt {
   address: string;
   meta: {
     name: string;
     source: string;
+    whenCreated: number;
   };
 }
 
@@ -27,12 +29,13 @@ const loadAccounts = async (api: ApiPromise) => {
     api.rpc.system.chain() as any,
     web3Accounts().then((accounts): InjectedAccountExt[] =>
       accounts.map(
-        ({ address, meta }): InjectedAccountExt => ({
+        ({ address, meta }, whenCreated): InjectedAccountExt => ({
           address,
           meta: {
             ...meta,
             name: `${meta.name} (
               ${meta.source === 'polkadot-js' ? 'extension' : meta.source})`,
+            whenCreated,
           },
         })
       )
@@ -94,9 +97,16 @@ export async function connectApi(endpoint: string, networkIdx: number) {
   }
 
   // load the web3 extension
-  injectedPromise
-    .then((): void => {})
-    .catch((error: Error) => console.error(error));
+  let extensions: InjectedExtension[] = [];
 
-  return api;
+  try {
+    extensions = await injectedPromise;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return {
+    api,
+    extensions,
+  };
 }
