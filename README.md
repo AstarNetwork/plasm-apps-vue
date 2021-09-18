@@ -1,4 +1,4 @@
-# Plasm apps
+# Plasm apps [Deprecated]
 
 The single place to interact with all blockchain networks within the Plasm Ecosystem.
 
